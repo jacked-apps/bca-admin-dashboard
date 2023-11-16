@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import './App.css';
-
+import { Navigation } from './navigation/Navigation';
+import './firebaseConfig';
 function App() {
   return (
-    <>
-      <div>BCA ADMIN DASHBOARD</div>
-    </>
+    <div>
+      <Navigation />
+    </div>
   );
 }
 
