@@ -1,4 +1,6 @@
-export const daysOfTheWeek = [
+import { DayOfWeek, Game, PoolHall } from './types';
+
+export const daysOfTheWeek: DayOfWeek[] = [
   'Sunday',
   'Monday',
   'Tuesday',
@@ -8,9 +10,11 @@ export const daysOfTheWeek = [
   'Saturday',
 ];
 
-export const poolHalls = ['Billiards plaza', 'Buteras'];
-export const games = ['9 ball', '8 ball'];
-
+export const timestampWeek: number = 604800000;
+export const poolHalls: PoolHall[] = ['Billiards plaza', 'Buteras'];
+export const games: Game[] = ['9 Ball', '8 Ball', '10 Ball'];
+export const bcaWebsite = 'https://www.playcsipool.com/events.html';
+export const apaWebsite = 'https://poolplayers.com/world-pool-championships/';
 export const blankPlayerObject = {
   captain: {
     firstName: '',

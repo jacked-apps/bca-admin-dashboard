@@ -1,6 +1,8 @@
 import { Timestamp } from 'firebase/firestore';
 export type SeasonName = string;
 export type Email = string;
+export type PoolHall = "Butera's Billiards" | 'Billiard Plaza';
+export type Game = '8 Ball' | '9 Ball' | '10 Ball';
 export type DayOfWeek =
   | 'Sunday'
   | 'Monday'
