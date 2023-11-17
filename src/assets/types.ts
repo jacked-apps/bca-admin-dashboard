@@ -1,8 +1,10 @@
 import { Timestamp } from 'firebase/firestore';
 export type SeasonName = string;
+export type TimeOfYear = 'Spring' | 'Summer' | 'Fall' | 'Winter';
 export type Email = string;
 export type PoolHall = "Butera's Billiards" | 'Billiard Plaza';
 export type Game = '8 Ball' | '9 Ball' | '10 Ball';
+export type DateFormat = 'long' | 'short' | 'numeric';
 export type DayOfWeek =
   | 'Sunday'
   | 'Monday'
@@ -22,10 +24,10 @@ export type Season = {
   id: SeasonName;
   startDate: Timestamp;
   endDate: Timestamp;
-  game: string;
+  game: Game;
   holidays: Holiday[];
   night: DayOfWeek;
-  poolHall: string;
+  poolHall: PoolHall;
   seasonCompleted: boolean;
   seasonName: SeasonName;
   teams: string[];

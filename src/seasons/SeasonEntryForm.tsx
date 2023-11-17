@@ -12,7 +12,11 @@ import {
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useCallback, useEffect } from 'react';
-import { convertDateToTimestamp } from '../assets/dateFunctions';
+import {
+  convertDateToTimestamp,
+  convertTimestampToDate,
+  toJSDate,
+} from '../assets/dateFunctions';
 
 type FormValues = {
   poolHall: PoolHall;
@@ -68,22 +72,43 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   }, [register]);
 
   const updateUserData = useCallback(() => {
+    let hasChanged = false;
     const newData = { ...seasonData };
+
     if (watchedGame !== seasonData.game) {
       newData.game = watchedGame;
+      hasChanged = true;
     }
     if (watchedPoolHall !== seasonData.poolHall) {
       newData.poolHall = watchedPoolHall;
+      hasChanged = true;
     }
-    if (watchedStartDate !== seasonData.startDate.toDate()) {
-      newData.startDate = convertDateToTimestamp(watchedStartDate);
+    const watchedStartDateTimestamp = convertDateToTimestamp(watchedStartDate);
+    const seasonStartDateTimestamp = convertDateToTimestamp(
+      seasonData.startDate.toDate(),
+    );
+
+    if (
+      watchedStartDateTimestamp !== 'Invalid Date' &&
+      seasonStartDateTimestamp !== 'Invalid Date'
+    ) {
+      if (
+        watchedStartDateTimestamp.toMillis() !==
+        seasonStartDateTimestamp.toMillis()
+      ) {
+        newData.startDate = watchedStartDateTimestamp;
+        hasChanged = true;
+      }
     }
-    setSeasonData(newData);
+
+    if (hasChanged) {
+      setSeasonData(newData);
+    }
   }, [
     watchedGame,
     watchedPoolHall,
-    watchedStartDate,
     seasonData,
+    watchedStartDate,
     setSeasonData,
   ]);
 

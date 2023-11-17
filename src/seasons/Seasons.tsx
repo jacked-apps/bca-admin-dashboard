@@ -6,9 +6,11 @@ import { daysOfTheWeek } from '../assets/globalVariables';
 import {
   convertTimestampToDate,
   convertDateToTimestamp,
+  getTimeOfYear,
 } from '../assets/dateFunctions';
 import { timestampWeek } from '../assets/globalVariables';
 import './seasons.css';
+import { buildSeasonName } from '../assets/globalFunctions';
 
 export const Seasons: React.FC = () => {
   //state
@@ -45,14 +47,26 @@ export const Seasons: React.FC = () => {
       const newEndDate = convertDateToTimestamp(
         new Date(newStartDate.getTime() + seasonLength),
       );
+
       const newNight = daysOfTheWeek[newStartDate.getDay()];
+      const newSeasonName = buildSeasonName(
+        newStartDate,
+        currentSeasonData.poolHall,
+        currentSeasonData.game,
+      );
       return {
         ...currentSeasonData,
         endDate: newEndDate,
         night: newNight,
+        seasonName: newSeasonName,
       };
     });
-  }, [seasonData.startDate, seasonLength]);
+  }, [
+    seasonData.startDate,
+    seasonData.game,
+    seasonData.poolHall,
+    seasonLength,
+  ]);
 
   const handleFormChange = (data: Season) => {
     setSeasonData(data);
