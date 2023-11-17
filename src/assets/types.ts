@@ -35,8 +35,8 @@ export type Season = {
 
 export type Holiday = {
   date: string;
-  start: Timestamp;
-  end: Timestamp;
+  start: Timestamp | Date;
+  end: Timestamp | Date;
   rule: string;
   type: string;
 };

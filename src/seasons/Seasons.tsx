@@ -10,7 +10,7 @@ import {
 } from '../assets/dateFunctions';
 import { timestampWeek } from '../assets/globalVariables';
 import './seasons.css';
-import { buildSeasonName } from '../assets/globalFunctions';
+import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
 
 export const Seasons: React.FC = () => {
   //state
@@ -47,18 +47,22 @@ export const Seasons: React.FC = () => {
       const newEndDate = convertDateToTimestamp(
         new Date(newStartDate.getTime() + seasonLength),
       );
-
+      if (newEndDate === 'Invalid Date') {
+        return currentSeasonData;
+      }
       const newNight = daysOfTheWeek[newStartDate.getDay()];
       const newSeasonName = buildSeasonName(
         newStartDate,
         currentSeasonData.poolHall,
         currentSeasonData.game,
       );
+      const newHolidays = fetchHolidays(currentSeasonData.startDate);
       return {
         ...currentSeasonData,
         endDate: newEndDate,
         night: newNight,
         seasonName: newSeasonName,
+        holidays: newHolidays,
       };
     });
   }, [

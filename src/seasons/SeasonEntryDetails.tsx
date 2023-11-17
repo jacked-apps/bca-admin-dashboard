@@ -18,10 +18,13 @@ export const SeasonEntryDetails: React.FC<SeasonEntryDetailsProps> = ({
   console.log('seasonData', seasonData);
   return (
     <div className='details-container'>
+      <div> {seasonData.seasonName}</div>
+      <div>Pool Hall: {seasonData.poolHall}</div>
       <div>Start date: {readableDate(seasonData.startDate)}</div>
       <div>End date: {readableDate(seasonData.endDate)}</div>
-      <div>{seasonData.game}</div>
-      <div>{seasonData.poolHall}</div>
+      <div>Night: {seasonData.night}</div>
+      <div>Game: {seasonData.game}</div>
+      <div>Holidays: {seasonData.holidays.length}</div>
     </div>
   );
 };
