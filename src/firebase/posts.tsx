@@ -1,4 +1,4 @@
-/ ------------------------------
+// ------------------------------
 // TABLE OF CONTENTS
 // ------------------------------
 // 1. User-related posts
@@ -20,9 +20,9 @@ import {
   collection,
   arrayUnion,
 } from '@firebase/firestore'; // Import getFirestore from Firebase
-import { db } from './firebaseConfig';
-import { blankPlayerArray } from '../constants/globalVariables';
-
+import { db } from '../firebaseConfig';
+import { blankPlayerObject } from '../assets/globalVariables';
+import { Season, SeasonName, TeamName } from '../assets/types';
 // ------------------------------
 // 1. USER-RELATED POSTS
 // -----------------------------
@@ -33,12 +33,15 @@ import { blankPlayerArray } from '../constants/globalVariables';
 
 /**
  * Adds or updates a season in firestore
- * @param {string} seasonName - The unique name of a season used as the document ID
- * @param {object} data - The data to be stored in season document
+ * @param {SeasonName} seasonName - The unique name of a season used as the document ID
+ * @param {Season} data - The data to be stored in season document
  * @returns {Promise<void>} - A promise indicating the completion of add/update season
  */
 
-export const addOrUpdateSeason = async (seasonName, data) => {
+export const addOrUpdateSeason = async (
+  seasonName: SeasonName,
+  data: Season,
+) => {
   try {
     // get a reference
     const seasonRef = doc(db, 'seasons', seasonName);
@@ -84,18 +87,20 @@ export const addOrUpdateSeason = async (seasonName, data) => {
 
 /**
  * Adds a team to the teams table and adds the team id to the seasons teams array
- * @param {string} seasonName - The unique name of a season used as the document ID
- * @param {string} teamName - The unique name of a team to add to the seasonName
- * @param {object} data - The data to be stored in season document
+ * @param {SeasonName} seasonName - The unique name of a season used as the document ID
+ * @param {TeamName} teamName - The unique name of a team to add to the seasonName
  * @returns {Promise<void>} - A promise indicating the completion of adding a team
  */
 
-export const addNewTeamToSeason = async (seasonName, teamName) => {
+export const addNewTeamToSeason = async (
+  seasonName: SeasonName,
+  teamName: TeamName,
+) => {
   try {
     const teamCollection = collection(db, 'teams');
     // Create new team
     const teamRef = await addDoc(teamCollection, {
-      players: blankPlayerArray,
+      players: blankPlayerObject,
       seasonId: seasonName,
       teamName: teamName,
     });

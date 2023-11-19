@@ -69,6 +69,8 @@ export type TeamPlayerRole =
 // Represents a season's name and also is the season id.
 export type SeasonName = string;
 
+// Represents a teams's name.
+export type TeamName = string;
 // Represents an email address and also is the pastPlayers id
 export type Email = string;
 

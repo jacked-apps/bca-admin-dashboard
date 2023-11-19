@@ -21,6 +21,7 @@ import {
 
 // types
 import { Game, Holiday, PoolHall, Season } from '../assets/types';
+import { addOrUpdateSeason } from '../firebase/posts';
 
 type FormValues = {
   poolHall: PoolHall;
@@ -54,6 +55,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     setValue,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({ resolver: yupResolver(seasonSchema) });
 
@@ -107,11 +109,21 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     setSeasonData(updatedData);
   };
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    alert(
-      '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
-    );
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const updatedSeasonData = {
+        ...seasonData,
+        holidays: [...seasonData.holidays, bcaEvent, apaEvent],
+      };
+      await addOrUpdateSeason(seasonData.seasonName, updatedSeasonData);
+      reset();
+      alert(
+        '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
+      );
+    } catch (error) {
+      console.error('Error adding/updating season', error);
+      alert(`Failed to update season ${seasonData.seasonName}`);
+    }
   };
 
   const handleStringChange = (
