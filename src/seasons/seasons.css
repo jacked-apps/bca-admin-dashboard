@@ -1,40 +1,130 @@
 .container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 20px;
+  width: 100%;
+  margin-bottom: 300px;
 }
-
+.form-input,
+.form-input-select {
+  width: 90%;
+  min-width: 150px;
+}
 .form-container {
-  flex: 1;
-  border: 1px solid black;
-  margin-right: 20px;
+  width: 33%;
+  border: 1px solid var(--button-color);
+  margin: 20px;
   padding: 20px;
 }
 
-.details-container {
-  flex: 1;
-  border: 1px solid black;
-  margin-right: 20px;
-  padding: 20px;
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
-
 .season-title {
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .form-input {
   margin: 5px;
   width: 200px;
 }
-.form-input-hall {
-  margin: 5px 15px;
-  width: 200px;
+.form-input-select {
+  margin: 5px;
+  width: 208px;
 }
-.form-input-game {
-  margin: 5px 38px;
-  width: 200px;
-}
+
 .champ-label {
   margin-top: 20px;
+}
+.submit-button-container {
+  display: flex;
+  margin: 20px 0;
+  justify-content: center;
+}
+.submit-button {
+  background-color: rgb(132, 139, 201);
+  border-radius: 10px;
+  padding: 10px;
+}
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.8em;
+  margin-top: 5px;
+  padding-bottom: 20px;
+
+  align-self: flex-end;
+}
+@media (max-width: 600px) {
+  .form-group {
+    flex-direction: column;
+    .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .form-container {
+      width: 33%;
+      border: 1px solid var(--button-color);
+      margin: 20px;
+      padding: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .season-title {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-input,
+    .form-input-select {
+      margin: 5px;
+      width: 90%;
+      min-width: 150px;
+    }
+
+    .champ-label {
+      margin-top: 20px;
+    }
+
+    .submit-button-container {
+      display: flex;
+      margin: 20px 0;
+      justify-content: center;
+    }
+
+    .submit-button {
+      background-color: var(--button-color);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .form-group {
+        flex-direction: column;
+      }
+
+      .form-input,
+      .form-input-select {
+        width: 100%;
+      }
+
+      .form-container {
+        width: 100%;
+        margin: 10px;
+        padding: 10px;
+      }
+    }
+  }
 }

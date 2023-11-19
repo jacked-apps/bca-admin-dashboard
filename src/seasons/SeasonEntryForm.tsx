@@ -65,7 +65,21 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     register('apaEndDate');
   }, [register]);
 
-  const handleDateChange = () => {};
+  const handleDateChange = (
+    event: 'bca' | 'apa',
+    position: 'Start' | 'End',
+    value: Date,
+  ) => {
+    setValue(`${event}${position}Date`, value);
+    const setter = event === 'bca' ? setBcaEvent : setApaEvent;
+    const object = event === 'bca' ? bcaEvent : apaEvent;
+    const key = position.toLowerCase();
+    const newObject = {
+      ...object,
+      [key]: value,
+    };
+    setter(newObject);
+  };
 
   const handleStartDateChange = (newValue: Date) => {
     // update form
@@ -95,6 +109,9 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
 
   const onSubmit = (data: FormValues) => {
     console.log(data);
+    alert(
+      '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
+    );
   };
 
   const handleStringChange = (
@@ -123,20 +140,22 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   return (
     <div className='form-container'>
       <div className='season-title'>Build a Season</div>
-      <form onSubmit={handleSubmit(onSubmit)} className='form-Container'>
-        <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className='form-group'>
           <label htmlFor='startDate'>Start Date: </label>
           <ReactDatePicker
             className='form-input'
             selected={watch('startDate')}
             onChange={(date: Date) => handleStartDateChange(date)}
           />
-          {errors.startDate && <span>{errors.startDate.message}</span>}
+          {errors.startDate && (
+            <span className='error-message'>{errors.startDate.message}</span>
+          )}
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor='game'>Game: </label>
           <select
-            className='form-input-game'
+            className='form-input-select'
             id='game'
             {...register('game', { required: true })}
             onChange={e => handleStringChange('game', e.target.value)}
@@ -147,12 +166,14 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
               </option>
             ))}
           </select>
-          {errors.game && <span>{errors.game.message}</span>}
+          {errors.game && (
+            <span className='error-message'>{errors.game.message}</span>
+          )}
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor='poolHall'>Pool Hall:</label>
           <select
-            className='form-input-hall'
+            className='form-input-select'
             id='poolHall'
             {...register('poolHall', { required: true })}
             onChange={e => handleStringChange('poolHall', e.target.value)}
@@ -163,58 +184,71 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
               </option>
             ))}
           </select>
-          {errors.poolHall && <span>{errors.poolHall.message}</span>}
+          {errors.poolHall && (
+            <span className='error-message'>{errors.poolHall.message}</span>
+          )}
         </div>
 
-        <div>
-          <div className='champ-label'>BCA Nationals</div>
+        <div className='champ-label'>BCA Nationals</div>
+        <div className='form-group'>
           <label htmlFor='bcaStartDate'>Start Date:</label>
           <ReactDatePicker
             className='form-input'
             selected={
               bcaEvent.start instanceof Date ? bcaEvent.start : new Date()
             }
-            onChange={(date: Date) => handleDateChange('bcaStartDate', date)}
+            onChange={(date: Date) => handleDateChange('bca', 'Start', date)}
           />
-          {errors.bcaStartDate && <span>{errors.bcaStartDate.message}</span>}
+          {errors.bcaStartDate && (
+            <span className='error-message'>{errors.bcaStartDate.message}</span>
+          )}
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor='bcaEndDate'>End Date: </label>
           <ReactDatePicker
             className='form-input'
             selected={bcaEvent.end instanceof Date ? bcaEvent.end : new Date()}
-            onChange={(date: Date) => handleDateChange('bcaEndDate', date)}
+            onChange={(date: Date) => handleDateChange('bca', 'End', date)}
           />
-          {errors.bcaEndDate && <span>{errors.bcaEndDate.message}</span>}
+          {errors.bcaEndDate && (
+            <span className='error-message'>{errors.bcaEndDate.message}</span>
+          )}
         </div>
         <a href={bcaWebsite} target='_blank' rel='noopener noreferrer'>
           Check BCA Dates
         </a>
-        <div>
-          <div className='champ-label'>APA Nationals</div>
+        <div className='champ-label'>APA Nationals</div>
+        <div className='form-group'>
           <label htmlFor='apaStartDate'>Start Date:</label>
           <ReactDatePicker
             className='form-input'
             selected={
               apaEvent.start instanceof Date ? apaEvent.start : new Date()
             }
-            onChange={(date: Date) => handleDateChange('apaStartDate', date)}
+            onChange={(date: Date) => handleDateChange('apa', 'Start', date)}
           />
-          {errors.apaStartDate && <span>{errors.apaStartDate.message}</span>}
+          {errors.apaStartDate && (
+            <span className='error-message'>{errors.apaStartDate.message}</span>
+          )}
         </div>
 
-        <div>
+        <div className='form-group'>
           <label htmlFor='apaEndDate'>End Date: </label>
           <ReactDatePicker
             className='form-input'
             selected={apaEvent.end instanceof Date ? apaEvent.end : new Date()}
-            onChange={(date: Date) => handleDateChange('apaEndDate', date)}
+            onChange={(date: Date) => handleDateChange('apa', 'End', date)}
           />
-          {errors.apaEndDate && <span>{errors.apaEndDate.message}</span>}
+          {errors.apaEndDate && (
+            <span className='error-message'>{errors.apaEndDate.message}</span>
+          )}
         </div>
         <a href={apaWebsite} target='_blank' rel='noopener noreferrer'>
           Check APA Dates
         </a>
+        <div className='submit-button-container'>
+          <button type='submit'>Create Season</button>
+        </div>
       </form>
     </div>
   );

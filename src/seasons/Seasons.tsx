@@ -43,11 +43,6 @@ export const Seasons: React.FC = () => {
     teams: [],
     schedule: { ...initialSchedule },
   });
-  console.log('CURRENT seasonData: ', seasonData);
-
-  const handleFormChange = (data: Season) => {
-    setSeasonData(data);
-  };
 
   return (
     <div className='container'>
