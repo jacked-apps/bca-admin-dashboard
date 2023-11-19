@@ -1,22 +1,26 @@
+import { useEffect } from 'react';
 import './seasons.css';
+// form
 import { useForm } from 'react-hook-form';
 import { seasonSchema } from './schema';
-import { Game, PoolHall, Season } from '../assets/types';
 import { yupResolver } from '@hookform/resolvers/yup';
+// date picker
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+// variables and functions
+import { convertDateToTimestamp } from '../assets/dateFunctions';
+import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
 import {
   games,
   poolHalls,
   bcaWebsite,
   apaWebsite,
+  seasonLength,
+  daysOfTheWeek,
 } from '../assets/globalVariables';
-import ReactDatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useCallback, useEffect } from 'react';
-import {
-  convertDateToTimestamp,
-  convertTimestampToDate,
-  toJSDate,
-} from '../assets/dateFunctions';
+
+// types
+import { Game, Holiday, PoolHall, Season } from '../assets/types';
 
 type FormValues = {
   poolHall: PoolHall;
@@ -27,30 +31,23 @@ type FormValues = {
   apaStartDate: Date;
   apaEndDate: Date;
 };
+
 type SeasonEntryFormProps = {
   seasonData: Season;
   setSeasonData: (data: Season) => void;
-  bcaStartDate: Date | null;
-  setBcaStartDate: (date: Date | null) => void;
-  bcaEndDate: Date | null;
-  setBcaEndDate: (date: Date | null) => void;
-  apaStartDate: Date | null;
-  setApaStartDate: (date: Date | null) => void;
-  apaEndDate: Date | null;
-  setApaEndDate: (date: Date | null) => void;
+  bcaEvent: Holiday;
+  setBcaEvent: (date: Holiday) => void;
+  apaEvent: Holiday;
+  setApaEvent: (date: Holiday) => void;
 };
 
 export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   seasonData,
   setSeasonData,
-  bcaStartDate,
-  setBcaStartDate,
-  bcaEndDate,
-  setBcaEndDate,
-  apaStartDate,
-  setApaStartDate,
-  apaEndDate,
-  setApaEndDate,
+  bcaEvent,
+  setBcaEvent,
+  apaEvent,
+  setApaEvent,
 }) => {
   const {
     register,
@@ -60,9 +57,6 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     formState: { errors },
   } = useForm<FormValues>({ resolver: yupResolver(seasonSchema) });
 
-  const watchedStartDate = watch('startDate');
-  const watchedGame = watch('game');
-  const watchedPoolHall = watch('poolHall');
   useEffect(() => {
     register('startDate');
     register('bcaStartDate');
@@ -71,54 +65,61 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     register('apaEndDate');
   }, [register]);
 
-  const updateUserData = useCallback(() => {
-    let hasChanged = false;
-    const newData = { ...seasonData };
+  const handleDateChange = () => {};
 
-    if (watchedGame !== seasonData.game) {
-      newData.game = watchedGame;
-      hasChanged = true;
-    }
-    if (watchedPoolHall !== seasonData.poolHall) {
-      newData.poolHall = watchedPoolHall;
-      hasChanged = true;
-    }
-    const watchedStartDateTimestamp = convertDateToTimestamp(watchedStartDate);
-    const seasonStartDateTimestamp = convertDateToTimestamp(
-      seasonData.startDate.toDate(),
+  const handleStartDateChange = (newValue: Date) => {
+    // update form
+    setValue('startDate', newValue);
+    // things to update
+    const startDate = convertDateToTimestamp(newValue);
+    const endDate = convertDateToTimestamp(
+      new Date(newValue.getTime() + seasonLength),
     );
-
-    if (
-      watchedStartDateTimestamp !== 'Invalid Date' &&
-      seasonStartDateTimestamp !== 'Invalid Date'
-    ) {
-      if (
-        watchedStartDateTimestamp.toMillis() !==
-        seasonStartDateTimestamp.toMillis()
-      ) {
-        newData.startDate = watchedStartDateTimestamp;
-        hasChanged = true;
-      }
-    }
-
-    if (hasChanged) {
-      setSeasonData(newData);
-    }
-  }, [
-    watchedGame,
-    watchedPoolHall,
-    seasonData,
-    watchedStartDate,
-    setSeasonData,
-  ]);
-
-  useEffect(() => {
-    updateUserData();
-  }, [watchedGame, watchedPoolHall, watchedStartDate, updateUserData]);
+    const night = daysOfTheWeek[newValue.getDay()];
+    const holidays = fetchHolidays(newValue);
+    const seasonName = buildSeasonName(
+      newValue,
+      seasonData.poolHall,
+      seasonData.game,
+    );
+    const updatedData: Season = {
+      ...seasonData,
+      startDate,
+      seasonName,
+      endDate,
+      night,
+      holidays,
+    };
+    setSeasonData(updatedData);
+  };
 
   const onSubmit = (data: FormValues) => {
     console.log(data);
   };
+
+  const handleStringChange = (
+    fieldName: 'poolHall' | 'game',
+    newValue: string,
+  ) => {
+    setValue(fieldName, newValue as PoolHall | Game);
+
+    // Create a new seasonData object with the updated field value
+    const newSeasonName = buildSeasonName(
+      seasonData.startDate,
+      fieldName === 'poolHall' ? (newValue as PoolHall) : seasonData.poolHall,
+      fieldName === 'game' ? (newValue as Game) : seasonData.game,
+    );
+
+    const updatedData: Season = {
+      ...seasonData,
+      seasonName: newSeasonName,
+      [fieldName]: newValue, // Dynamically update the field based on fieldName
+    };
+
+    // Directly set the new seasonData state
+    setSeasonData(updatedData);
+  };
+
   return (
     <div className='form-container'>
       <div className='season-title'>Build a Season</div>
@@ -128,7 +129,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           <ReactDatePicker
             className='form-input'
             selected={watch('startDate')}
-            onChange={(date: Date) => setValue('startDate', date)}
+            onChange={(date: Date) => handleStartDateChange(date)}
           />
           {errors.startDate && <span>{errors.startDate.message}</span>}
         </div>
@@ -138,6 +139,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
             className='form-input-game'
             id='game'
             {...register('game', { required: true })}
+            onChange={e => handleStringChange('game', e.target.value)}
           >
             {games.map((game, index) => (
               <option key={index} value={game}>
@@ -153,6 +155,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
             className='form-input-hall'
             id='poolHall'
             {...register('poolHall', { required: true })}
+            onChange={e => handleStringChange('poolHall', e.target.value)}
           >
             {poolHalls.map((poolHall, index) => (
               <option key={index} value={poolHall}>
@@ -162,13 +165,16 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           </select>
           {errors.poolHall && <span>{errors.poolHall.message}</span>}
         </div>
+
         <div>
           <div className='champ-label'>BCA Nationals</div>
           <label htmlFor='bcaStartDate'>Start Date:</label>
           <ReactDatePicker
             className='form-input'
-            selected={bcaStartDate}
-            onChange={(date: Date) => setBcaStartDate(date)}
+            selected={
+              bcaEvent.start instanceof Date ? bcaEvent.start : new Date()
+            }
+            onChange={(date: Date) => handleDateChange('bcaStartDate', date)}
           />
           {errors.bcaStartDate && <span>{errors.bcaStartDate.message}</span>}
         </div>
@@ -176,8 +182,8 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           <label htmlFor='bcaEndDate'>End Date: </label>
           <ReactDatePicker
             className='form-input'
-            selected={bcaEndDate}
-            onChange={(date: Date) => setBcaEndDate(date)}
+            selected={bcaEvent.end instanceof Date ? bcaEvent.end : new Date()}
+            onChange={(date: Date) => handleDateChange('bcaEndDate', date)}
           />
           {errors.bcaEndDate && <span>{errors.bcaEndDate.message}</span>}
         </div>
@@ -189,8 +195,10 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           <label htmlFor='apaStartDate'>Start Date:</label>
           <ReactDatePicker
             className='form-input'
-            selected={apaStartDate}
-            onChange={(date: Date) => setApaStartDate(date)}
+            selected={
+              apaEvent.start instanceof Date ? apaEvent.start : new Date()
+            }
+            onChange={(date: Date) => handleDateChange('apaStartDate', date)}
           />
           {errors.apaStartDate && <span>{errors.apaStartDate.message}</span>}
         </div>
@@ -199,38 +207,14 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           <label htmlFor='apaEndDate'>End Date: </label>
           <ReactDatePicker
             className='form-input'
-            selected={apaEndDate}
-            onChange={(date: Date) => setApaEndDate(date)}
+            selected={apaEvent.end instanceof Date ? apaEvent.end : new Date()}
+            onChange={(date: Date) => handleDateChange('apaEndDate', date)}
           />
           {errors.apaEndDate && <span>{errors.apaEndDate.message}</span>}
         </div>
         <a href={apaWebsite} target='_blank' rel='noopener noreferrer'>
           Check APA Dates
         </a>
-        <input
-          type='hidden'
-          {...register('bcaStartDate')}
-          value={
-            bcaStartDate ? bcaStartDate.toISOString().substring(0, 10) : ''
-          }
-        />
-        <input
-          type='hidden'
-          {...register('bcaEndDate')}
-          value={bcaEndDate ? bcaEndDate.toISOString().substring(0, 10) : ''}
-        />
-        <input
-          type='hidden'
-          {...register('apaStartDate')}
-          value={
-            apaStartDate ? apaStartDate.toISOString().substring(0, 10) : ''
-          }
-        />
-        <input
-          type='hidden'
-          {...register('apaEndDate')}
-          value={apaEndDate ? apaEndDate.toISOString().substring(0, 10) : ''}
-        />
       </form>
     </div>
   );

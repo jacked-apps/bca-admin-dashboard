@@ -2,12 +2,12 @@
 // TABLE OF CONTENTS
 // ------------------------------
 // 1. Season-related functions
-//
 //    - buildSeasonName
-//    - getEndOfSeasonDate
-//
-//    - getHolidaysBetweenDates
+// 2. Holiday-related functions
+//    - fetchHolidays
+//    - createHolidayObject
 //    - getHolidaysAroundDate
+
 // 2. Team-related functions
 //    - createPlayerData
 // 3. Math-related functions
@@ -15,11 +15,11 @@
 // ------------------------------
 // IMPORTS and VARIABLES
 // ------------------------------
-import { daysOfTheWeek } from './globalVariables';
+import { daysOfTheWeek, notDate } from './globalVariables';
 import Holidays from 'date-holidays';
-import { Game, Holiday, PoolHall } from './types';
+import { Game, Holiday, PoolHall, DateOrStamp, NotDate } from './types';
 import { Timestamp } from 'firebase/firestore';
-import { getTimeOfYear, toJSDate } from './dateFunctions';
+import { getTimeOfYear, readableDate, toJSDate } from './dateFunctions';
 
 // ------------------------------
 // 1. SEASON-RELATED Functions
@@ -40,7 +40,7 @@ export const buildSeasonName = (
   game?: Game,
 ) => {
   const date = toJSDate(startDate);
-  if (date === 'Invalid Date') {
+  if (date === notDate) {
     return 'No Season Name Yet';
   }
 
@@ -51,6 +51,12 @@ export const buildSeasonName = (
     poolHall ? poolHall : 'No Pool Hall'
   }`;
 };
+
+/**
+ * Calculates the end date of a season
+ * @param {Date | Timestamp | NotDate} startDate - starting date of the season
+ * @returns {Date} - a season name, e.g., "9 Ball Tuesday Spring 2023 Billiards Plaza"
+ */
 
 // ------------------------------
 // 2. HOLIDAY-RELATED Functions
@@ -66,7 +72,7 @@ const ADDITIONAL_WEEKS = 8;
  */
 export const fetchHolidays = (startDate: Date | Timestamp | string) => {
   const jsDate = toJSDate(startDate);
-  if (jsDate === 'Invalid Date') {
+  if (jsDate === notDate) {
     return [];
   }
   const hd = new Holidays();
@@ -90,4 +96,29 @@ export const fetchHolidays = (startDate: Date | Timestamp | string) => {
     const holidayDate = new Date(holiday.date);
     return holidayDate >= start && holidayDate <= end;
   });
+};
+
+/**
+ * Creates a holiday object in the shape of Holiday.
+ * @param {DateOrStamp} startDate - The start date of the holiday/event.
+ * @param {DateOrStamp} endDate - The end date of the holiday/event.
+ * @param {string} type - either bca or apa to create that event.
+ * @returns {Holiday} - A holiday object.
+ */
+
+export const createHolidayObject = (
+  startDate: DateOrStamp,
+  endDate: DateOrStamp,
+  type: 'bca' | 'apa',
+): Holiday => {
+  const name = `${type.toUpperCase()} National Championships`;
+  const object = {
+    date: readableDate(startDate),
+    name: name,
+    start: startDate,
+    end: endDate,
+    rule: 'Take these weeks off league to allow players to go to these events',
+    type: 'event',
+  };
+  return object;
 };

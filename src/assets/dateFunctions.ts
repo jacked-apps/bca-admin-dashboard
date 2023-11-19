@@ -12,7 +12,9 @@
 // ------------------------------
 //import { daysOfTheWeek } from './globalVariables';
 import { Timestamp } from '@firebase/firestore';
-import { TimeOfYear, DateFormat } from './types';
+import { TimeOfYear, DateFormat, StampOrInvalid, NotDate } from './types';
+import { seasonLength } from './globalVariables';
+import { notDate } from './globalVariables';
 // ------------------------------
 // 1. Date Conversion Functions
 // ------------------------------
@@ -25,13 +27,13 @@ import { TimeOfYear, DateFormat } from './types';
 
 export const convertDateToTimestamp = (
   date: Date | undefined,
-): Timestamp | 'Invalid Date' => {
+): Timestamp | NotDate => {
   if (date === undefined) {
-    return 'Invalid Date';
+    return notDate;
   }
   const jsDate = toJSDate(date);
-  if (jsDate === 'Invalid Date') {
-    return 'Invalid Date';
+  if (jsDate === notDate) {
+    return notDate;
   }
 
   if (!date) {
@@ -54,21 +56,19 @@ export const convertTimestampToDate = (timestamp: Timestamp): Date => {
  * @param {Date | string | Timestamp} date - The date to convert
  * @returns {Date} - The converted JS Date object
  */
-export const toJSDate = (
-  date: Date | string | Timestamp,
-): Date | 'Invalid Date' => {
+export const toJSDate = (date: Date | string | Timestamp): Date | NotDate => {
   if (date instanceof Date) {
     return date;
   } else if (typeof date === 'string') {
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) {
-      return 'Invalid Date';
+      return notDate;
     }
     return parsedDate;
   } else if (date instanceof Timestamp) {
     return date.toDate();
   } else {
-    return 'Invalid Date';
+    return notDate;
   }
 };
 
@@ -78,13 +78,14 @@ export const toJSDate = (
  * @param {DateFormat} format - Date to convert
  * @returns {string} - The date in the format requested
  */
+
 export const readableDate = (
   date: Date | string | Timestamp,
   format: DateFormat = 'short',
 ): string => {
   const jsDate = toJSDate(date);
-  return jsDate === 'Invalid Date'
-    ? 'Invalid Date'
+  return jsDate === notDate
+    ? notDate
     : jsDate.toLocaleString('en-US', {
         year: 'numeric',
         month: format,
@@ -92,10 +93,10 @@ export const readableDate = (
       });
 };
 
-export const getTimeOfYear = (date: Date): TimeOfYear | 'Invalid Date' => {
+export const getTimeOfYear = (date: Date): TimeOfYear | NotDate => {
   const jsDate = toJSDate(date);
-  if (jsDate === 'Invalid Date') {
-    return 'Invalid Date';
+  if (jsDate === notDate) {
+    return notDate;
   }
   const month = date.getMonth();
 
@@ -107,5 +108,31 @@ export const getTimeOfYear = (date: Date): TimeOfYear | 'Invalid Date' => {
     return 'Fall';
   } else {
     return 'Winter';
+  }
+};
+
+/**
+ * Calculates the end date of a season given its start date
+ * @param {Date | Timestamp | Invalid} startDate - The start date of the season, can be a Firebase Timestamp or 'notDate'
+ * @returns {Timestamp | NotDate} - The end date of the season as a Firebase Timestamp, or 'notDate' if the start date is invalid
+ */
+
+export const getSeasonEndDate = (
+  startDate: Date | StampOrInvalid,
+): StampOrInvalid => {
+  const start = toJSDate(startDate);
+  if (start === notDate) {
+    return notDate;
+  } else {
+    const endDate = new Date(start.getTime() + seasonLength);
+    return isNaN(endDate.getTime()) ? notDate : Timestamp.fromDate(endDate);
+  }
+};
+
+export const createNewTimestamp = (stamp: StampOrInvalid): StampOrInvalid => {
+  if (stamp instanceof Date && !isNaN(stamp.getTime())) {
+    return Timestamp.fromDate(stamp);
+  } else {
+    return notDate;
   }
 };

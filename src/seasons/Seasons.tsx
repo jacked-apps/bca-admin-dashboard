@@ -1,76 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+// Types
+import { Holiday, Season } from '../assets/types';
+// Components
 import { SeasonEntryForm } from './SeasonEntryForm';
 import { SeasonEntryDetails } from './SeasonEntryDetails';
-import { Season } from '../assets/types';
-import { daysOfTheWeek } from '../assets/globalVariables';
+// Variables and Functions
+import { daysOfTheWeek, initialSchedule } from '../assets/globalVariables';
 import {
-  convertTimestampToDate,
   convertDateToTimestamp,
-  getTimeOfYear,
+  getSeasonEndDate,
 } from '../assets/dateFunctions';
-import { timestampWeek } from '../assets/globalVariables';
+import { createHolidayObject } from '../assets/globalFunctions';
+// CSS
 import './seasons.css';
-import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
 
 export const Seasons: React.FC = () => {
   //state
-  const [bcaStartDate, setBcaStartDate] = useState<Date | null>(null);
-  const [bcaEndDate, setBcaEndDate] = useState<Date | null>(null);
-  const [apaStartDate, setApaStartDate] = useState<Date | null>(null);
-  const [apaEndDate, setApaEndDate] = useState<Date | null>(null);
+  const [bcaEvent, setBcaEvent] = useState<Holiday>(
+    createHolidayObject(new Date(), new Date(), 'bca'),
+  );
+  const [apaEvent, setApaEvent] = useState<Holiday>(
+    createHolidayObject(new Date(), new Date(), 'apa'),
+  );
 
   //variables
-  const seasonLength = 18 * timestampWeek;
   const today = new Date();
   const defaultStartDate = convertDateToTimestamp(today);
-  const defaultEndDate = convertDateToTimestamp(
-    new Date(defaultStartDate.toDate().getTime() + seasonLength),
-  );
+
+  const defaultEndDate = getSeasonEndDate(defaultStartDate);
 
   const [seasonData, setSeasonData] = useState<Season>({
     // default values for the Season object
     id: '',
     startDate: defaultStartDate,
     endDate: defaultEndDate,
-    game: '',
+    game: '9 Ball',
     holidays: [],
     night: daysOfTheWeek[today.getDay()],
     poolHall: 'Billiard Plaza',
     seasonCompleted: false,
     seasonName: '',
     teams: [],
+    schedule: { ...initialSchedule },
   });
-
-  useEffect(() => {
-    setSeasonData(currentSeasonData => {
-      const newStartDate = currentSeasonData.startDate.toDate();
-      const newEndDate = convertDateToTimestamp(
-        new Date(newStartDate.getTime() + seasonLength),
-      );
-      if (newEndDate === 'Invalid Date') {
-        return currentSeasonData;
-      }
-      const newNight = daysOfTheWeek[newStartDate.getDay()];
-      const newSeasonName = buildSeasonName(
-        newStartDate,
-        currentSeasonData.poolHall,
-        currentSeasonData.game,
-      );
-      const newHolidays = fetchHolidays(currentSeasonData.startDate);
-      return {
-        ...currentSeasonData,
-        endDate: newEndDate,
-        night: newNight,
-        seasonName: newSeasonName,
-        holidays: newHolidays,
-      };
-    });
-  }, [
-    seasonData.startDate,
-    seasonData.game,
-    seasonData.poolHall,
-    seasonLength,
-  ]);
+  console.log('CURRENT seasonData: ', seasonData);
 
   const handleFormChange = (data: Season) => {
     setSeasonData(data);
@@ -81,22 +54,16 @@ export const Seasons: React.FC = () => {
       <SeasonEntryForm
         seasonData={seasonData}
         setSeasonData={setSeasonData}
-        bcaStartDate={bcaStartDate}
-        setBcaStartDate={setBcaStartDate}
-        bcaEndDate={bcaEndDate}
-        setBcaEndDate={setBcaEndDate}
-        apaStartDate={apaStartDate}
-        setApaStartDate={setApaStartDate}
-        apaEndDate={apaEndDate}
-        setApaEndDate={setApaEndDate}
+        bcaEvent={bcaEvent}
+        setBcaEvent={setBcaEvent}
+        apaEvent={apaEvent}
+        setApaEvent={setApaEvent}
       />
 
       <SeasonEntryDetails
         seasonData={seasonData}
-        bcaStartDate={bcaStartDate}
-        bcaEndDate={bcaEndDate}
-        apaStartDate={apaStartDate}
-        apaEndDate={apaEndDate}
+        bcaEvent={bcaEvent}
+        apaEvent={apaEvent}
       />
     </div>
   );

@@ -1,4 +1,7 @@
+import { Season } from '../assets/types';
+import { readableDate } from '../assets/dateFunctions';
 import './seasons.css';
+
 type SeasonEntryDetailsProps = {
   seasonData: Season;
   bcaStartDate: Date | null;
@@ -6,7 +9,6 @@ type SeasonEntryDetailsProps = {
   apaStartDate: Date | null;
   apaEndDate: Date | null;
 };
-import { readableDate } from '../assets/dateFunctions';
 
 export const SeasonEntryDetails: React.FC<SeasonEntryDetailsProps> = ({
   seasonData,

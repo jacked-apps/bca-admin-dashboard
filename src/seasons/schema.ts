@@ -1,30 +1,60 @@
 import * as yup from 'yup';
 import { poolHalls, games } from '../assets/globalVariables';
+const today = new Date();
+today.setHours(0, 0, 0, 0);
 
 export const seasonSchema = yup.object().shape({
   startDate: yup.date().required('Start date is required'),
   game: yup.string().oneOf(games).required('Game is required'),
   poolHall: yup.string().oneOf(poolHalls).required('Pool hall is required'),
 
-  bcaStartDate: yup.date().required('BCA start date is required'),
+  bcaStartDate: yup
+    .date()
+    .required('Start date is required')
+    .test(
+      'is-not-today',
+      'Today is not a valid choice, please choose a different start date or select yesterday if today is the actual start date',
+      value => {
+        const selectedDate = new Date(value);
+        selectedDate.setHours(0, 0, 0, 0);
+        return selectedDate.getTime() !== today.getTime();
+      },
+    ),
   bcaEndDate: yup
     .date()
     .required('BCA end date is required')
-    .when('bcaStartDate', (bcaStartDate, schema) => {
-      return schema.min(
-        bcaStartDate,
-        'BCA end date must be after the start date',
-      );
-    }),
+    .test(
+      'is-not-today',
+      'Today is not a valid choice, please choose a different end date or select tomorrow if today is the actual end date',
+      value => {
+        const selectedDate = new Date(value);
+        selectedDate.setHours(0, 0, 0, 0);
+        return selectedDate.getTime() !== today.getTime();
+      },
+    ),
 
-  apaStartDate: yup.date().required('APA start date is required'),
+  apaStartDate: yup
+    .date()
+    .required('APA start date is required')
+    .test(
+      'is-not-today',
+      'Today is not a valid choice, please choose a different start date or select yesterday if today is the actual start date',
+      value => {
+        const selectedDate = new Date(value);
+        selectedDate.setHours(0, 0, 0, 0);
+        return selectedDate.getTime() !== today.getTime();
+      },
+    ),
   apaEndDate: yup
     .date()
     .required('APA end date is required')
-    .when('apaStartDate', (apaStartDate, schema) => {
-      return schema.min(
-        apaStartDate,
-        'APA end date must be after the start date',
-      );
-    }),
+    .test(
+      'is-not-today',
+      'Today is not a valid choice, please choose a different end date or select tomorrow if today is the actual end date',
+      value => {
+        const selectedDate = new Date(value);
+        selectedDate.setHours(0, 0, 0, 0);
+        return selectedDate.getTime() !== today.getTime();
+      },
+    ),
 });

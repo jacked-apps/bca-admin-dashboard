@@ -1,5 +1,5 @@
-import { DayOfWeek, Game, PoolHall } from './types';
-
+import { DayOfWeek, Game, PoolHall, Schedule } from './types';
+export const notDate = 'Invalid Date';
 export const daysOfTheWeek: DayOfWeek[] = [
   'Sunday',
   'Monday',
@@ -10,59 +10,34 @@ export const daysOfTheWeek: DayOfWeek[] = [
   'Saturday',
 ];
 
-export const timestampWeek: number = 604800000;
+export const timestampWeek: number = 604800000; // 604,800,000
+export const seasonLength: number = timestampWeek * 18;
 export const poolHalls: PoolHall[] = ['Billiard Plaza', "Butera's Billiards"];
 export const games: Game[] = ['9 Ball', '8 Ball', '10 Ball'];
 export const bcaWebsite = 'https://www.playcsipool.com/events.html';
 export const apaWebsite = 'https://poolplayers.com/world-pool-championships/';
+
+export const blankPlayerInfoObject = {
+  firstName: '',
+  lastName: '',
+  nickname: '',
+  pastPlayerId: '',
+  currentUserId: '',
+  totalWins: 0,
+  totalLosses: 0,
+};
 export const blankPlayerObject = {
-  captain: {
-    firstName: '',
-    lastName: '',
-    nickname: '',
-    pastPlayerId: '',
-    currentUserId: '',
-    totalWins: 0,
-    totalLosses: 0,
-  },
+  captain: { ...blankPlayerInfoObject },
+  player2: { ...blankPlayerInfoObject },
+  player3: { ...blankPlayerInfoObject },
+  player4: { ...blankPlayerInfoObject },
+  player5: { ...blankPlayerInfoObject },
+};
 
-  player2: {
-    firstName: '',
-    lastName: '',
-    nickname: '',
-    pastPlayerId: '',
-    currentUserId: '',
-    totalWins: 0,
-    totalLosses: 0,
-  },
-
-  player3: {
-    firstName: '',
-    lastName: '',
-    nickname: '',
-    pastPlayerId: '',
-    currentUserId: '',
-    totalWins: 0,
-    totalLosses: 0,
-  },
-
-  player4: {
-    firstName: '',
-    lastName: '',
-    nickname: '',
-    pastPlayerId: '',
-    currentUserId: '',
-    totalWins: 0,
-    totalLosses: 0,
-  },
-
-  player5: {
-    firstName: '',
-    lastName: '',
-    nickname: '',
-    pastPlayerId: '',
-    currentUserId: '',
-    totalWins: 0,
-    totalLosses: 0,
+export const initialSchedule: Schedule = {
+  '2023-01-01': {
+    title: 'placeHolder',
+    leaguePlay: false,
+    matchUps: 'placeholder-matchupId',
   },
 };
