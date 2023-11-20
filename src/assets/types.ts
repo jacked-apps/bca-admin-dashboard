@@ -135,7 +135,8 @@ export type Season = {
 
 // Represents a Team document from teams Collection
 export type Team = {
-  teamId: TeamId; // a string representing the Teams document id
+  id: TeamId; // a string representing the Teams document id
+  teamName: string;
   seasonId: SeasonName; // a string representing the Seasons document Id
   players: TeamPlayer; //  [role in TeamPlayerRole]: TeamPlayerInfo; e.g. 'captain': {name: string, pastPlayerId: Email ...}
   wins: number; // The number of time a team has won a match. TeamVictories

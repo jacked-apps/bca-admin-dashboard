@@ -58,6 +58,26 @@
 
   align-self: flex-end;
 }
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--button-color);
+  padding: 10px;
+}
+.list-button-container {
+  display: flex;
+  flex-direction: column;
+}
+.list-title {
+  align-self: center;
+}
+.list-button {
+  font-size: x-small;
+  padding: 2px;
+  margin: 5px;
+}
+
 @media (max-width: 600px) {
   .form-group {
     flex-direction: column;
