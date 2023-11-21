@@ -10,7 +10,6 @@ export const useFetchSeasons = () => {
     const fetchSeasons = async () => {
       try {
         const fetchedSeasons = await fetchCurrentSeasons();
-        console.log('Fetched seasons:', fetchedSeasons);
         setSeasons(fetchedSeasons);
         if (fetchedSeasons.length === 1) {
           setSelectedSeason(fetchedSeasons[0]);

@@ -24,9 +24,8 @@ import { Timestamp } from 'firebase/firestore';
 export type Names = {
   firstName: string;
   lastName: string;
-  nickName: string;
+  nickname: string;
 };
-
 // ------------------------------
 // 2. ENUM-LIKE TYPES
 // ------------------------------
@@ -54,14 +53,6 @@ export type DayOfWeek =
   | 'Friday'
   | 'Saturday';
 
-// Represents all of the players "roles" on a team in Teams collection
-export type TeamPlayerRole =
-  | 'captain'
-  | 'player2'
-  | 'player3'
-  | 'player4'
-  | 'player5';
-
 // ------------------------------
 // 3. FIREBASE ALIAS TYPES
 // ------------------------------
@@ -87,14 +78,6 @@ export type MatchupId = string;
 // 4. MAPPED TYPES
 // ------------------------------
 
-// Represents the players on a team
-// roles are  'captain'| 'player2'| 'player3'| 'player4'| 'player5';
-// player info is Names firstName, lastName, nickname
-// as well as - wins, losses, pastPlayer id(Email), and currentPlayer id(PlayerID)
-export type TeamPlayer = {
-  [role in TeamPlayerRole]: TeamPlayerInfo;
-};
-
 // ------------------------------
 // 5. FIREBASE DOCUMENT OBJECT TYPES
 // ------------------------------
@@ -103,6 +86,7 @@ export type TeamPlayer = {
 // Names includes: firstName, lastName, nickName
 export type PastPlayer = Names & {
   id: Email; // the Email of the player also the id of the document
+  currentUserId?: PlayerId;
   email: Email; // Email of the player
   dob: string; // Date of birth of the player
   address: string; // The players Address
@@ -131,17 +115,6 @@ export type Season = {
   seasonName: SeasonName; //  string; built by buildSeasonName()
   teams: TeamId[]; // string the ids for the Team in firebase collection Teams
   schedule: Schedule; // The schedule Object
-};
-
-// Represents a Team document from teams Collection
-export type Team = {
-  id: TeamId; // a string representing the Teams document id
-  teamName: string;
-  seasonId: SeasonName; // a string representing the Seasons document Id
-  players: TeamPlayer; //  [role in TeamPlayerRole]: TeamPlayerInfo; e.g. 'captain': {name: string, pastPlayerId: Email ...}
-  wins: number; // The number of time a team has won a match. TeamVictories
-  losses: number; // The number of times a Team has lost a match
-  points: number; // The number of points (excess games) the team earned in a match
 };
 
 // Represents a Matchup document from the matchups Collection
@@ -197,13 +170,6 @@ export type Holiday = {
 // Represents a Holiday from date-holidays package
 // Holds information on possible Holiday conflicts
 // Names includes: firstName, lastName, nickName
-
-export type TeamPlayerInfo = Names & {
-  totalWins: number; // career wins for the player (adds up wins from previous 3 seasons)
-  totalLosses: number; // career losses for the player (adds up losses from previous 3 seasons)
-  pastPlayerId: Email; // players id from pastPlayers collection (also the players Email)
-  currentUserId: PlayerId; // players id from currentPlayer collection
-};
 
 // Embedded on Match
 // Represents a Team in a match
@@ -274,3 +240,39 @@ export type StampOrInvalid = Timestamp | NotDate;
 export type NotDate = 'Invalid Date';
 
 //////////////////////////////////////
+/// team related
+// Represents a Team document from teams Collection
+export type Team = {
+  id: TeamId; // a string representing the Teams document id
+  teamName: string;
+  seasonId: SeasonName; // a string representing the Seasons document Id
+  players: {
+    captain: TeamPlayer;
+    player2: TeamPlayer;
+    player3: TeamPlayer;
+    player4: TeamPlayer;
+    player5: TeamPlayer;
+  };
+  wins: number; // The number of time a team has won a match. TeamVictories
+  losses: number; // The number of times a Team has lost a match
+  points: number; // The number of points (excess games) the team earned in a match
+};
+
+// Represents all of the players "roles" on a team in Teams collection
+export type TeamPlayerRole =
+  | 'captain'
+  | 'player2'
+  | 'player3'
+  | 'player4'
+  | 'player5';
+
+export type TeamPlayer = {
+  firstName: string;
+  lastName: string;
+  nickname: string;
+  email: Email;
+  totalWins: number; // career wins for the player (adds up wins from previous 3 seasons)
+  totalLosses: number; // career losses for the player (adds up losses from previous 3 seasons)
+  pastPlayerId: Email; // players id from pastPlayers collection (also the players Email)
+  currentUserId: PlayerId; // players id from currentPlayer collection
+};

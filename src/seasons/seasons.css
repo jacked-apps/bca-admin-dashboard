@@ -77,6 +77,10 @@
   padding: 2px;
   margin: 5px;
 }
+.list-name {
+  align-self: center;
+  margin-bottom: 10px;
+}
 
 @media (max-width: 600px) {
   .form-group {

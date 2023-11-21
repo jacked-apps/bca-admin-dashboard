@@ -1,4 +1,4 @@
-import { DayOfWeek, Game, PoolHall, Schedule } from './types';
+import { DayOfWeek, Game, PoolHall, Schedule, TeamPlayerRole } from './types';
 export const notDate = 'Invalid Date';
 export const daysOfTheWeek: DayOfWeek[] = [
   'Sunday',
@@ -8,6 +8,13 @@ export const daysOfTheWeek: DayOfWeek[] = [
   'Thursday',
   'Friday',
   'Saturday',
+];
+export const playerOrder: TeamPlayerRole[] = [
+  'captain',
+  'player2',
+  'player3',
+  'player4',
+  'player5',
 ];
 
 export const timestampWeek: number = 604800000; // 604,800,000

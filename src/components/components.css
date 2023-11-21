@@ -1,0 +1,11 @@
+.dark-mode-input {
+  background-color: #333; /* Dark background */
+  color: white; /* Light text */
+  border: 2px solid #00ff00; /* Bright green border */
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.dark-mode-input::placeholder {
+  color: #bbb; /* Lighter placeholder text */
+}

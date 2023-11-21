@@ -124,7 +124,6 @@ export const removeTeamFromSeason = async (
 
 export const updateTeamData = async (teamId: TeamId, data: Team) => {
   try {
-    console.log('UPDATE TEAM', teamId, data.players);
     // reference to the team document
     const teamRef = doc(db, 'teams', teamId);
     // remove player array from document

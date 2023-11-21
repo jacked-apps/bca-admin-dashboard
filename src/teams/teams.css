@@ -4,4 +4,63 @@
   margin-top: 20px;
   width: 100%;
   margin-bottom: 300px;
+  gap: 5px;
+}
+.list-container {
+  margin-top: 20px;
+}
+.list-button-container {
+  display: flex;
+  flex-direction: column;
+}
+.small-button {
+  font-size: x-small;
+  padding: 2px;
+  margin: 5px;
+}
+.list-name {
+  align-self: center;
+  margin-bottom: 10px;
+}
+
+.list-title {
+  border-bottom: 1px solid var(--button-color);
+  align-self: center;
+  margin-bottom: 10px;
+}
+.add-button-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+.details-container {
+  border: 1px solid var(--button-color);
+  padding: 15px 35px;
+}
+.team-name-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.details-title {
+  text-align: center;
+
+  margin-bottom: 10px;
+  width: 100%; /* Ensures the title spans the full width of the container */
+}
+
+.button-group {
+  margin: 25px 0;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+.player-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
 }

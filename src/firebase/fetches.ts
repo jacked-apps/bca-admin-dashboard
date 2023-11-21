@@ -75,7 +75,6 @@ export const fetchPastPlayerData = async (email: Email) => {
 
     if (playerDoc.exists()) {
       const playerData = playerDoc.data();
-      //console.log('Player Profile Data:', playerData); // Log the retrieved player data
       return playerData;
     } else {
       console.log('Player not found in Firestore');
@@ -168,7 +167,7 @@ export const fetchTeamsFromSeason = async (
         const teamDoc = await getDoc(teamRef);
         if (teamDoc.exists()) {
           const teamData = teamDoc.data() as Omit<Team, 'id'>;
-          teamsOutputArray.push({
+          const transformedPlayers = teamsOutputArray.push({
             id: teamDoc.id,
             ...teamData,
           });

@@ -21,9 +21,9 @@ export const SeasonList = ({
       </div>
       {selectedSeason ? (
         <>
-          <div>{selectedSeason.seasonName}</div>
+          <div className='list-name'>{selectedSeason.seasonName}</div>
           <button
-            className='list-button'
+            className='small-button'
             onClick={() => setSelectedSeason(null)}
           >
             Change
@@ -34,7 +34,7 @@ export const SeasonList = ({
           {seasons && seasons.length > 0 ? (
             seasons.map((season, index) => (
               <button
-                className='list-button'
+                className='small-button'
                 key={index}
                 onClick={() => setSelectedSeason(season)}
               >
@@ -43,7 +43,7 @@ export const SeasonList = ({
             ))
           ) : (
             <button
-              className='list-button'
+              className='small-button'
               onClick={() => navigate('/seasons')}
             >
               Create New Season

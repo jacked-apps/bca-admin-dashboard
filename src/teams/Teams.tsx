@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 // Components
 import { TeamsList } from './TeamsList';
 import { TeamDetails } from './TeamDetails';
-import { NameMeButton } from './NameMeButton';
+import { AddTeamButton } from './AddTeamButton';
 import { SeasonList } from '../seasons/SeasonList';
 // Firebase and utility functions
 import { Fetches, Posts, Updates } from '../firebase/firebaseFunctions';
@@ -22,7 +22,6 @@ export const Teams = () => {
         const fetchedTeams = await Fetches.fetchTeamsFromSeason(
           seasonSelected.id,
         );
-        console.log('Fetched teams;', fetchedTeams);
         setTeams(fetchedTeams || []);
       } catch (error) {
         console.error('Error fetching teams from firebase', error);
@@ -46,12 +45,18 @@ export const Teams = () => {
       return;
     }
     try {
+      if (!selectedSeason) {
+        console.error('No season selected');
+        return;
+      }
       await Updates.updateTeamData(editedTeam.id, editedTeam);
       const updatedTeams = teams.map(team =>
         team.id === selectedTeam.id ? editedTeam : team,
       );
       setTeams(updatedTeams);
+
       setSelectedTeam(null);
+      fetchTeams(selectedSeason);
     } catch (error) {
       console.error(`Error updating team data: ${error}`, error);
     }
@@ -106,7 +111,7 @@ export const Teams = () => {
           selectedTeam={selectedTeam}
           setSelectedTeam={setSelectedTeam}
         />
-        <NameMeButton onAdd={handleAddTeam} label='Add Team' />
+        <AddTeamButton onAddTeam={handleAddTeam} />
       </div>
       <div>
         {selectedTeam && (
