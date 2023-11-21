@@ -213,9 +213,10 @@ export const addFieldIfDefined = <T, K extends keyof T>(
  * It creates entries for each week, plus season break and money round
  * the user can alter the usual 16 week season if they wish
  * @param {Date} startDate - The starting day of the season to make the schedule for
- * @param {number} seasonLength - The the length of the season
+ * @param {number} [seasonLength = 16 ] Optional. The the length of the season
  * @param {Schedule} basicSchedule - The the basic schedule for the league.
  */
+
 export const createBasicSchedule = (
   startDate: Date,
   seasonLength: number = 16,
