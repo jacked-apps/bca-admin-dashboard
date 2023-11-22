@@ -93,6 +93,28 @@ export const readableDate = (
       });
 };
 
+/**
+ * converts a Date to a readable string with a short version day of the week
+ * @param {Date | Timestamp | string} date - Date to convert
+ * @param {DateFormat} format - Date to convert
+ * @returns {string} - The date in the format requested
+ */
+
+export const readableDateWithDay = (
+  dateInput: Date | string | Timestamp,
+  format: DateFormat = 'short',
+) => {
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const date = new Date(toJSDate(dateInput));
+  const day = days[date.getDay()];
+  const readableDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: format,
+    day: 'numeric',
+  });
+  return `${day}, ${readableDate}`;
+};
+
 export const getTimeOfYear = (date: Date): TimeOfYear | NotDate => {
   const jsDate = toJSDate(date);
   if (jsDate === notDate) {

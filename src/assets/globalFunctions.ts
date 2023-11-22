@@ -6,13 +6,16 @@
 // 2. Holiday-related functions
 //    - fetchHolidays
 //    - createHolidayObject
-//    - getHolidaysAroundDate
-
 // 3. Team-related functions
 //    - convertPastPlayerToTeamPlayer
-//    - createPlayerData
 // 4. Helper Functions
+//    - safeParseInt
+//    - addFieldIfDefined
+//    - addWeek
 // 5. Schedule-related functions
+//    - createBasicSchedule
+//    - insertHolidayIntoSchedule
+//    - checkForConflicts
 
 // ------------------------------
 // IMPORTS and VARIABLES
@@ -27,8 +30,6 @@ import {
   PoolHall,
   DateOrStamp,
   PastPlayer,
-  TeamPlayerRole,
-  TeamPlayerInfo,
   TeamPlayer,
   Schedule,
 } from './types';
@@ -64,12 +65,6 @@ export const buildSeasonName = (
   }`;
 };
 
-/**
- * Calculates the end date of a season
- * @param {Date | Timestamp | NotDate} startDate - starting date of the season
- * @returns {Date} - a season name, e.g., "9 Ball Tuesday Spring 2023 Billiards Plaza"
- */
-
 // ------------------------------
 // 2. HOLIDAY-RELATED Functions
 // ------------------------------
@@ -82,6 +77,7 @@ const ADDITIONAL_WEEKS = 8;
  * @param {Date} startDate - The start date of the season.
  * @returns {Holiday[]} - A promise that resolves to an array of holidays.
  */
+
 export const fetchHolidays = (startDate: Date | Timestamp | string) => {
   const jsDate = toJSDate(startDate);
   if (jsDate === notDate) {
@@ -138,17 +134,18 @@ export const createHolidayObject = (
 // ------------------------------
 // 3. TEAM-RELATED Functions
 // ------------------------------
+
 /**
  * Converts a pastPlayer object to a teamPlayerObject and assigns it to the specified role.
  * @param {PastPlayer} pastPlayer - A pastPlayer's data to be converted
  * @param {TeamPlayerRole} role - The role (e.g., 'captain', 'player2') that the player will assume in the team.
- * @returns {TeamPlayer} - An object with a single key-value pair, where the key is the team role and the value is the TeamPlayerInfo
+ * @returns {TeamPlayer} - An object with a single key-value pair, where the key is the team role and the value is the TeamPlayer info
  */
 
 export const convertPastPlayerToTeamPlayer = (
   pastPlayer: PastPlayer,
-): TeamPlayerInfo => {
-  const teamPlayerInfo: Partial<TeamPlayerInfo> = {};
+): TeamPlayer => {
+  const teamPlayerInfo: Partial<TeamPlayer> = {};
 
   addFieldIfDefined(teamPlayerInfo, 'firstName', pastPlayer.firstName);
   addFieldIfDefined(teamPlayerInfo, 'lastName', pastPlayer.lastName);
@@ -169,7 +166,7 @@ export const convertPastPlayerToTeamPlayer = (
   addFieldIfDefined(teamPlayerInfo, 'totalWins', totalWins);
   addFieldIfDefined(teamPlayerInfo, 'totalLosses', totalLosses);
 
-  return teamPlayerInfo as TeamPlayerInfo;
+  return teamPlayerInfo as TeamPlayer;
 };
 
 // ------------------------------
@@ -203,14 +200,32 @@ export const addFieldIfDefined = <T, K extends keyof T>(
   }
 };
 
+/**
+ * Adds a week to any date
+ * @param {string} date - The date string to which a week will be added
+ * @returns {string} A formatted date representing the date one week after
+ *                   the given date.  Returns original date if it is invalid
+ */
+
+export const addWeek = (date: string) => {
+  // convert to a js date object
+  const inDate = toJSDate(date);
+  // check if it is a valid date
+  if (inDate === notDate) return date;
+  // adds 7 days
+  inDate.setDate(inDate.getDate() + 7);
+
+  return readableDate(inDate);
+};
+
 // ------------------------------
-// 4. Schedule-Related Functions
+// 5. Schedule-Related Functions
 // ------------------------------
 
 /**
  * Creates a basic schedule for a pool season
  * This function initializes the schedule starting from the startDate
- * It creates entries for each week, plus season break and money round
+ * It creates entries for each week, plus season break, money round and the next Season start
  * the user can alter the usual 16 week season if they wish
  * @param {Date} startDate - The starting day of the season to make the schedule for
  * @param {number} [seasonLength = 16 ] Optional. The the length of the season
@@ -222,7 +237,12 @@ export const createBasicSchedule = (
   seasonLength: number = 16,
 ): Schedule => {
   const basicSchedule: Schedule = {};
-  const currentDate = new Date(startDate.getTime());
+  let currentDate = new Date(startDate.getTime());
+
+  const nextWeek = (date: Date): Date => {
+    const nextWeekTimestamp = date.setDate(date.getDate() + 7);
+    return new Date(nextWeekTimestamp);
+  };
 
   for (let week = 1; week <= seasonLength; week++) {
     const dateKey = readableDate(currentDate);
@@ -231,18 +251,127 @@ export const createBasicSchedule = (
       leaguePlay: true,
       matchUps: 'placeholder-matchupId',
     };
-    currentDate.setDate(currentDate.getDate() + 7);
+
+    currentDate = nextWeek(currentDate);
   }
+  // add season break
   basicSchedule[readableDate(currentDate)] = {
     title: 'Season Break',
     leaguePlay: false,
-    matchUps: 'placeholder-matchupId',
+    matchUps: 'none',
   };
-  currentDate.setDate(currentDate.getDate() + 7);
+  // add money round
+  currentDate = nextWeek(currentDate);
   basicSchedule[readableDate(currentDate)] = {
     title: 'Money Round',
     leaguePlay: true,
     matchUps: 'placeholder-matchupId',
   };
+  // add next season start
+  currentDate = nextWeek(currentDate);
+  const SeasonName = getTimeOfYear(currentDate);
+  basicSchedule[readableDate(currentDate)] = {
+    title: `${SeasonName} Start`,
+    leaguePlay: false,
+    matchUps: 'none',
+  };
   return basicSchedule;
+};
+
+/**
+ * Inserts a holiday into a given schedule and adjusts subsequent weeks.
+ * Adds the holiday to a specified date in the schedule, shifts all following
+ * weeks accordingly, and denotes the start of the next season.
+ * @param {string} holidayName - The name of the holiday to add
+ * @param {string} dateKey - The date key to add the holiday to
+ * @param {Schedule} schedule - The schedule to add the holiday in
+ * @returns {Schedule} - A modified schedule with the holiday inserted and adjusted weeks
+ */
+
+export const insertHolidayIntoSchedule = (
+  holidayName: string,
+  dateKey: string,
+  schedule: Schedule,
+) => {
+  // create a new schedule
+  const newSchedule = { ...schedule };
+
+  if (newSchedule[dateKey]) {
+    // get the old data
+    let oldData = newSchedule[dateKey];
+
+    // insert the holiday in its place
+    newSchedule[dateKey] = {
+      ...newSchedule[dateKey],
+      title: holidayName,
+      leaguePlay: false,
+      matchUps: 'none',
+    };
+
+    // move to the next week
+    dateKey = addWeek(dateKey);
+
+    // loop thru the rest to cascade the data
+    for (const key in newSchedule) {
+      if (key >= dateKey) {
+        // grab the newData
+        const newData = { ...newSchedule[dateKey] };
+
+        // insert old data
+        newSchedule[dateKey] = {
+          ...newSchedule[dateKey],
+          ...oldData,
+        };
+
+        // move to next date
+        dateKey = addWeek(dateKey);
+
+        // update the oldData for the next round
+        oldData = { ...newData };
+      }
+    }
+    // get the "season" name for the next season start
+    const jsDate = toJSDate(dateKey);
+    const nextSeason =
+      jsDate === notDate ? 'Next Season' : getTimeOfYear(jsDate);
+    // create the last entry in the schedule
+    newSchedule[dateKey] = {
+      ...newSchedule[dateKey],
+      title: `${nextSeason} Start`,
+      leaguePlay: false,
+      matchUps: 'none',
+    };
+    return newSchedule;
+  } else return schedule;
+};
+
+/**
+ * Checks for conflicts in a schedule within a specified date range.
+ * A conflict is defined as a date within the range where 'leaguePlay' is true.
+ * The conflict check range is extended to 2 days before the start date and 2 days after the end date.
+ * @param {Schedule} schedule - The schedule object to check for conflicts,
+ *                              typically a mapping of date strings to schedule details.
+ * @param {Date} start - The start date of the range to check for conflicts.
+ * @param {Date} end - The end date of the range to check for conflicts.
+ * @returns {string[]} - An array of date strings from the schedule that are within the conflict range
+ *                       and have 'leaguePlay' set to true.
+ */
+
+export const checkForConflicts = (
+  schedule: Schedule,
+  start: Date,
+  end: Date,
+) => {
+  // Extend the conflict check range: 2 days before start, 2 days after end
+  const rangeStart = new Date(new Date(start).setDate(start.getDate() - 2));
+  const rangeEnd = new Date(new Date(end).setDate(end.getDate() + 2));
+
+  // Filter and return dates from the schedule that fall within the conflict range
+  // and have 'leaguePlay' set to true
+  return Object.keys(schedule).filter(date => {
+    const scheduleDate = new Date(date);
+    const isInRange = scheduleDate >= rangeStart && scheduleDate <= rangeEnd;
+    const isLeaguePlay = schedule[date].leaguePlay;
+    return isInRange && isLeaguePlay;
+  });
 };

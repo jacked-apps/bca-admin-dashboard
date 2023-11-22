@@ -1,4 +1,4 @@
-import { PastPlayer, TeamPlayerRole, TeamPlayerInfo } from './types';
+import { PastPlayer, TeamPlayerRole, TeamPlayer } from './types';
 
 const safeParseInt = (value: string | undefined): number => {
   return parseInt(value ?? '0', 10) || 0;
@@ -17,8 +17,8 @@ const addFieldIfDefined = <T, K extends keyof T>(
 export const convertToTeamPlayer = (
   pastPlayer: PastPlayer,
   role: TeamPlayerRole,
-): { [key in TeamPlayerRole]?: TeamPlayerInfo } => {
-  const teamPlayerInfo: Partial<TeamPlayerInfo> = {};
+): { [key in TeamPlayerRole]?: TeamPlayer } => {
+  const teamPlayerInfo: Partial<TeamPlayer> = {};
 
   addFieldIfDefined(teamPlayerInfo, 'firstName', pastPlayer.firstName);
   addFieldIfDefined(teamPlayerInfo, 'lastName', pastPlayer.lastName);
@@ -39,5 +39,5 @@ export const convertToTeamPlayer = (
   addFieldIfDefined(teamPlayerInfo, 'totalWins', totalWins);
   addFieldIfDefined(teamPlayerInfo, 'totalLosses', totalLosses);
 
-  return { [role]: teamPlayerInfo as TeamPlayerInfo };
+  return { [role]: teamPlayerInfo as TeamPlayer };
 };
