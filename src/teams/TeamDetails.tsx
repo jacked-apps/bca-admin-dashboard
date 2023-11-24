@@ -10,12 +10,14 @@ type TeamDetailsProps = {
   team: Team;
   onSave: (editedTeam: Team) => void;
   onDelete: (teamToDelete: Team) => void;
+  onCancel: () => void;
   playerData: PastPlayer[];
 };
 export const TeamDetails = ({
   team,
   onSave,
   onDelete,
+  onCancel,
   playerData,
 }: TeamDetailsProps) => {
   // set edited Team
@@ -38,8 +40,8 @@ export const TeamDetails = ({
   };
 
   return (
-    <div className='details-container'>
-      <div className='team-name-group'>
+    <div className='d2-container'>
+      <div className='details-name-group'>
         <div className='details-title'>Team Name:</div>
         <input
           value={editedTeam.teamName}
@@ -48,8 +50,7 @@ export const TeamDetails = ({
           }
         />
       </div>
-
-      <div>
+      <div className='details-player-group'>
         <div className='details-title'>Players:</div>
         {team &&
           playerOrder.map(role => {
@@ -66,9 +67,11 @@ export const TeamDetails = ({
             );
           })}
       </div>
-      <div className='button-group'>
+      <div className='details-button-group'>
+        {' '}
         <button onClick={() => onSave(editedTeam)}>Save</button>
         <button onClick={() => onDelete(team)}>Delete</button>
+        <button onClick={onCancel}>Cancel</button>
       </div>
     </div>
   );

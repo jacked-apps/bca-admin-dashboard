@@ -85,6 +85,9 @@ export const Teams = () => {
     }
   };
 
+  const onCancel = () => {
+    setSelectedTeam(null);
+  };
   const handleAddTeam = async (teamName: TeamName) => {
     if (!selectedSeason) {
       console.error('No team selected to save.');
@@ -100,7 +103,7 @@ export const Teams = () => {
 
   return (
     <div className='container'>
-      <div>
+      <div className='teams-lists'>
         <SeasonList
           seasons={seasons}
           selectedSeason={selectedSeason}
@@ -113,12 +116,13 @@ export const Teams = () => {
         />
         <AddTeamButton onAddTeam={handleAddTeam} />
       </div>
-      <div>
+      <div className='teams-details'>
         {selectedTeam && (
           <TeamDetails
             playerData={pastPlayerData}
             team={selectedTeam}
             onSave={handleSave}
+            onCancel={onCancel}
             onDelete={handleDelete}
           />
         )}

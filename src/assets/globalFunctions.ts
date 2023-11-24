@@ -12,10 +12,13 @@
 //    - safeParseInt
 //    - addFieldIfDefined
 //    - addWeek
+//    - shuffleArray
 // 5. Schedule-related functions
 //    - createBasicSchedule
 //    - insertHolidayIntoSchedule
 //    - checkForConflicts
+// 6. Matchup-related functions
+//    -generateRoundRobinSchedule
 
 // ------------------------------
 // IMPORTS and VARIABLES
@@ -32,6 +35,7 @@ import {
   PastPlayer,
   TeamPlayer,
   Schedule,
+  RoundRobinSchedule,
 } from './types';
 
 // ------------------------------
@@ -218,6 +222,26 @@ export const addWeek = (date: string) => {
   return readableDate(inDate);
 };
 
+/**
+ * Takes an array and randomizes the order of the array using the Fisher-Yates shuffle algorithm.
+ * @param {T[]} array - The array to be randomized
+ * @returns {T[]} A new array in a shuffled order
+ */
+
+export const shuffleArray = <T>(array: T[]): T[] => {
+  const shuffled = [...array]; // Create a copy of the array
+
+  //iterate thru the array
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    // pick a random spot in the array
+    const j = Math.floor(Math.random() * (i + 1));
+    // swap places with the current item and the item in the random spot
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+};
+
 // ------------------------------
 // 5. Schedule-Related Functions
 // ------------------------------
@@ -374,4 +398,69 @@ export const checkForConflicts = (
     const isLeaguePlay = schedule[date].leaguePlay;
     return isInRange && isLeaguePlay;
   });
+};
+
+/**
+ * Creates an object with a round robin tournament schedule.  the object will contain a week number key
+ * followed by an array of tuples. each tuple representing a table with each team playing on that table.
+ * @param {number} numberOfTeams - The number of teams
+ * @param {string} lengthOfSeason - The length of the season
+ * @returns {RoundRobinSchedule} - A round robin tournament schedule for the amount of teams given and the given length of the season
+ */
+
+export const generateRoundRobinSchedule = (
+  numberOfTeams: number,
+  lengthOfSeason: number = 16,
+): RoundRobinSchedule => {
+  if (numberOfTeams % 2 !== 0) {
+    numberOfTeams++; // Add a bye if the number of teams is odd
+  }
+
+  const weeks = lengthOfSeason;
+  const halfSize = numberOfTeams / 2;
+  const teams = Array.from({ length: numberOfTeams }, (_, i) => i + 1);
+
+  const schedule: RoundRobinSchedule = {};
+
+  for (let week = 1; week <= weeks; week++) {
+    schedule[`Week ${week}`] = [];
+
+    for (let i = 0; i < halfSize; i++) {
+      const home = teams[i];
+      const away = teams[numberOfTeams - 1 - i];
+
+      // Avoid matching a team with itself (in case of odd number of teams and a bye)
+      if (home !== away) {
+        schedule[`Week ${week}`].push([home, away]);
+      }
+    }
+
+    // Rotate teams for the next round
+    teams.splice(1, 0, teams.pop()!);
+  }
+
+  return schedule;
+};
+
+export const countRepeatedMatchups = (schedule: RoundRobinSchedule) => {
+  const matchupCount: { [key: string]: number } = {};
+
+  for (const week of Object.values(schedule)) {
+    week.forEach(([team1, team2]) => {
+      const matchupKey = [team1, team2].sort().join('-'); // Creates a sorted key (e.g., "1-2" or "2-3")
+      matchupCount[matchupKey] = (matchupCount[matchupKey] || 0) + 1;
+    });
+  }
+
+  // Counting how many matchups occurred more than once
+  const repeatedMatchups: { [team: string]: number } = {};
+  for (const [key, count] of Object.entries(matchupCount)) {
+    if (count > 1) {
+      const [team1, team2] = key.split('-');
+      repeatedMatchups[team1] = (repeatedMatchups[team1] || 0) + 1;
+      repeatedMatchups[team2] = (repeatedMatchups[team2] || 0) + 1;
+    }
+  }
+
+  return repeatedMatchups;
 };

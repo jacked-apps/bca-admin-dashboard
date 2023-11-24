@@ -4,7 +4,13 @@
   margin-top: 20px;
   width: 100%;
   margin-bottom: 300px;
-  gap: 5px;
+}
+
+.teams-lists {
+  width: 25%;
+}
+.teams-details {
+  width: 60%;
 }
 .list-container {
   margin-top: 20px;
@@ -35,32 +41,44 @@
   margin-top: 50px;
 }
 .details-container {
-  border: 1px solid var(--button-color);
-  padding: 15px 35px;
-}
-.team-name-group {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 20px;
+  border: 1px solid var(--button-color);
+  padding: 15px 35px;
+  align-items: center;
+}
+
+.details-name-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px 0;
+  width: 100%;
 }
 
 .details-title {
   text-align: center;
-
   margin-bottom: 10px;
-  width: 100%; /* Ensures the title spans the full width of the container */
-}
-
-.button-group {
-  margin: 25px 0;
-  display: flex;
   width: 100%;
-  justify-content: space-around;
 }
-.player-group {
+
+.details-button-group {
   display: flex;
+  align-self: center;
+  justify-content: space-around;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
+  margin: 50px 0;
+  width: 100%;
+}
+.details-player-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+.d2-container {
+  width: 100%;
+  border: 1px solid var(--button-color);
+  margin: auto;
 }

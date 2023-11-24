@@ -44,6 +44,7 @@ export const TeamsList = ({
           )}
         </div>
       )}
+      {teams && teams.length > 0 && <div>Team count: {teams.length}</div>}
     </div>
   );
 };

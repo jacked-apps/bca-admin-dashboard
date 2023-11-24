@@ -276,3 +276,10 @@ export type TeamPlayer = {
   pastPlayerId: Email; // players id from pastPlayers collection (also the players Email)
   currentUserId: PlayerId; // players id from currentPlayer collection
 };
+// Represents a matchup at a table, with two teams playing against each other.
+export type TableMatchup = [number, number]; // Tuple: [Team1, Team2]
+
+// Represents the entire round-robin schedule with weeks as keys and arrays of table matchups.
+export type RoundRobinSchedule = {
+  [week: string]: TableMatchup[];
+};
