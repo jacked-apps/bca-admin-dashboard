@@ -94,7 +94,50 @@
 .dismiss-button:focus-visible {
   outline: none;
 }
+.finish-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin: 30px;
+}
 
 .finish-message {
   margin-top: 20px;
+}
+.reset-button-container {
+  display: flex;
+  justify-content: end;
+  margin-top: 150px;
+}
+.reset-button {
+  background-color: red;
+}
+
+.add-container {
+  margin-top: 25px;
+}
+
+.add-explain {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.add-explain-text {
+  flex-grow: 1;
+  text-align: left;
+}
+.add-explain-title {
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: 100px;
+}
+.explain-button {
+  padding: 40px;
+  margin: 200px;
+}
+.form-body {
+  width: 75%;
+  margin-bottom: 50px;
 }

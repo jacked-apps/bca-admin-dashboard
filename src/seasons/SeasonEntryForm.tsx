@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import './seasons.css';
+
 // form
 import { useForm } from 'react-hook-form';
 import { seasonSchema } from './schema';
@@ -110,6 +111,8 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   };
 
   const onSubmit = async (data: FormValues) => {
+    console.log('Form data', data);
+    // Uses state date to save to firebase.  Prop data only passed in to validate the form data
     try {
       const updatedSeasonData = {
         ...seasonData,

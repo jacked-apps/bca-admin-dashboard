@@ -42,7 +42,10 @@ h1 {
   padding: 2px;
   margin: 5px;
 }
-
+.medium-button {
+  padding: 4px;
+  font-size: small;
+}
 button {
   border-radius: 10px;
   border: 3px solid transparent;
@@ -54,8 +57,18 @@ button {
   transition: border-color 0.25s;
   background-color: var(--button-color);
 }
+.small-button:hover,
+.medium-button:hover {
+  border-color: #121543;
+}
 button:hover {
   border-color: #121543;
+}
+.small-button:focus,
+.small-button:focus-visible,
+.medium-button:focus,
+.medium-button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }
 button:focus,
 button:focus-visible {

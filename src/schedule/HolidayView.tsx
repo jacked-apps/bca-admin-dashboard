@@ -4,21 +4,26 @@ import './schedule.css';
 import { HolidayList } from './HolidayList';
 import { HolidayDetails } from './HolidayDetails';
 import { FinishSchedule } from './FinishSchedule';
+import { AddHoliday } from './AddHoliday';
+import { updateSeasonSchedule } from '../firebase/updates';
 
 type HolidayViewProps = {
   season: Season;
   holidays: Holiday[];
   editedSchedule: Schedule;
   setEditedSchedule: (schedule: Schedule) => void;
+  getBasicSchedule: () => void;
 };
 export const HolidayView = ({
   season,
   holidays,
   editedSchedule,
   setEditedSchedule,
+  getBasicSchedule,
 }: HolidayViewProps) => {
   const [editedHolidays, setEditedHolidays] = useState<Holiday[]>(holidays);
   const [activeHoliday, setActiveHoliday] = useState<Holiday | null>(null);
+  const [addHoliday, setAddHoliday] = useState<boolean>(false);
 
   const handleDismissHoliday = (holiday: Holiday) => {
     // remove activeHoliday from holiday array
@@ -27,6 +32,25 @@ export const HolidayView = ({
     if (activeHoliday === holiday) {
       setActiveHoliday(null);
     }
+  };
+  const handleAddHoliday = () => {
+    setAddHoliday(true);
+  };
+  const handleSaveSchedule = async () => {
+    try {
+      await updateSeasonSchedule(season.seasonName, editedSchedule);
+      alert(
+        `Your new schedule has been added ${season.seasonName}.\nChoose a new season or move on to Match Ups.`,
+      );
+    } catch (error) {
+      console.error('Failed to update schedule', error);
+      alert('Failed to update the schedule please try again.');
+    }
+  };
+
+  const handleResetSchedule = () => {
+    setEditedHolidays(holidays);
+    getBasicSchedule();
   };
 
   return (
@@ -48,7 +72,19 @@ export const HolidayView = ({
           setActiveHoliday={setActiveHoliday}
         />
       )}
-      {editedHolidays.length === 0 && <FinishSchedule />}
+      {editedHolidays.length === 0 && !addHoliday && (
+        <FinishSchedule
+          handleAddHoliday={handleAddHoliday}
+          handleResetSchedule={handleResetSchedule}
+          handleSaveSchedule={handleSaveSchedule}
+        />
+      )}
+      {editedHolidays.length === 0 && addHoliday && (
+        <AddHoliday
+          setEditedHolidays={setEditedHolidays}
+          setAddHoliday={setAddHoliday}
+        />
+      )}
     </div>
   );
 };

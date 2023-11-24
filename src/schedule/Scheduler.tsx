@@ -47,6 +47,7 @@ export const Scheduler = () => {
               holidays={selectedSeason.holidays}
               editedSchedule={editedSchedule}
               setEditedSchedule={setEditedSchedule}
+              getBasicSchedule={getBasicSchedule}
             />
           </div>
         )}

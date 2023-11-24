@@ -8,7 +8,8 @@
 // 3  Team-related updates
 //    - removeTeamFromSeason
 //    - updateTeamData
-
+// 4. Schedule-related updates
+//    - updateSeasonSchedule
 // ------------------------------
 // IMPORTS and VARIABLES
 // ------------------------------
@@ -29,6 +30,7 @@ import {
   Email,
   PastPlayer,
   PlayerId,
+  Schedule,
   SeasonName,
   Team,
   TeamId,
@@ -77,11 +79,11 @@ export const updatePastPlayerProfile = async (
 };
 
 // ------------------------------
-// 2. SEASON-RELATED POSTS
+// 2. SEASON-RELATED UPDATES
 // ------------------------------
 
 // ------------------------------
-// 2. TEAM-RELATED POSTS
+// 3. TEAM-RELATED UPDATES
 // ------------------------------
 
 /**
@@ -132,5 +134,27 @@ export const updateTeamData = async (teamId: TeamId, data: Team) => {
     await updateDoc(teamRef, data);
   } catch (error) {
     console.error('Error updating team', error);
+  }
+};
+
+/**
+ * Updates the old schedule with the given schedule
+ * @param {SeasonName} seasonId - The seasons name (same as id)
+ * @param {Schedule} schedule - The new schedule object
+ * @returns {Promise<void>} - A promise indicating the completion of adding a team
+ */
+
+export const updateSeasonSchedule = async (
+  seasonName: SeasonName,
+  schedule: Schedule,
+) => {
+  try {
+    //reference to the season document
+    const seasonRef = doc(db, 'seasons', seasonName);
+    await updateDoc(seasonRef, {
+      schedule: schedule,
+    });
+  } catch (error) {
+    console.error('Error updating schedule', error);
   }
 };
