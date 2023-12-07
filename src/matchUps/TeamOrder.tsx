@@ -44,19 +44,20 @@ export const TeamOrder = ({ teamOrder, setTeamOrder }: TeamOrderProps) => {
         <div className='order-title'>Count = {teamOrder.length}</div>
       </div>
 
-      {teamOrder.map((team, index) => (
-        <div key={team.id} className='team-container'>
-          <div className='team-info'>
-            {index + 1}: {team.teamName}
+      {teamOrder.length >= 1 &&
+        teamOrder.map((team, index) => (
+          <div key={team.id} className='team-container'>
+            <div className='team-info'>
+              {index + 1}: {team.teamName}
+            </div>
+            <button
+              className='small-button'
+              onClick={() => handleMove(team.id, team.teamName)}
+            >
+              Move
+            </button>
           </div>
-          <button
-            className='small-button'
-            onClick={() => handleMove(team.id, team.teamName)}
-          >
-            Move
-          </button>
-        </div>
-      ))}
+        ))}
       <div className='button-group'>
         <button className='small-button' onClick={handleRandomize}>
           Random
