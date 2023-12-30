@@ -33,4 +33,3 @@ function generateFourTeamSchedule(
 
 // Example usage:
 const fourTeamSchedule = generateFourTeamSchedule(16); // Generates a 16-week schedule
-console.log(fourTeamSchedule);

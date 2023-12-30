@@ -22,7 +22,7 @@ export function generateAnotherSchedule(
     // Generate round-robin matchups
     // Simplified approach: rotate teams and pair them
     const rotatedTeams = rotateTeams(teams, currentRotation - 1);
-    console.log(rotatedTeams, currentRotation, fullRotation);
+    //console.log(rotatedTeams, currentRotation, fullRotation);
     if (currentRotation === fullRotation) {
       currentRotation = 0;
     }
@@ -36,9 +36,9 @@ export function generateAnotherSchedule(
     schedule[`Week ${week}`] = matchups;
   }
   if (byeTeamNumber !== 0) {
-    console.log('this is the bye team', byeTeamNumber);
+    //.log('this is the bye team', byeTeamNumber);
   } else {
-    console.log('No byes');
+    //console.log('No byes');
   }
   return schedule;
 }

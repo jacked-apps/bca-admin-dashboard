@@ -80,7 +80,7 @@ function adjustTablePlayTimes(schedule: RRSchedule) {
     if (tableMatch.length > 0) {
       firstTrade = [firstFour, tableMatch[0]];
     }
-    console.log('getting first trade:', firstFour, tableMatch, firstTrade);
+    //console.log('getting first trade:', firstFour, tableMatch, firstTrade);
   }
 
   if (firstTrade && firstTrade.length > 0) {
@@ -102,9 +102,9 @@ function adjustTablePlayTimes(schedule: RRSchedule) {
     // if they do good swap.
 
     // if none match
-    console.log('if first trade ', teamOneZeros, teamTwoZeros);
+    //console.log('if first trade ', teamOneZeros, teamTwoZeros);
   }
-  console.log('in adjust', tableCount, fours, firstTrade);
+  //console.log('in adjust', tableCount, fours, firstTrade);
 }
 //////////////////
 /////////////////
