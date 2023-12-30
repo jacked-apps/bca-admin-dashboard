@@ -5,6 +5,7 @@ import {
   RoundRobinScheduleFinished,
 } from '../assets/types';
 import './matchups.css';
+import { Posts } from '../firebase/firebaseFunctions';
 
 type SetTeamsInScheduleProps = {
   teamOrder: Team[];
@@ -13,12 +14,14 @@ type SetTeamsInScheduleProps = {
     finishedSchedule: RoundRobinScheduleFinished | null,
   ) => void;
   finishedSchedule: RoundRobinScheduleFinished | null;
+  seasonId: string;
 };
 export const SetTeamsInSchedule = ({
   teamOrder,
   schedule,
   finishedSchedule,
   setFinishedSchedule,
+  seasonId,
 }: SetTeamsInScheduleProps) => {
   const [inserted, setInserted] = useState(!!finishedSchedule);
 
@@ -37,6 +40,19 @@ export const SetTeamsInSchedule = ({
   const handleRevert = () => {
     setFinishedSchedule(null);
     setInserted(false);
+  };
+
+  const handleSave = async () => {
+    if (!finishedSchedule) {
+      return;
+    }
+    try {
+      await Posts.addFinishedRoundRobin(seasonId, finishedSchedule);
+      alert(`Finished schedule added to ${seasonId} successfully`);
+    } catch (error) {
+      console.error(`Error adding finished schedule: ${error}`);
+      alert('An Error occurred while saving this schedule');
+    }
   };
 
   const handleInsertTeams = () => {
@@ -67,7 +83,6 @@ export const SetTeamsInSchedule = ({
     setInserted(true);
   };
 
-  console.log('setTeams', teamOrder, schedule);
   return (
     <div className='set-team-button'>
       {inserted ? (
@@ -77,6 +92,11 @@ export const SetTeamsInSchedule = ({
           Insert Teams
           <br />
           Into Schedule
+        </button>
+      )}
+      {inserted && (
+        <button className='indent' onClick={handleSave}>
+          Save
         </button>
       )}
     </div>

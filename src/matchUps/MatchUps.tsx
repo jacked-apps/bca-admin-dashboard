@@ -68,6 +68,7 @@ export const MatchUps = () => {
           schedule={schedule}
           setFinishedSchedule={setFinishedSchedule}
           finishedSchedule={finishedSchedule}
+          seasonId={selectedSeason ? selectedSeason.id : ''}
         />
       </div>
       <div className='match-working-area'>

@@ -7,6 +7,8 @@
 //    - addOrUpdateSeason
 // 3  Team-related posts
 //    - addNewTeamToSeason
+// 4  RoundRobin related posts
+//    - saveFinishedRoundRobin
 
 // ------------------------------
 // IMPORTS and VARIABLES
@@ -22,7 +24,12 @@ import {
 } from '@firebase/firestore'; // Import getFirestore from Firebase
 import { db } from '../firebaseConfig';
 import { blankPlayerObject } from '../assets/globalVariables';
-import { Season, SeasonName, TeamName } from '../assets/types';
+import {
+  RoundRobinScheduleFinished,
+  Season,
+  SeasonName,
+  TeamName,
+} from '../assets/types';
 // ------------------------------
 // 1. USER-RELATED POSTS
 // -----------------------------
@@ -82,7 +89,7 @@ export const addOrUpdateSeason = async (
 };
 
 // ------------------------------
-// 2. TEAM-RELATED POSTS
+// 3. TEAM-RELATED POSTS
 // ------------------------------
 
 /**
@@ -113,5 +120,31 @@ export const addNewTeamToSeason = async (
     });
   } catch (error) {
     console.error('Error adding new team to season', error);
+  }
+};
+// ------------------------------
+// 4. FINISHED ROUND ROBIN-RELATED POSTS
+// ------------------------------
+
+/**
+ * Adds a Finished Round Robin schedule to the finishedRoundRobins collection
+ * @param {SeasonName} seasonName - The unique name of a season used as the document ID
+ * @param {RoundRobinScheduleFinished} finishedRoundRobin - The Round Robin Schedule with team names inserted to save to the database
+ * @returns {Promise<void>} - A promise indicating the completion of adding the Finished Round Robin Schedule
+ */
+
+export const addFinishedRoundRobin = async (
+  seasonName: SeasonName,
+  finishedRoundRobin: RoundRobinScheduleFinished,
+) => {
+  try {
+    const finishedRRRef = doc(db, 'finishedRoundRobinSchedules', seasonName);
+    await setDoc(finishedRRRef, {
+      finishedSchedule: finishedRoundRobin,
+    });
+
+    console.log(`Finished round robin schedule added to ${seasonName}`);
+  } catch (error) {
+    console.error('Error adding finished round robin schedule', error);
   }
 };
