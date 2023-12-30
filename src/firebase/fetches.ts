@@ -5,7 +5,8 @@
 //    - fetchAllPastPlayers
 //    - fetchPastPlayerData
 //    - fetchCurrentUserInfo
-// 2. Next fetch type
+// 2. Other fetches
+//    - fetchRoundRobinSchedule
 
 // ------------------------------
 // IMPORTS and VARIABLES
@@ -26,6 +27,7 @@ import {
   Email,
   PastPlayer,
   PlayerId,
+  RoundRobinSchedule,
   Season,
   SeasonName,
   Team,
@@ -167,7 +169,7 @@ export const fetchTeamsFromSeason = async (
         const teamDoc = await getDoc(teamRef);
         if (teamDoc.exists()) {
           const teamData = teamDoc.data() as Omit<Team, 'id'>;
-          const transformedPlayers = teamsOutputArray.push({
+          teamsOutputArray.push({
             id: teamDoc.id,
             ...teamData,
           });
@@ -182,5 +184,38 @@ export const fetchTeamsFromSeason = async (
   } catch (error) {
     console.error(`Error fetching teams from ${seasonId}: `, error);
     return []; // Return an empty array in case of an error
+  }
+};
+
+// ------------------------------
+// 2. OTHER FETCHES
+// ------------------------------
+
+/**
+ * Fetches the round-robin schedule for the specified number of teams.
+ * @param {number} numberOfTeams - The number of teams in the season
+ * @returns {Promise<RoundRobinSchedule>}
+ */
+
+export const fetchRoundRobinSchedule = async (
+  numberOfTeams: number,
+): Promise<RoundRobinSchedule> => {
+  try {
+    const scheduleName = `scheduleFor${numberOfTeams}Teams`;
+    const scheduleRef = doc(db, 'roundRobinSchedules', scheduleName);
+    const scheduleDoc = await getDoc(scheduleRef);
+
+    if (scheduleDoc.exists()) {
+      return scheduleDoc.data() as RoundRobinSchedule;
+    } else {
+      console.log(`${scheduleName} not found in Firestore`);
+      return {};
+    }
+  } catch (error) {
+    console.error(
+      `Error fetching round robin schedule for ${numberOfTeams} teams: `,
+      error,
+    );
+    throw error;
   }
 };

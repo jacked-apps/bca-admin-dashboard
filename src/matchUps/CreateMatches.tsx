@@ -1,53 +1,63 @@
-import { generateRoundRobinSchedule } from '../createRoundRobin/newRoundRobinGenerator';
-import {} from '../createRoundRobin/roundRobinScheduleAlgorithm';
+import { useEffect } from 'react';
 import { RoundRobinSchedule } from '../assets/types';
-import {
-  fourTeam,
-  sixTeam,
-  eightTeam,
-  fourteenTeam,
-} from '../assets/preMadeSchedules';
+import { Fetches } from '../firebase/firebaseFunctions';
+import './matchups.css';
+
 type CreateMatchesProps = {
   numberOfTeams: number;
+  schedule: RoundRobinSchedule | null;
+  setSchedule: (schedule: RoundRobinSchedule) => void;
 };
 
-export const CreateMatches = ({ numberOfTeams }: CreateMatchesProps) => {
-  let useSchedule: RoundRobinSchedule;
-  let hasByeTeam = false;
-  switch (true) {
-    // @ts-expect-error: TS7029
-    case numberOfTeams % 2 !== 0:
-      hasByeTeam = true;
-    // falls through
-    case numberOfTeams <= 4:
-      useSchedule = fourTeam;
-      break;
-    case numberOfTeams <= 6:
-      useSchedule = sixTeam;
-      break;
-    case numberOfTeams <= 8:
-      useSchedule = eightTeam;
-      break;
-    case numberOfTeams <= 14 && numberOfTeams > 12:
-      useSchedule = fourteenTeam;
-      break;
-    default:
-      useSchedule = generateRoundRobinSchedule(numberOfTeams);
-  }
-
-  console.log('create Matches: ', useSchedule);
+export const CreateMatches = ({
+  numberOfTeams,
+  schedule,
+  setSchedule,
+}: CreateMatchesProps) => {
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      let useNumber = numberOfTeams;
+      if (numberOfTeams % 2 === 1) {
+        useNumber++;
+      }
+      try {
+        const fetchedSchedule = await Fetches.fetchRoundRobinSchedule(
+          useNumber,
+        );
+        setSchedule(fetchedSchedule);
+      } catch (error) {
+        console.error('Error fetching schedule', error);
+      }
+    };
+    fetchSchedule();
+  }, [numberOfTeams, setSchedule]);
 
   return (
     <div>
       Create Matches
       <div>
-        {Object.keys(fourteenTeam).map(key => (
-          <div key={key}>
-            {key} {JSON.stringify(fourteenTeam[key])}
-          </div>
-        ))}
+        {schedule &&
+          Object.keys(schedule).length > 0 &&
+          Object.keys(schedule)
+            .sort((a, b) => {
+              const weekNumberA = parseInt(a.split(' ')[1]);
+              const weekNumberB = parseInt(b.split(' ')[1]);
+              return weekNumberA - weekNumberB;
+            })
+            .map(key => (
+              <div key={key} className='schedule-matchups'>
+                <div>{key}</div>
+                {schedule[key].map((table, index) => (
+                  <div key={index}>
+                    <div className='indent'>
+                      Table {index + 1}: -- home: {table.home} vs. away:{' '}
+                      {table.away}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
       </div>
-      {hasByeTeam && <div>will create bye team</div>}
     </div>
   );
 };

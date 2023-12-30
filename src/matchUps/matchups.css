@@ -38,3 +38,35 @@
   align-items: center; /* This aligns the button and text vertically */
   margin-bottom: 10px; /* Optional, for spacing between team entries */
 }
+.schedule-matchups {
+  margin-top: 10px;
+}
+.set-team-button {
+  margin-top: 25px;
+}
+
+.indent {
+  margin-left: 25px;
+}
+.finished-table {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* Three columns: equal size for teams, auto for 'vs.' */
+  justify-items: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  width: 80%;
+  margin-left: 25px;
+}
+
+.table-number {
+  margin-top: 10px;
+  grid-column: 2; /* Align the table number with the 'vs.' column */
+  text-align: center; /* Center the text */
+}
+.vs {
+  grid-column: 2; /* Align the table number with the 'vs.' column */
+  text-align: center; /* Center the text */
+}
+.home {
+  grid-column: 1; /* Align the table number with the 'vs.' column */
+  text-align: center; /* Center the text */
+}

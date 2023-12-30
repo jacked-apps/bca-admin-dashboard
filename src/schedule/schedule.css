@@ -22,6 +22,7 @@
   margin-bottom: 50px;
 }
 .view-group {
+  margin-top: 5px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap; /* Allow view-group items to wrap */

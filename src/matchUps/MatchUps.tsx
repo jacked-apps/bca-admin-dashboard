@@ -5,18 +5,28 @@ import { useFetchSeasons } from '../assets/customHooks';
 import { SeasonList } from '../seasons/SeasonList';
 import { TeamOrder } from './TeamOrder';
 // types
-import { Season, Team } from '../assets/types';
+import {
+  RoundRobinSchedule,
+  RoundRobinScheduleFinished,
+  Season,
+  Team,
+} from '../assets/types';
 // firebase
 import { Fetches } from '../firebase/firebaseFunctions';
 // styles
 import './matchups.css';
 import { CreateMatches } from './CreateMatches';
+import { SetTeamsInSchedule } from './SetTeamsInSchedule';
+import { FinishedMatches } from './FinishedMatches';
 
 export const MatchUps = () => {
   // state
   const { seasons, selectedSeason, setSelectedSeason } = useFetchSeasons();
   const [teams, setTeams] = useState<Team[]>([]);
   const [teamOrder, setTeamOrder] = useState<Team[]>(teams);
+  const [schedule, setSchedule] = useState<RoundRobinSchedule | null>(null);
+  const [finishedSchedule, setFinishedSchedule] =
+    useState<RoundRobinScheduleFinished | null>(null);
 
   // effects
   const fetchTeams = useCallback(async (seasonSelected: Season) => {
@@ -53,9 +63,26 @@ export const MatchUps = () => {
           setSelectedSeason={setSelectedSeason}
         />
         <TeamOrder teamOrder={teamOrder} setTeamOrder={setTeamOrder} />
+        <SetTeamsInSchedule
+          teamOrder={teamOrder}
+          schedule={schedule}
+          setFinishedSchedule={setFinishedSchedule}
+          finishedSchedule={finishedSchedule}
+        />
       </div>
       <div className='match-working-area'>
-        <CreateMatches numberOfTeams={teamOrder.length} />
+        {finishedSchedule ? (
+          <FinishedMatches
+            finishedSchedule={finishedSchedule}
+            selectedSeason={selectedSeason}
+          />
+        ) : (
+          <CreateMatches
+            numberOfTeams={teamOrder.length}
+            schedule={schedule}
+            setSchedule={setSchedule}
+          />
+        )}
       </div>
     </div>
   );

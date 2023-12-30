@@ -25,7 +25,11 @@ export const Scheduler = () => {
   }, [selectedSeason]);
 
   useEffect(() => {
-    getBasicSchedule();
+    if (selectedSeason && selectedSeason.schedule) {
+      setEditedSchedule(selectedSeason.schedule);
+    } else {
+      getBasicSchedule();
+    }
   }, [selectedSeason, getBasicSchedule]);
 
   return (
