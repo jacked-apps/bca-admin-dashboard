@@ -137,7 +137,6 @@ const balanceTeamsByTable = (schedule: RoundRobinSchedule) => {
   const balanceTeamOneSchedule = { ...schedule };
   const numberOfTables = schedule['Week 1'].length;
   let tableNumber = 0;
-  console.log('hello', numberOfTables);
   Object.keys(balanceTeamOneSchedule).forEach(week => {
     const tableArray = balanceTeamOneSchedule[week];
     const tableOne = tableArray.shift();
@@ -234,10 +233,7 @@ const potentialHighSwaps = (
         }
       }
     });
-    console.log(potentialSwaps);
   }
-
-  console.log('swapTables: ', potentialSwaps);
 };
 
 const balanceTableCounts = (schedule: RoundRobinSchedule) => {
@@ -248,7 +244,6 @@ const balanceTableCounts = (schedule: RoundRobinSchedule) => {
     findMinAndMaxTablePlays(schedule);
   const percentage = calculatePercentageOfAverageNumbers(schedule);
   potentialHighSwaps(schedule, maxTeamsAndTables[0]);
-  console.log('max and min', schedule, maxTeamsAndTables, minTeamsAndTables);
 
   return percentage;
 };

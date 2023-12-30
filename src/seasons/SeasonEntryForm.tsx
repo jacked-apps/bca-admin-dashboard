@@ -111,6 +111,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   };
 
   const onSubmit = async (data: FormValues) => {
+    // console log to make sure data is checked and used here.
     console.log('Form data', data);
     // Uses state date to save to firebase.  Prop data only passed in to validate the form data
     try {

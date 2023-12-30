@@ -40,7 +40,6 @@ export const AddHoliday = ({
       alert('You cant end before you start!');
       return;
     }
-    console.log(data);
     const newHoliday: Holiday = {
       date: readableDate(data.startDate),
       name: data.title,
