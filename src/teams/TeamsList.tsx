@@ -4,13 +4,13 @@ import './teams.css';
 type TeamsListProps = {
   teams: Team[];
   selectedTeam: Team | null;
-  setSelectedTeam: (team: Team | null) => void;
+  handleTeamSelect: (teamId: string | null) => void;
 };
 
 export const TeamsList = ({
   teams,
   selectedTeam,
-  setSelectedTeam,
+  handleTeamSelect,
 }: TeamsListProps) => {
   return (
     <div className='list-container'>
@@ -22,7 +22,7 @@ export const TeamsList = ({
           <div className='list-name'>{selectedTeam.teamName}</div>
           <button
             className='small-button'
-            onClick={() => setSelectedTeam(null)}
+            onClick={() => handleTeamSelect(null)}
           >
             Change
           </button>
@@ -34,7 +34,7 @@ export const TeamsList = ({
               <button
                 className='small-button'
                 key={index}
-                onClick={() => setSelectedTeam(team)}
+                onClick={() => handleTeamSelect(team.id)}
               >
                 {team.teamName}
               </button>

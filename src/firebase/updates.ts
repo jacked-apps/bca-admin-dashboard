@@ -17,7 +17,7 @@ import {
   doc,
   updateDoc,
   deleteDoc,
-  //getDoc,
+  getDoc,
   //deleteField,
   //setDoc,
   //addDoc,
@@ -34,6 +34,8 @@ import {
   SeasonName,
   Team,
   TeamId,
+  TeamPlayerRole,
+  TeamPlayer,
 } from '../assets/types';
 //import { blankPlayerArray } from '../constants/globalVariables';
 
@@ -134,6 +136,50 @@ export const updateTeamData = async (teamId: TeamId, data: Team) => {
     await updateDoc(teamRef, data);
   } catch (error) {
     console.error('Error updating team', error);
+  }
+};
+
+/**
+ * Removes a player from a team
+ * @param {TeamId} teamId - The unique ID of a team to update
+ * @param {TeamPlayerRole} role - The Position the player has on the team
+ * @param {TeamPlayer} playerInfo - Player info we are trying to remove
+ * @returns {Promise<void>} - A promise indicating the completion of adding a team
+ */
+
+export const removePlayerFromTeam = async (
+  teamId: TeamId,
+  role: TeamPlayerRole,
+  playerInfo: TeamPlayer,
+) => {
+  try {
+    const teamRef = doc(db, 'teams', teamId);
+    const teamDoc = await getDoc(teamRef);
+    if (teamDoc.exists()) {
+      const teamData = teamDoc.data();
+      const player = teamData.players[role];
+      if (
+        player.firstName === playerInfo.firstName &&
+        player.lastName === playerInfo.lastName
+      ) {
+        console.log('remove player ', teamData);
+        updateDoc(teamRef, {
+          [`players.${role}`]: {
+            email: '',
+            firstName: '',
+            lastName: '',
+            nickname: '',
+            pastPlayerId: '',
+            totalWins: 0,
+            totalLosses: 0,
+          },
+        });
+      }
+    }
+  } catch (error) {
+    console.error(
+      `Error removing ${playerInfo.firstName} ${playerInfo.lastName} from the team`,
+    );
   }
 };
 

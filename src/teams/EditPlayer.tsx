@@ -34,6 +34,7 @@ export const EditPlayer: React.FC<EditPlayerProps> = ({
             setIsEditing(false);
           }}
         />
+
         {playerInfo.firstName !== '' && (
           <button className='small-button' onClick={handleCancelClick}>
             Cancel

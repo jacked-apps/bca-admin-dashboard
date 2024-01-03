@@ -25,7 +25,11 @@ export const Scheduler = () => {
   }, [selectedSeason]);
 
   useEffect(() => {
-    if (selectedSeason && selectedSeason.schedule) {
+    if (
+      selectedSeason &&
+      selectedSeason.schedule &&
+      Object.keys(selectedSeason.schedule).length > 1
+    ) {
       setEditedSchedule(selectedSeason.schedule);
     } else {
       getBasicSchedule();
@@ -34,15 +38,13 @@ export const Scheduler = () => {
 
   return (
     <div>
-      {selectedSeason && <div>{selectedSeason.seasonName}</div>}
       <div className='container'>
-        {!selectedSeason && (
-          <SeasonList
-            seasons={seasons}
-            selectedSeason={selectedSeason}
-            setSelectedSeason={setSelectedSeason}
-          />
-        )}
+        <SeasonList
+          seasons={seasons}
+          selectedSeason={selectedSeason}
+          setSelectedSeason={setSelectedSeason}
+        />
+
         {selectedSeason && (
           <div className='container'>
             <ScheduleView editedSchedule={editedSchedule} />

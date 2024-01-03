@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import './teams.css';
 import { PastPlayerSearch } from '../components/PastPlayerSearch';
 import { convertPastPlayerToTeamPlayer } from '../assets/globalFunctions';
-import { PastPlayer, Team, TeamPlayerRole } from '../assets/types';
+import { PastPlayer, Team, TeamPlayer, TeamPlayerRole } from '../assets/types';
 import { playerOrder } from '../assets/globalVariables';
 import { EditPlayer } from './EditPlayer';
+import { Updates } from '../firebase/firebaseFunctions';
 
 type TeamDetailsProps = {
   team: Team;
@@ -27,6 +28,34 @@ export const TeamDetails = ({
   useEffect(() => {
     setEditedTeam(team);
   }, [team]);
+
+  const handleRemovePlayer = async (
+    role: TeamPlayerRole,
+    playerInfo: TeamPlayer,
+  ) => {
+    const teamId = team.id;
+    try {
+      await Updates.removePlayerFromTeam(teamId, role, playerInfo);
+      // Remove player from local state to trigger a rerender
+      setEditedTeam(prevTeam => {
+        const updatedPlayers = { ...prevTeam.players };
+        updatedPlayers[role] = {
+          currentUserId: '',
+          email: '',
+          firstName: '',
+          lastName: '',
+          nickname: '',
+          pastPlayerId: '',
+          totalWins: 0,
+          totalLosses: 0,
+        };
+        return { ...prevTeam, players: updatedPlayers };
+      });
+    } catch (error) {
+      console.error('Error while removing player', error);
+    }
+    //console.log('Remove Player clicked', role, team, playerInfo);
+  };
 
   const handleSelect = (player: PastPlayer, role: TeamPlayerRole) => {
     const newPlayerData = convertPastPlayerToTeamPlayer(player);
@@ -56,14 +85,23 @@ export const TeamDetails = ({
           playerOrder.map(role => {
             const playerInfo =
               editedTeam.players[role as keyof typeof team.players];
+
             return (
-              <EditPlayer
-                key={role}
-                playerInfo={playerInfo}
-                role={role}
-                onSelect={handleSelect}
-                playerData={playerData}
-              />
+              <div style={{ display: 'flex' }}>
+                <EditPlayer
+                  key={role}
+                  playerInfo={playerInfo}
+                  role={role}
+                  onSelect={handleSelect}
+                  playerData={playerData}
+                />
+                <button
+                  className='small-button'
+                  onClick={() => handleRemovePlayer(role, playerInfo)}
+                >
+                  Remove
+                </button>
+              </div>
             );
           })}
       </div>

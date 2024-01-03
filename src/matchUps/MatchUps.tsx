@@ -45,6 +45,28 @@ export const MatchUps = () => {
   }, []);
 
   useEffect(() => {
+    const fetchFinishedSchedule = async () => {
+      if (selectedSeason) {
+        try {
+          const fetchedFinishedSchedule =
+            await Fetches.fetchFinishedRoundRobinSchedule(selectedSeason.id);
+
+          setFinishedSchedule(fetchedFinishedSchedule);
+
+          console.log(fetchedFinishedSchedule);
+        } catch (error) {
+          console.error(
+            `Error fetching finished round robin for ${selectedSeason.id}`,
+          );
+        }
+      } else {
+        setFinishedSchedule(null);
+      }
+    };
+    fetchFinishedSchedule();
+  }, [selectedSeason]);
+
+  useEffect(() => {
     if (!selectedSeason) {
       setTeamOrder([]);
       return;

@@ -100,6 +100,18 @@ export const Teams = () => {
       console.error(`Error adding new team: ${error}`, error);
     }
   };
+  const handleTeamSelect = async (teamId: string | null) => {
+    if (!teamId) {
+      setSelectedTeam(null);
+      return;
+    }
+    try {
+      const upDatedTeamData = await Fetches.fetchTeamById(teamId);
+      setSelectedTeam(upDatedTeamData);
+    } catch (error) {
+      console.error('Error fetching team data');
+    }
+  };
 
   return (
     <div className='container'>
@@ -112,9 +124,9 @@ export const Teams = () => {
         <TeamsList
           teams={teams}
           selectedTeam={selectedTeam}
-          setSelectedTeam={setSelectedTeam}
+          handleTeamSelect={handleTeamSelect}
         />
-        <AddTeamButton onAddTeam={handleAddTeam} />
+        {selectedSeason && <AddTeamButton onAddTeam={handleAddTeam} />}
       </div>
       <div className='teams-details'>
         {selectedTeam && (

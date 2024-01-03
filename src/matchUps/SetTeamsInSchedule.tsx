@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   RoundRobinSchedule,
   Team,
@@ -36,6 +36,10 @@ export const SetTeamsInSchedule = ({
     }
     return order;
   }, [teamOrder]);
+
+  useEffect(() => {
+    setInserted(!!finishedSchedule);
+  }, [finishedSchedule]);
 
   const handleRevert = () => {
     setFinishedSchedule(null);

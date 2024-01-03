@@ -5,8 +5,12 @@
 //    - fetchAllPastPlayers
 //    - fetchPastPlayerData
 //    - fetchCurrentUserInfo
-// 2. Other fetches
+// 2. Round Robin-related fetches
 //    - fetchRoundRobinSchedule
+//    - fetchFinishedRoundRobinSchedule
+// 3. Team-related fetches
+//    - fetchTeamById
+// 4. xxx-related fetches
 
 // ------------------------------
 // IMPORTS and VARIABLES
@@ -28,10 +32,11 @@ import {
   PastPlayer,
   PlayerId,
   RoundRobinSchedule,
+  RoundRobinScheduleFinished,
   Season,
   SeasonName,
   Team,
-  TeamId,
+  //TeamId,
 } from '../assets/types';
 
 // ------------------------------
@@ -188,7 +193,7 @@ export const fetchTeamsFromSeason = async (
 };
 
 // ------------------------------
-// 2. OTHER FETCHES
+// 2. ROUND ROBIN SCHEDULE RELATED FETCHES
 // ------------------------------
 
 /**
@@ -219,3 +224,67 @@ export const fetchRoundRobinSchedule = async (
     throw error;
   }
 };
+
+/**
+ * Fetches the Finished Round Robin Schedule using the season ID.
+ * @param {SeasonName} seasonId - the ID of the season
+ * @returns {Promise<RoundRobinScheduleFinished | null> } - the team data.
+ */
+
+export const fetchFinishedRoundRobinSchedule = async (
+  seasonId: SeasonName,
+): Promise<RoundRobinScheduleFinished | null> => {
+  try {
+    // create ref
+    const scheduleRef = doc(db, 'finishedRoundRobinSchedules', seasonId);
+    // fetch the document
+    const scheduleDoc = await getDoc(scheduleRef);
+    if (scheduleDoc.exists()) {
+      //if document is there return the data
+      const finishedSchedule = scheduleDoc.data();
+      return finishedSchedule.finishedSchedule as RoundRobinScheduleFinished;
+    } else {
+      // handle errors
+      console.log(
+        `Finished round robin schedule for ${seasonId} not found in Firestore`,
+      );
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error fetching finished round robin for ${seasonId}`);
+    throw error;
+  }
+};
+
+// ------------------------------
+// 3. TEAM RELATED FETCHES
+// ------------------------------
+
+/**
+ * Fetches the Team data using the team ID.
+ * @param {string} teamId - the ID of the user
+ * @returns {Promise<Team | null> } - the team data.
+ */
+
+export const fetchTeamById = async (teamId: string): Promise<Team | null> => {
+  try {
+    const teamRef = doc(db, 'teams', teamId);
+    const teamDoc = await getDoc(teamRef);
+
+    if (teamDoc.exists()) {
+      const teamData = teamDoc.data() as Team;
+      teamData.id = teamDoc.id;
+      return teamData;
+    } else {
+      console.log('Team not found in Firestore');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching team data: ', error);
+    throw error;
+  }
+};
+
+// ------------------------------
+// 4. xxx RELATED FETCHES
+// ------------------------------
