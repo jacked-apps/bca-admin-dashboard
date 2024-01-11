@@ -94,12 +94,23 @@ export type PastPlayer = Names & {
   zip: string; // That cities zip code
   phone: string; // The players phone number
   // archived wins and losses for the last 3 seasons if available
-  seasonOneWins?: string;
-  seasonTwoWins?: string;
-  seasonThreeWins?: string;
-  seasonOneLosses?: string;
-  seasonTwoLosses?: string;
-  seasonThreeLosses?: string;
+  stats?: {
+    [string: SeasonName]: { wins: number; losses: number };
+  };
+  seasons?: string[];
+  teams?: string[];
+};
+
+// Represents a player that has logged into the app with minimal information
+// needed to run most of the seasons data.
+export type CurrentUser = Names & {
+  id: string;
+  isAdmin?: boolean;
+  email: Email;
+  handicap9: number;
+  handicap8: number;
+  seasons: string[];
+  teams: string[];
 };
 
 //Represents a Season document from seasons Collection
@@ -280,7 +291,7 @@ export type TeamPlayer = {
 // Represents a matchup at a table, with two teams playing against each other.
 export type TableMatchup = { home: number; away: number }; // Tuple: [Team1, Team2]
 export type TableMatchupFinished = {
-  home: { teamName: string; id: string };
+  home: { ame: string; id: string };
   away: { teamName: string; id: string };
 };
 

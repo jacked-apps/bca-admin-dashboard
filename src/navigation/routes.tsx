@@ -3,6 +3,7 @@ import { Seasons } from '../seasons/Seasons';
 import { Teams } from '../teams/Teams';
 import { Scheduler } from '../schedule/Scheduler';
 import { MatchUps } from '../matchUps/MatchUps';
+import { Players } from '../players/Players';
 
 export const routes = [
   { name: 'Home', path: '/', Component: Home },
@@ -10,4 +11,5 @@ export const routes = [
   { name: 'Teams', path: '/teams', Component: Teams },
   { name: 'Schedule', path: '/schedule', Component: Scheduler },
   { name: 'Match Ups', path: '/MatchUps', Component: MatchUps },
+  { name: 'Players', path: '/Players', Component: Players },
 ];

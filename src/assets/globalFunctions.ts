@@ -13,6 +13,7 @@
 //    - addFieldIfDefined
 //    - addWeek
 //    - shuffleArray
+//    - formatName
 // 5. Schedule-related functions
 //    - createBasicSchedule
 //    - insertHolidayIntoSchedule
@@ -240,6 +241,16 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   }
 
   return shuffled;
+};
+
+/**
+ * Takes a name and formats it to first letter uppercase while the rest is lowercase eg. 'Edward'.
+ * @param {string} name - The name to be formatted
+ * @returns {string} A formatted name
+ */
+
+export const formatName = (name: string): string => {
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 };
 
 // ------------------------------

@@ -5,12 +5,15 @@
 //    - fetchAllPastPlayers
 //    - fetchPastPlayerData
 //    - fetchCurrentUserInfo
+//    - fetchAllCurrentUsers
 // 2. Round Robin-related fetches
 //    - fetchRoundRobinSchedule
 //    - fetchFinishedRoundRobinSchedule
 // 3. Team-related fetches
 //    - fetchTeamById
-// 4. xxx-related fetches
+//    - fetchTeamsFromSeason
+// 4. Season-related fetches
+//    -fetchCurrentSeasons
 
 // ------------------------------
 // IMPORTS and VARIABLES
@@ -30,12 +33,14 @@ import { db } from '../firebaseConfig';
 import {
   Email,
   PastPlayer,
+  ActivePlayer,
   PlayerId,
   RoundRobinSchedule,
   RoundRobinScheduleFinished,
   Season,
   SeasonName,
   Team,
+  CurrentUser,
   //TeamId,
 } from '../assets/types';
 
@@ -119,76 +124,58 @@ export const fetchCurrentUserInfo = async (playerId: PlayerId) => {
 };
 
 /**
- * Fetches the current seasons not yet completed.
- * @returns {Season[]} - the users current data.
+ * Fetches all of the current user data
+ * @returns {Array<object>} - An array of objects, where each object represents a current users' profile data
+ * with all the properties in that data (firstName lastName etc)
  */
 
-export const fetchCurrentSeasons = async (): Promise<Season[]> => {
+export const fetchAllCurrentUsers = async (): Promise<CurrentUser[]> => {
   try {
-    const seasonQuery = query(
-      collection(db, 'seasons'),
-      where('seasonCompleted', '==', false),
-    );
-    const querySnapshot = await getDocs(seasonQuery);
-    const seasonData: Season[] = [];
+    const querySnapshot = await getDocs(collection(db, 'currentUsers'));
+    const playersData: CurrentUser[] = [];
 
     querySnapshot.forEach(doc => {
-      const newSeasonData = doc.data() as Season;
-      seasonData.push({
-        ...newSeasonData,
+      const playerData = doc.data() as CurrentUser;
+      playersData.push({
+        ...playerData,
         id: doc.id,
       });
     });
 
-    return seasonData;
+    return playersData;
   } catch (error) {
-    console.error('Error fetching current unfinished seasons', error);
+    console.error('Error fetching all current user data', error);
     throw error;
   }
 };
 
 /**
- * Fetches all the teams from the given season.
- * @param {SeasonName} seasonId - the ID of the user
- * @returns {Team[]} - the users current data.
+ * Fetches documents from currentUsers where a given field matches with a searchString
+ * @param {string} fieldName - The name of the filed to search
+ * @param {string} searchString - The string to match in specified field
+ * @returns {Promise<Array>} - An array of matching documents
  */
 
-/**
- * Fetches all the teams from the given season.
- * @param {SeasonName} seasonId - The ID of the season
- * @returns {Promise<Team[]>} - A promise that resolves to an array of team objects
- */
-
-export const fetchTeamsFromSeason = async (
-  seasonId: SeasonName,
-): Promise<Team[]> => {
+export const fetchCurrentUserBySearchField = async (
+  fieldName: string,
+  searchString: string,
+): Promise<CurrentUser[]> => {
   try {
-    const seasonRef = doc(db, 'seasons', seasonId);
-    const seasonDoc = await getDoc(seasonRef);
-    if (seasonDoc.exists()) {
-      const teamsArray = seasonDoc.data().teams;
-      const teamsOutputArray: Team[] = [];
+    const myQuery = query(
+      collection(db, 'currentUsers'),
+      where(fieldName, '==', searchString),
+    );
+    const querySnapshot = await getDocs(myQuery);
+    const results: CurrentUser[] = [];
 
-      for (const teamId of teamsArray) {
-        const teamRef = doc(db, 'teams', teamId);
-        const teamDoc = await getDoc(teamRef);
-        if (teamDoc.exists()) {
-          const teamData = teamDoc.data() as Omit<Team, 'id'>;
-          teamsOutputArray.push({
-            id: teamDoc.id,
-            ...teamData,
-          });
-        }
-      }
-
-      return teamsOutputArray;
-    } else {
-      console.log(`${seasonId} not found in Firestore`);
-      return [];
-    }
+    querySnapshot.forEach(doc => {
+      const data = doc.data() as Omit<CurrentUser, 'id'>;
+      results.push({ id: doc.id, ...data });
+    });
+    return results;
   } catch (error) {
-    console.error(`Error fetching teams from ${seasonId}: `, error);
-    return []; // Return an empty array in case of an error
+    console.error('Error fetching documents');
+    return [];
   }
 };
 
@@ -205,6 +192,9 @@ export const fetchTeamsFromSeason = async (
 export const fetchRoundRobinSchedule = async (
   numberOfTeams: number,
 ): Promise<RoundRobinSchedule> => {
+  if (numberOfTeams < 4) {
+    numberOfTeams = 4;
+  }
   try {
     const scheduleName = `scheduleFor${numberOfTeams}Teams`;
     const scheduleRef = doc(db, 'roundRobinSchedules', scheduleName);
@@ -285,6 +275,73 @@ export const fetchTeamById = async (teamId: string): Promise<Team | null> => {
   }
 };
 
+/**
+ * Fetches all the teams from the given season.
+ * @param {SeasonName} seasonId - The ID of the season
+ * @returns {Promise<Team[]>} - A promise that resolves to an array of team objects
+ */
+
+export const fetchTeamsFromSeason = async (
+  seasonId: SeasonName,
+): Promise<Team[]> => {
+  try {
+    const seasonRef = doc(db, 'seasons', seasonId);
+    const seasonDoc = await getDoc(seasonRef);
+    if (seasonDoc.exists()) {
+      const teamsArray = seasonDoc.data().teams;
+      const teamsOutputArray: Team[] = [];
+
+      for (const teamId of teamsArray) {
+        const teamRef = doc(db, 'teams', teamId);
+        const teamDoc = await getDoc(teamRef);
+        if (teamDoc.exists()) {
+          const teamData = teamDoc.data() as Omit<Team, 'id'>;
+          teamsOutputArray.push({
+            id: teamDoc.id,
+            ...teamData,
+          });
+        }
+      }
+
+      return teamsOutputArray;
+    } else {
+      console.log(`${seasonId} not found in Firestore`);
+      return [];
+    }
+  } catch (error) {
+    console.error(`Error fetching teams from ${seasonId}: `, error);
+    return []; // Return an empty array in case of an error
+  }
+};
 // ------------------------------
-// 4. xxx RELATED FETCHES
+// 4. SEASON RELATED FETCHES
 // ------------------------------
+
+/**
+ * Fetches the current seasons not yet completed.
+ * @returns {Season[]} - the users current data.
+ */
+
+export const fetchCurrentSeasons = async (): Promise<Season[]> => {
+  try {
+    const seasonQuery = query(
+      collection(db, 'seasons'),
+      where('seasonCompleted', '==', false),
+    );
+    const querySnapshot = await getDocs(seasonQuery);
+    const seasonData: Season[] = [];
+
+    querySnapshot.forEach(doc => {
+      const newSeasonData = doc.data() as Season;
+      seasonData.push({
+        ...newSeasonData,
+        id: doc.id,
+      });
+    });
+
+    return seasonData;
+  } catch (error) {
+    console.error('Error fetching current unfinished seasons', error);
+    throw error;
+  }
+};
