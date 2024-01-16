@@ -107,8 +107,7 @@ export type CurrentUser = Names & {
   id: string;
   isAdmin?: boolean;
   email: Email;
-  handicap9: number;
-  handicap8: number;
+  stats?: { [game: string]: { wins: number; losses: number } };
   seasons: string[];
   teams: string[];
 };

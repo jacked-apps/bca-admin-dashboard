@@ -36,6 +36,7 @@ import {
   TeamId,
   TeamPlayerRole,
   TeamPlayer,
+  CurrentUser,
 } from '../assets/types';
 //import { blankPlayerArray } from '../constants/globalVariables';
 
@@ -50,7 +51,10 @@ import {
  * @returns {Promise<void>} - A promise indicating the completion of the update
  */
 
-export const updateUserProfile = async (userId: PlayerId, data: PastPlayer) => {
+export const updateUserProfile = async (
+  userId: PlayerId,
+  data: Partial<CurrentUser>,
+) => {
   try {
     const userRef = doc(db, 'currentUsers', userId);
     await updateDoc(userRef, data);
@@ -63,13 +67,13 @@ export const updateUserProfile = async (userId: PlayerId, data: PastPlayer) => {
 /**
  * Updates the profile data of a pastPlayer
  * @param {Email} email - the email of the player (used as ID)
- * @param {PastPlayer} data - the new data to update
+ * @param {Partial<PastPlayer>} data - the new data to update
  * @returns {Promise<void>} - a promise indicating completion of the update
  */
 
 export const updatePastPlayerProfile = async (
   email: Email,
-  data: PastPlayer,
+  data: Partial<PastPlayer>,
 ) => {
   try {
     const playerRef = doc(db, 'pastPlayers', email);

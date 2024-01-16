@@ -34,7 +34,11 @@ export const Players = () => {
         setChosenPastPlayer={setChosenPastPlayer}
         pastPlayers={pastPlayers}
       />
-      <Info pastPlayer={chosenPastPlayer} currentUser={chosenCurrentUser} />
+      <Info
+        pastPlayer={chosenPastPlayer}
+        currentUser={chosenCurrentUser}
+        setChosenPastPlayer={setChosenPastPlayer}
+      />
       <CurrentPlayersList
         setChosenCurrentUser={setChosenCurrentUser}
         currentUsers={currentUsers}
