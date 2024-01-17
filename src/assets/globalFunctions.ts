@@ -14,6 +14,7 @@
 //    - addWeek
 //    - shuffleArray
 //    - formatName
+//    - formatPhoneNumber
 // 5. Schedule-related functions
 //    - createBasicSchedule
 //    - insertHolidayIntoSchedule
@@ -253,6 +254,33 @@ export const formatName = (name: string): string => {
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 };
 
+/**
+ * Takes a phone number and formats it to be in the format (123) 456-7890.
+ * @param {string} phoneNumber - The phone number to be formatted
+ * @returns {string} A formatted phone number
+ * */
+
+export const formatPhoneNumber = (phoneNumber: string): string => {
+  let newPhoneNumber = phoneNumber;
+  // take all non numbers out of the string
+  newPhoneNumber = phoneNumber.replace(/\D/g, '');
+  // if the string is less than 10 digits return
+  if (newPhoneNumber.length < 10) return phoneNumber;
+  // add a dash - between the 6th and 7th digit
+  newPhoneNumber =
+    newPhoneNumber.substring(0, 3) + '-' + newPhoneNumber.substring(3);
+  // put parentheses around first three digits
+  newPhoneNumber = `(${newPhoneNumber.substring(
+    0,
+    3,
+  )}) ${newPhoneNumber.substring(3)}`;
+  // add a space after the closing paren
+  newPhoneNumber =
+    newPhoneNumber.substring(0, newPhoneNumber.length - 4) +
+    '' +
+    newPhoneNumber.substring(newPhoneNumber.length - 4);
+  return newPhoneNumber;
+};
 // ------------------------------
 // 5. Schedule-Related Functions
 // ------------------------------

@@ -1,24 +1,10 @@
 import React from 'react';
-import { CurrentUser, Names, PastPlayer } from '../assets/types';
+import { CurrentUser, PastPlayer } from '../assets/types';
 import { nameFields, pastPlayerFields } from './buttonFields';
 
 import './players.css';
-import EditNameButton from '../components/EditNamesButton';
 import { NameFields } from './NameFields';
-import { set } from 'firebase/database';
-
-export type PastPlayerProfileFields = Omit<
-  PastPlayer,
-  | 'email'
-  | 'stats'
-  | 'teams'
-  | 'seasons'
-  | 'firstName'
-  | 'lastName'
-  | 'nickname'
-  | 'currentUserId'
-  | 'id'
->;
+import { ProfileFields } from './ProfileFields';
 
 type InfoProps = {
   pastPlayer: PastPlayer | null;
@@ -45,33 +31,10 @@ export const Info = ({
           />
           <div className='grid-label'>Email:</div>
           <div className='grid-value text-button'>{pastPlayer.email}</div>
-          {pastPlayerFields.map(field => {
-            return (
-              <React.Fragment key={field.fieldName}>
-                <div className='grid-label'>{field.name}:</div>
-              </React.Fragment>
-            );
-          })}
-          <div className='grid-label'>Phone:</div>
-          <button className='grid-value text-button'>{pastPlayer.phone}</button>
-
-          <div className='grid-label'>Address:</div>
-          <button className='grid-value text-button'>
-            {pastPlayer.address}
-          </button>
-
-          <div className='grid-label'>City:</div>
-          <div className='grid-value text-button'>
-            {pastPlayer.city}, {pastPlayer.zip ? pastPlayer.zip : 'No Zip'}
-          </div>
-
-          <div className='grid-label'>Zip:</div>
-          <div className='grid-value text-button'>
-            {pastPlayer.zip ? pastPlayer.zip : 'No Zip'}
-          </div>
-
-          <div className='grid-label'>DOB:</div>
-          <div className='grid-value text-button'>{pastPlayer.dob}</div>
+          <ProfileFields
+            pastPlayer={pastPlayer}
+            setChosenPastPlayer={setChosenPastPlayer}
+          />
         </div>
       )}
 

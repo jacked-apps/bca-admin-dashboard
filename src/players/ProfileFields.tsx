@@ -1,19 +1,27 @@
 import React from 'react';
-import { Names, PastPlayer } from '../assets/types';
-import { nameFields } from './buttonFields';
-import { formatName } from '../assets/globalFunctions';
+import { PastPlayer } from '../assets/types';
+import { PastPlayerProfileFields, profileFields } from './buttonFields';
 import { Fetches, Updates } from '../firebase/firebaseFunctions';
+import { formatName, formatPhoneNumber } from '../assets/globalFunctions';
+
 type Props = {
   pastPlayer: PastPlayer;
   setChosenPastPlayer: React.Dispatch<React.SetStateAction<PastPlayer | null>>;
 };
 
-export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
-  const handleClick = async (fieldName: keyof Names, name: string) => {
-    let newValue = prompt(`Enter a new value for ${name}`, '');
+export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
+  const handleClick = async (
+    fieldName: keyof PastPlayerProfileFields,
+    value: string,
+    name: string,
+  ) => {
+    let newValue = prompt(`Enter a new value for ${name}`, value);
     if (newValue === null || newValue === '') return;
-    if (fieldName !== 'nickname') {
+    if (fieldName !== 'city') {
       newValue = formatName(newValue);
+    }
+    if (fieldName === 'phone') {
+      newValue = formatPhoneNumber(newValue);
     }
     try {
       await updatePlayer(fieldName, newValue);
@@ -25,16 +33,14 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
       console.log('Error updating pastPlayer', error);
     }
   };
-  const updatePlayer = async (fieldName: keyof Names, value: string) => {
-    const userId = pastPlayer.currentUserId || null;
+  const updatePlayer = async (
+    fieldName: keyof PastPlayerProfileFields,
+    value: string,
+  ) => {
     try {
       Updates.updatePastPlayerProfile(pastPlayer.email, {
         [fieldName]: value,
       });
-      userId &&
-        Updates.updateUserProfile(userId, {
-          [fieldName]: value,
-        });
       alert(`${fieldName} updated successfully`);
     } catch (error) {
       console.log('Error updating pastPlayer', error);
@@ -42,14 +48,16 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
   };
   return (
     <>
-      {nameFields.map(field => {
-        const fieldName = field.fieldName as keyof Names;
+      {profileFields.map(field => {
+        const fieldName = field.fieldName as keyof PastPlayerProfileFields;
         return (
           <React.Fragment key={field.fieldName}>
             <div className='grid-label'>{field.name}:</div>
             <button
               className='grid-value text-button'
-              onClick={() => handleClick(fieldName, pastPlayer[fieldName])}
+              onClick={() =>
+                handleClick(fieldName, pastPlayer[fieldName], field.name)
+              }
             >
               {pastPlayer[fieldName]}
             </button>

@@ -1,4 +1,4 @@
-import { Names } from '../assets/types';
+import { Names, PastPlayer } from '../assets/types';
 
 export const nameFields: Array<{ fieldName: keyof Names; name: string }> = [
   {
@@ -15,7 +15,23 @@ export const nameFields: Array<{ fieldName: keyof Names; name: string }> = [
   },
 ];
 
-export const pastPlayerFields = [
+export type PastPlayerProfileFields = Omit<
+  PastPlayer,
+  | 'email'
+  | 'stats'
+  | 'teams'
+  | 'seasons'
+  | 'firstName'
+  | 'lastName'
+  | 'nickname'
+  | 'currentUserId'
+  | 'id'
+>;
+
+export const profileFields: Array<{
+  fieldName: keyof PastPlayerProfileFields;
+  name: string;
+}> = [
   {
     fieldName: 'phone',
     name: 'Phone',
