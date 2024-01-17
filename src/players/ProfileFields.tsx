@@ -3,6 +3,7 @@ import { PastPlayer } from '../assets/types';
 import { PastPlayerProfileFields, profileFields } from './buttonFields';
 import { Fetches, Updates } from '../firebase/firebaseFunctions';
 import { formatName, formatPhoneNumber } from '../assets/globalFunctions';
+import { validatePastPlayerFields } from '../assets/validateFields';
 
 type Props = {
   pastPlayer: PastPlayer;
@@ -17,11 +18,19 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
   ) => {
     let newValue = prompt(`Enter a new value for ${name}`, value);
     if (newValue === null || newValue === '') return;
-    if (fieldName !== 'city') {
+    if (fieldName === 'city') {
       newValue = formatName(newValue);
     }
     if (fieldName === 'phone') {
+      console.log('phone number', newValue);
       newValue = formatPhoneNumber(newValue);
+      const validPhone = validatePastPlayerFields('strictPhone', newValue);
+      if (!validPhone) return;
+    }
+    const validated = validatePastPlayerFields(fieldName, newValue);
+    if (!validated) {
+      alert('Invalid value');
+      return;
     }
     try {
       await updatePlayer(fieldName, newValue);

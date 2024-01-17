@@ -3,6 +3,7 @@ import { Names, PastPlayer } from '../assets/types';
 import { nameFields } from './buttonFields';
 import { formatName } from '../assets/globalFunctions';
 import { Fetches, Updates } from '../firebase/firebaseFunctions';
+import { validatePastPlayerFields } from '../assets/validateFields';
 type Props = {
   pastPlayer: PastPlayer;
   setChosenPastPlayer: React.Dispatch<React.SetStateAction<PastPlayer | null>>;
@@ -14,6 +15,11 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
     if (newValue === null || newValue === '') return;
     if (fieldName !== 'nickname') {
       newValue = formatName(newValue);
+    }
+    const validated = validatePastPlayerFields(fieldName, newValue);
+    if (!validated) {
+      alert('Invalid value');
+      return;
     }
     try {
       await updatePlayer(fieldName, newValue);

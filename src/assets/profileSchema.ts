@@ -10,8 +10,20 @@ export type playerSchema = {
   dob: Date;
 };
 
-//phone format (###)###-####
-const phoneRegEx = /^\(\d{3}\) \d{3}-\d{4}$/;
+/**
+ * common phone number formats:
+ * - (###) ###-####
+ * - ###-###-####
+ * - ###.###.####
+ * - ### ### ####
+ * - ##########
+ */
+const phoneRegex =
+  /^\(\d{3}\) \d{3}-\d{4}$|^\d{3}-\d{3}-\d{4}$|^\d{3}\.\d{3}\.\d{4}$|^\d{10}$|^\d{3} \d{3} \d{4}$/;
+
+//phone format (###)###-#### only
+const strictPhoneRegEx = /^\(\d{3}\) \d{3}-\d{4}$/;
+
 //zip format ##### or #####-####
 const zipRegEx = /^\d{5}(-\d{4})?$/;
 // 21 years ago
@@ -28,9 +40,12 @@ export const profileSchema = yup.object().shape({
     .min(2, 'Last name must be at least 2 characters')
     .required('Last name is required'),
   nickname: yup.string().max(10, 'Nickname must be less than 10 characters'),
+  strictPhone: yup
+    .string()
+    .matches(strictPhoneRegEx, 'Phone number must be in (###)###-#### format'),
   phone: yup
     .string()
-    .matches(phoneRegEx, 'Phone number must be in (###)###-#### format')
+    .matches(phoneRegex, 'Phone number must be in (###)###-#### format')
     .required('Phone Number is required'),
   address: yup.string().max(100, 'Address must be less than 100 characters'),
   city: yup

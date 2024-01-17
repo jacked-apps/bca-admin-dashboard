@@ -258,6 +258,8 @@ export const formatName = (name: string): string => {
  * Takes a phone number and formats it to be in the format (123) 456-7890.
  * @param {string} phoneNumber - The phone number to be formatted
  * @returns {string} A formatted phone number
+ * @throws {Error} If the phone number is not 10 digits
+ * const phoneRegEx = /^\(\d{3}\) \d{3}-\d{4}$/;
  * */
 
 export const formatPhoneNumber = (phoneNumber: string): string => {
@@ -268,19 +270,17 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
   if (newPhoneNumber.length < 10) return phoneNumber;
   // add a dash - between the 6th and 7th digit
   newPhoneNumber =
-    newPhoneNumber.substring(0, 3) + '-' + newPhoneNumber.substring(3);
+    newPhoneNumber.substring(0, 6) + '-' + newPhoneNumber.substring(6);
   // put parentheses around first three digits
   newPhoneNumber = `(${newPhoneNumber.substring(
     0,
     3,
   )}) ${newPhoneNumber.substring(3)}`;
-  // add a space after the closing paren
-  newPhoneNumber =
-    newPhoneNumber.substring(0, newPhoneNumber.length - 4) +
-    '' +
-    newPhoneNumber.substring(newPhoneNumber.length - 4);
+  console.log('parens : ', newPhoneNumber);
+
   return newPhoneNumber;
 };
+
 // ------------------------------
 // 5. Schedule-Related Functions
 // ------------------------------
