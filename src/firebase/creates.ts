@@ -67,6 +67,7 @@ export const createPastPlayer = async (pastPlayer: PastPlayer) => {
       phone: pastPlayer.phone,
       address: pastPlayer.address || '',
       city: pastPlayer.city || '',
+      state: pastPlayer.state || '',
       zip: pastPlayer.zip || '',
       stats: pastPlayer.stats || {},
       teams: pastPlayer.teams || [],

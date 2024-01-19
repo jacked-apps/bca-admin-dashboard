@@ -45,6 +45,10 @@ export const profileFields: Array<{
     name: 'City',
   },
   {
+    fieldName: 'state',
+    name: 'State',
+  },
+  {
     fieldName: 'zip',
     name: 'Zip',
   },

@@ -91,6 +91,7 @@ export type PastPlayer = Names & {
   dob: string; // Date of birth of the player
   address: string; // The players Address
   city: string; // The city the player lives in
+  state: string; // The state the player lives in
   zip: string; // That cities zip code
   phone: string; // The players phone number
   // archived wins and losses for the last 3 seasons if available
