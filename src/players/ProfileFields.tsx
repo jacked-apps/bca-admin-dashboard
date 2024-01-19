@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PastPlayer } from '../assets/types';
 import { PastPlayerProfileFields, profileFields } from './buttonFields';
-import { Fetches, Updates } from '../firebase/firebaseFunctions';
+import { Reads, Updates } from '../firebase/firebaseFunctions';
 import { formatName, formatPhoneNumber } from '../assets/globalFunctions';
 import { validatePastPlayerFields } from '../assets/validateFields';
+import { FieldEntryDialog } from '../components/FieldEntryDialog';
 
 type Props = {
   pastPlayer: PastPlayer;
@@ -11,37 +12,57 @@ type Props = {
 };
 
 export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
-  const handleClick = async (
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [title, setTitle] = useState<string | null>(null);
+  const [currentFieldName, setCurrentFieldName] = useState<
+    keyof PastPlayerProfileFields | null
+  >(null);
+
+  const handleDialogOpen = (
     fieldName: keyof PastPlayerProfileFields,
-    value: string,
     name: string,
   ) => {
-    let newValue = prompt(`Enter a new value for ${name}`, value);
-    if (newValue === null || newValue === '') return;
-    if (fieldName === 'city') {
-      newValue = formatName(newValue);
+    setTitle(`Enter a new ${name}`);
+    setCurrentFieldName(fieldName);
+    setIsOpen(true);
+  };
+
+  const handleDialogClose = async (value: string) => {
+    setIsOpen(false);
+    if (!currentFieldName) return;
+    let processedValue = value;
+    if (!currentFieldName || value === null || value === '') return;
+    if (currentFieldName === 'city') {
+      processedValue = formatName(processedValue);
     }
-    if (fieldName === 'phone') {
-      console.log('phone number', newValue);
-      newValue = formatPhoneNumber(newValue);
-      const validPhone = validatePastPlayerFields('strictPhone', newValue);
+    if (currentFieldName === 'phone') {
+      processedValue = formatPhoneNumber(processedValue);
+      const validPhone = validatePastPlayerFields(
+        'strictPhone',
+        processedValue,
+      );
       if (!validPhone) return;
     }
-    const validated = validatePastPlayerFields(fieldName, newValue);
+    const validated = validatePastPlayerFields(
+      currentFieldName,
+      processedValue,
+    );
     if (!validated) {
       alert('Invalid value');
       return;
     }
     try {
-      await updatePlayer(fieldName, newValue);
-      const updatedPlayer = await Fetches.fetchPastPlayerData(pastPlayer.email); //refetch pastPlayer
+      await updatePlayer(currentFieldName, processedValue);
+      const updatedPlayer = await Reads.fetchPastPlayerData(pastPlayer.email); //refetch pastPlayer
       if (updatedPlayer) {
         setChosenPastPlayer(updatedPlayer as PastPlayer);
       }
     } catch (error) {
       console.log('Error updating pastPlayer', error);
     }
+    setCurrentFieldName(null);
   };
+
   const updatePlayer = async (
     fieldName: keyof PastPlayerProfileFields,
     value: string,
@@ -55,6 +76,7 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
       console.log('Error updating pastPlayer', error);
     }
   };
+
   return (
     <>
       {profileFields.map(field => {
@@ -64,15 +86,19 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
             <div className='grid-label'>{field.name}:</div>
             <button
               className='grid-value text-button'
-              onClick={() =>
-                handleClick(fieldName, pastPlayer[fieldName], field.name)
-              }
+              onClick={() => handleDialogOpen(fieldName, field.name)}
             >
               {pastPlayer[fieldName]}
             </button>
           </React.Fragment>
         );
       })}
+      <FieldEntryDialog<string>
+        title={title ? title : ''}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        setValue={value => handleDialogClose(value)}
+      />
     </>
   );
 };

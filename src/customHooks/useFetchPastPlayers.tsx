@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PastPlayer } from '../assets/types';
-import { Fetches } from '../firebase/firebaseFunctions';
+import { Reads } from '../firebase/firebaseFunctions';
 
 const useFetchPastPlayers = () => {
   const [pastPlayers, setPastPlayers] = useState<PastPlayer[]>([]);
@@ -11,7 +11,7 @@ const useFetchPastPlayers = () => {
     const fetchPlayers = async () => {
       setIsLoading(true);
       try {
-        const fetchedPastPlayers = await Fetches.fetchAllPastPlayers();
+        const fetchedPastPlayers = await Reads.fetchAllPastPlayers();
         setPastPlayers(fetchedPastPlayers);
         setIsLoading(false);
       } catch (error) {

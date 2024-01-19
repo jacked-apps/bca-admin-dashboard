@@ -19,8 +19,8 @@
 //    - createBasicSchedule
 //    - insertHolidayIntoSchedule
 //    - checkForConflicts
-// 6. Matchup-related functions
-//    -generateRoundRobinSchedule
+// 6. User-related functions
+//    - generateNickname
 
 // ------------------------------
 // IMPORTS and VARIABLES
@@ -37,7 +37,6 @@ import {
   PastPlayer,
   TeamPlayer,
   Schedule,
-  RoundRobinSchedule,
 } from './types';
 
 // ------------------------------
@@ -79,7 +78,7 @@ const SEASON_LENGTH_WEEKS = 18;
 const ADDITIONAL_WEEKS = 8;
 
 /**
- * Fetches holidays for a given season.
+ * Fetches holidays for a given season from Holidays.
  * @param {Date} startDate - The start date of the season.
  * @returns {Holiday[]} - A promise that resolves to an array of holidays.
  */
@@ -159,7 +158,7 @@ export const convertPastPlayerToTeamPlayer = (
   addFieldIfDefined(teamPlayerInfo, 'currentUserId', pastPlayer.currentUserId);
   addFieldIfDefined(teamPlayerInfo, 'pastPlayerId', pastPlayer.id);
   addFieldIfDefined(teamPlayerInfo, 'email', pastPlayer.email);
-
+  // TODO fix this to align with new stats object
   const totalWins =
     safeParseInt(pastPlayer.seasonOneWins) +
     safeParseInt(pastPlayer.seasonTwoWins) +
@@ -437,4 +436,41 @@ export const checkForConflicts = (
     const isLeaguePlay = schedule[date].leaguePlay;
     return isInRange && isLeaguePlay;
   });
+};
+
+// ------------------------------
+// 6. User-Related Functions
+// ------------------------------
+
+/**
+ * Creates a nickname for a player based on their first and last name ensuring it is
+ * less than 12 characters long for use in the phone app
+ * @param {string} firstName first name of player
+ * @param {string}lastName last name of player
+ * @returns {string} a name for the player no longer than 12 characters
+ */
+
+export const generateNickname = (
+  firstName: string,
+  lastName: string,
+): string => {
+  // create the full name
+  let fullName = `${firstName} ${lastName}`;
+
+  // try full name
+  if (fullName.length < 12) {
+    return fullName;
+  }
+  // try full first name with just initial of last name
+  fullName = `${firstName} ${lastName.charAt(0)}`;
+  if (fullName.length < 12) {
+    return fullName;
+  }
+  // try first name initial with full last name
+  fullName = `${firstName.charAt(0)} ${lastName}`;
+  if (fullName.length < 12) {
+    return fullName;
+  }
+  // last resort use first four letters in each name.
+  return `${firstName.substring(0, 4)} ${lastName.substring(0, 4)}`;
 };

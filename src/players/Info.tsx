@@ -1,10 +1,11 @@
 import React from 'react';
+// types
 import { CurrentUser, PastPlayer } from '../assets/types';
-import { nameFields, pastPlayerFields } from './buttonFields';
-
-import './players.css';
+// components
 import { NameFields } from './NameFields';
 import { ProfileFields } from './ProfileFields';
+// styles
+import './players.css';
 
 type InfoProps = {
   pastPlayer: PastPlayer | null;

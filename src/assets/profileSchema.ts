@@ -8,6 +8,7 @@ export type playerSchema = {
   city: string;
   zip: string;
   dob: Date;
+  email: string;
 };
 
 /**
@@ -61,4 +62,5 @@ export const profileSchema = yup.object().shape({
     .required('Date of Birth is required')
     .typeError('Please provide a valid date')
     .max(minimumAge, 'You must be at least 21 years old'),
+  email: yup.string().email('Please enter a valid email address'),
 });

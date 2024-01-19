@@ -5,7 +5,12 @@ import { TeamDetails } from './TeamDetails';
 import { AddTeamButton } from './AddTeamButton';
 import { SeasonList } from '../seasons/SeasonList';
 // Firebase and utility functions
-import { Fetches, Posts, Updates } from '../firebase/firebaseFunctions';
+import {
+  Reads,
+  Updates,
+  Deletes,
+  Creates,
+} from '../firebase/firebaseFunctions';
 import './teams.css';
 import { useFetchPlayers, useFetchSeasons } from '../assets/customHooks';
 import { Season, Team, TeamName } from '../assets/types';
@@ -19,7 +24,7 @@ export const Teams = () => {
   const fetchTeams = useCallback(async (seasonSelected: Season) => {
     if (seasonSelected) {
       try {
-        const fetchedTeams = await Fetches.fetchTeamsFromSeason(
+        const fetchedTeams = await Reads.fetchTeamsFromSeason(
           seasonSelected.id,
         );
         setTeams(fetchedTeams || []);
@@ -73,7 +78,7 @@ export const Teams = () => {
       )
     ) {
       try {
-        await Updates.removeTeamFromSeason(
+        await Deletes.removeTeamFromSeason(
           selectedSeason.seasonName,
           teamToDelete.id,
         );
@@ -94,7 +99,7 @@ export const Teams = () => {
       return;
     }
     try {
-      await Posts.addNewTeamToSeason(selectedSeason.id, teamName);
+      await Creates.addNewTeamToSeason(selectedSeason.id, teamName);
       fetchTeams(selectedSeason);
     } catch (error) {
       console.error(`Error adding new team: ${error}`, error);
@@ -106,7 +111,7 @@ export const Teams = () => {
       return;
     }
     try {
-      const upDatedTeamData = await Fetches.fetchTeamById(teamId);
+      const upDatedTeamData = await Reads.fetchTeamById(teamId);
       setSelectedTeam(upDatedTeamData);
     } catch (error) {
       console.error('Error fetching team data');

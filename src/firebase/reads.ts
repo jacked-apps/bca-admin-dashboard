@@ -1,18 +1,18 @@
 // ------------------------------
 // TABLE OF CONTENTS
 // ------------------------------
-// 1. User-related fetches
+// 1. User-related reads
 //    - fetchAllPastPlayers
 //    - fetchPastPlayerData
 //    - fetchCurrentUserInfo
 //    - fetchAllCurrentUsers
-// 2. Round Robin-related fetches
+// 2. Round Robin-related reads
 //    - fetchRoundRobinSchedule
 //    - fetchFinishedRoundRobinSchedule
-// 3. Team-related fetches
+// 3. Team-related reads
 //    - fetchTeamById
 //    - fetchTeamsFromSeason
-// 4. Season-related fetches
+// 4. Season-related reads
 //    -fetchCurrentSeasons
 
 // ------------------------------
@@ -45,7 +45,7 @@ import {
 } from '../assets/types';
 
 // ------------------------------
-// 1. USER-RELATED FETCHES
+// 1. USER-RELATED READS
 // ------------------------------
 
 /**
@@ -180,7 +180,7 @@ export const fetchCurrentUserBySearchField = async (
 };
 
 // ------------------------------
-// 2. ROUND ROBIN SCHEDULE RELATED FETCHES
+// 2. ROUND ROBIN SCHEDULE RELATED READS
 // ------------------------------
 
 /**
@@ -247,7 +247,7 @@ export const fetchFinishedRoundRobinSchedule = async (
 };
 
 // ------------------------------
-// 3. TEAM RELATED FETCHES
+// 3. TEAM RELATED READS
 // ------------------------------
 
 /**
@@ -314,7 +314,7 @@ export const fetchTeamsFromSeason = async (
   }
 };
 // ------------------------------
-// 4. SEASON RELATED FETCHES
+// 4. SEASON RELATED READS
 // ------------------------------
 
 /**

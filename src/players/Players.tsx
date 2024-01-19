@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PastPlayersList } from './PastPlayersList';
-import { Fetches } from '../firebase/firebaseFunctions';
+import { Reads } from '../firebase/firebaseFunctions';
 import { CurrentUser, PastPlayer } from '../assets/types';
 import { Info } from './Info';
 import { CurrentPlayersList } from './CurrentPlayersList';
@@ -17,9 +17,9 @@ export const Players = () => {
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const fetchedPastPlayers = await Fetches.fetchAllPastPlayers();
+        const fetchedPastPlayers = await Reads.fetchAllPastPlayers();
         setPastPlayers(fetchedPastPlayers);
-        const fetchedCurrentUsers = await Fetches.fetchAllCurrentUsers();
+        const fetchedCurrentUsers = await Reads.fetchAllCurrentUsers();
         setCurrentUsers(fetchedCurrentUsers);
       } catch (error) {
         console.error('Error fetching players from firebase', error);

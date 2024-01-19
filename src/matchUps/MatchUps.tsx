@@ -12,7 +12,7 @@ import {
   Team,
 } from '../assets/types';
 // firebase
-import { Fetches } from '../firebase/firebaseFunctions';
+import { Reads } from '../firebase/firebaseFunctions';
 // styles
 import './matchups.css';
 import { CreateMatches } from './CreateMatches';
@@ -32,7 +32,7 @@ export const MatchUps = () => {
   const fetchTeams = useCallback(async (seasonSelected: Season) => {
     if (seasonSelected) {
       try {
-        const fetchedTeams = await Fetches.fetchTeamsFromSeason(
+        const fetchedTeams = await Reads.fetchTeamsFromSeason(
           seasonSelected.id,
         );
         setTeamOrder(fetchedTeams || []);
@@ -49,7 +49,7 @@ export const MatchUps = () => {
       if (selectedSeason) {
         try {
           const fetchedFinishedSchedule =
-            await Fetches.fetchFinishedRoundRobinSchedule(selectedSeason.id);
+            await Reads.fetchFinishedRoundRobinSchedule(selectedSeason.id);
 
           setFinishedSchedule(fetchedFinishedSchedule);
 

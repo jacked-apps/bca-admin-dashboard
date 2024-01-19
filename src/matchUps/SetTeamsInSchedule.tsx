@@ -5,7 +5,7 @@ import {
   RoundRobinScheduleFinished,
 } from '../assets/types';
 import './matchups.css';
-import { Posts } from '../firebase/firebaseFunctions';
+import { Creates } from '../firebase/firebaseFunctions';
 
 type SetTeamsInScheduleProps = {
   teamOrder: Team[];
@@ -51,7 +51,7 @@ export const SetTeamsInSchedule = ({
       return;
     }
     try {
-      await Posts.addFinishedRoundRobin(seasonId, finishedSchedule);
+      await Creates.addFinishedRoundRobin(seasonId, finishedSchedule);
       alert(`Finished schedule added to ${seasonId} successfully`);
     } catch (error) {
       console.error(`Error adding finished schedule: ${error}`);

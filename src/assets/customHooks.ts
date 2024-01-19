@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PastPlayer, Season } from './types';
-import { fetchCurrentSeasons, fetchAllPastPlayers } from '../firebase/fetches';
+import { Reads } from '../firebase/firebaseFunctions';
 
 export const useFetchSeasons = () => {
   const [seasons, setSeasons] = useState<Season[]>([]);
@@ -9,7 +9,7 @@ export const useFetchSeasons = () => {
   useEffect(() => {
     const fetchSeasons = async () => {
       try {
-        const fetchedSeasons = await fetchCurrentSeasons();
+        const fetchedSeasons = await Reads.fetchCurrentSeasons();
         setSeasons(fetchedSeasons);
         if (fetchedSeasons.length === 1) {
           setSelectedSeason(fetchedSeasons[0]);
@@ -31,7 +31,7 @@ export const useFetchPlayers = () => {
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const fetch = await fetchAllPastPlayers();
+        const fetch = await Reads.fetchAllPastPlayers();
         setPastPlayerData(fetch);
       } catch (error) {
         console.error('Error retrieving past player data', error);

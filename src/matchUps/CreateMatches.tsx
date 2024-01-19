@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { RoundRobinSchedule } from '../assets/types';
-import { Fetches } from '../firebase/firebaseFunctions';
+import { Reads } from '../firebase/firebaseFunctions';
 import './matchups.css';
 
 type CreateMatchesProps = {
@@ -21,9 +21,7 @@ export const CreateMatches = ({
         useNumber++;
       }
       try {
-        const fetchedSchedule = await Fetches.fetchRoundRobinSchedule(
-          useNumber,
-        );
+        const fetchedSchedule = await Reads.fetchRoundRobinSchedule(useNumber);
         setSchedule(fetchedSchedule);
       } catch (error) {
         console.error('Error fetching schedule', error);

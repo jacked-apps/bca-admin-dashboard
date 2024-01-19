@@ -22,7 +22,7 @@ import {
 
 // types
 import { Game, Holiday, PoolHall, Season } from '../assets/types';
-import { addOrUpdateSeason } from '../firebase/posts';
+import { Creates } from '../firebase/firebaseFunctions';
 
 type FormValues = {
   poolHall: PoolHall;
@@ -119,7 +119,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
         ...seasonData,
         holidays: [...seasonData.holidays, bcaEvent, apaEvent],
       };
-      await addOrUpdateSeason(seasonData.seasonName, updatedSeasonData);
+      await Creates.addOrUpdateSeason(seasonData.seasonName, updatedSeasonData);
       reset();
       alert(
         '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',

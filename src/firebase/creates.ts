@@ -1,9 +1,9 @@
 // ------------------------------
 // TABLE OF CONTENTS
 // ------------------------------
-// 1. User-related posts
-//    -
-// 2. Season-related posts
+// 1. User-related creates
+//    - createPastPlayer
+// 2. Season-related create
 //    - addOrUpdateSeason
 // 3  Team-related posts
 //    - addNewTeamToSeason
@@ -25,15 +25,61 @@ import {
 import { db } from '../firebaseConfig';
 import { blankPlayerObject } from '../assets/globalVariables';
 import {
+  PastPlayer,
   RoundRobinScheduleFinished,
   Season,
   SeasonName,
   TeamName,
 } from '../assets/types';
+import { generateNickname } from '../assets/globalFunctions';
 // ------------------------------
 // 1. USER-RELATED POSTS
-// -----------------------------
+// ------------------------------
 
+/**
+ * Creates a pastPlayer with the minimum required data.
+ * @param pastPlayer - The profileData of the user.
+ * @returns {Promise<void>} Promise resolving to the created pastPlayer
+ */
+
+export const createPastPlayer = async (pastPlayer: PastPlayer) => {
+  if (
+    !pastPlayer.email ||
+    !pastPlayer.firstName ||
+    !pastPlayer.lastName ||
+    !pastPlayer.phone
+  ) {
+    console.error(
+      'Past Player must have a first name, last name, email, and  phone number',
+    );
+    return;
+  }
+
+  try {
+    const playerRef = doc(db, 'pastPlayers', pastPlayer.email);
+    await setDoc(playerRef, {
+      firstName: pastPlayer.firstName,
+      lastName: pastPlayer.lastName,
+      nickname:
+        pastPlayer.nickname ||
+        generateNickname(pastPlayer.firstName, pastPlayer.lastName),
+      email: pastPlayer.email,
+      phone: pastPlayer.phone,
+      address: pastPlayer.address || '',
+      city: pastPlayer.city || '',
+      zip: pastPlayer.zip || '',
+      stats: pastPlayer.stats || {},
+      teams: pastPlayer.teams || [],
+      seasons: pastPlayer.seasons || [],
+      currentUserId: pastPlayer.currentUserId || '',
+      dob: pastPlayer.dob || '',
+      id: pastPlayer.id || pastPlayer.email,
+    });
+    console.log('Past Player created successfully');
+  } catch (err) {
+    console.error('Error creating new pastPlayer', err);
+  }
+};
 // ------------------------------
 // 2. SEASON-RELATED POSTS
 // ------------------------------

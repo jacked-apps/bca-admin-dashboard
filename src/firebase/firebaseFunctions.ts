@@ -1,5 +1,7 @@
-import * as Fetches from './fetches';
-import * as Posts from './posts';
-import * as Updates from './updates';
+import * as Creates from './creates';
+import * as Reads from './reads';
 
-export { Fetches, Posts, Updates };
+import * as Updates from './updates';
+import * as Deletes from './deletes';
+
+export { Creates, Reads, Updates, Deletes };

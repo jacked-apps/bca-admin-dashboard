@@ -38,7 +38,6 @@ import {
   TeamPlayer,
   CurrentUser,
 } from '../assets/types';
-//import { blankPlayerArray } from '../constants/globalVariables';
 
 // ------------------------------
 // 1. USER-RELATED UPDATES
@@ -91,37 +90,6 @@ export const updatePastPlayerProfile = async (
 // ------------------------------
 // 3. TEAM-RELATED UPDATES
 // ------------------------------
-
-/**
- * Removes a team from the teams table and removes the team id from the seasons teams array
- * @param {SeasonName} seasonName - The unique name of a season used as the document ID
- * @param {TeamId} teamId - The unique ID of a team to remove to the seasonName
- * @returns {Promise<void>} - A promise indicating the completion of adding a team
- */
-
-export const removeTeamFromSeason = async (
-  seasonName: SeasonName,
-  teamId: TeamId,
-) => {
-  try {
-    //reference to the season document
-    const seasonRef = doc(db, 'seasons', seasonName);
-
-    // remove the teamId from the teams array
-    await updateDoc(seasonRef, {
-      teams: arrayRemove(teamId),
-    });
-
-    //reference to the team document
-    const teamRef = doc(db, 'teams', teamId);
-
-    // remove the team document from the teams collection
-    await deleteDoc(teamRef);
-    console.log('Successfully removed team from season and deleted team');
-  } catch (error) {
-    console.error(`Error removing team from ${seasonName}`, error);
-  }
-};
 
 /**
  * Updates a team document with new information
@@ -186,6 +154,10 @@ export const removePlayerFromTeam = async (
     );
   }
 };
+
+// ------------------------------
+// 2. SCHEDULE-RELATED UPDATES
+// ------------------------------
 
 /**
  * Updates the old schedule with the given schedule
