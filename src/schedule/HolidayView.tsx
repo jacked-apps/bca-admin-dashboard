@@ -6,6 +6,7 @@ import { HolidayDetails } from './HolidayDetails';
 import { FinishSchedule } from './FinishSchedule';
 import { AddHoliday } from './AddHoliday';
 import { updateSeasonSchedule } from '../firebase/updates';
+import { toast } from 'react-toastify';
 
 type HolidayViewProps = {
   season: Season;
@@ -39,12 +40,12 @@ export const HolidayView = ({
   const handleSaveSchedule = async () => {
     try {
       await updateSeasonSchedule(season.seasonName, editedSchedule);
-      alert(
+      toast.success(
         `Your new schedule has been added ${season.seasonName}.\nChoose a new season or move on to Match Ups.`,
       );
     } catch (error) {
       console.error('Failed to update schedule', error);
-      alert('Failed to update the schedule please try again.');
+      toast.error('Failed to update the schedule please try again.');
     }
   };
 

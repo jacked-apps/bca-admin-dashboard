@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import './seasons.css';
+import { toast } from 'react-toastify';
 
 // form
 import { useForm } from 'react-hook-form';
@@ -121,12 +122,12 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
       };
       await Creates.addOrUpdateSeason(seasonData.seasonName, updatedSeasonData);
       reset();
-      alert(
+      toast.success(
         '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
       );
     } catch (error) {
       console.error('Error adding/updating season', error);
-      alert(`Failed to update season ${seasonData.seasonName}`);
+      toast.error(`Failed to update season ${seasonData.seasonName}`);
     }
   };
 

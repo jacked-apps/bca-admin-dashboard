@@ -1,5 +1,5 @@
-import { set } from 'firebase/database';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 type FieldEntryDialogProps<T> = {
   title: string;
@@ -21,7 +21,7 @@ export const FieldEntryDialog = <T,>({
 
   const handleSubmit = () => {
     if (confirmMe && input !== confirmInput) {
-      alert('Entries do not match');
+      toast.warn('Entries do not match', {});
       return;
     }
     setValue(input as unknown as T);

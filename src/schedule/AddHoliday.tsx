@@ -1,4 +1,6 @@
 import React, { useRef } from 'react';
+import { toast } from 'react-toastify';
+
 import { Explanation } from './Explanation';
 // form
 import { useForm, Controller } from 'react-hook-form';
@@ -37,7 +39,7 @@ export const AddHoliday = ({
 
   const onSubmit = (data: FormValues) => {
     if (data.endDate < data.startDate) {
-      alert('You cant end before you start!');
+      toast.warn('You cant end before you start!');
       return;
     }
     const newHoliday: Holiday = {

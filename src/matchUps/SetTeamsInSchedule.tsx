@@ -6,6 +6,7 @@ import {
 } from '../assets/types';
 import './matchups.css';
 import { Creates } from '../firebase/firebaseFunctions';
+import { toast } from 'react-toastify';
 
 type SetTeamsInScheduleProps = {
   teamOrder: Team[];
@@ -52,10 +53,10 @@ export const SetTeamsInSchedule = ({
     }
     try {
       await Creates.addFinishedRoundRobin(seasonId, finishedSchedule);
-      alert(`Finished schedule added to ${seasonId} successfully`);
+      toast.success(`Finished schedule added to ${seasonId} successfully`);
     } catch (error) {
       console.error(`Error adding finished schedule: ${error}`);
-      alert('An Error occurred while saving this schedule');
+      toast.error('An Error occurred while saving this schedule');
     }
   };
 

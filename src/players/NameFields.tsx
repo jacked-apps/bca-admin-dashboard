@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+
 import { Names, PastPlayer } from '../assets/types';
 import { nameFields } from './buttonFields';
 import { formatName } from '../assets/globalFunctions';
@@ -36,7 +38,7 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
       processedValue,
     );
     if (!validated) {
-      alert('Invalid value');
+      toast.warn('Invalid value');
       return;
     }
     try {
@@ -59,7 +61,7 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
         Updates.updateUserProfile(userId, {
           [fieldName]: value,
         });
-      alert(`${fieldName} updated successfully`);
+      toast.success(`${fieldName} updated successfully`);
     } catch (error) {
       console.log('Error updating pastPlayer', error);
     }

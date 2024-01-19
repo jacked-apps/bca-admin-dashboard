@@ -1,6 +1,7 @@
 import { shuffleArray } from '../assets/globalFunctions';
 import { Team } from '../assets/types';
 import './matchups.css';
+import { toast } from 'react-toastify';
 
 type TeamOrderProps = {
   teamOrder: Team[];
@@ -27,7 +28,7 @@ export const TeamOrder = ({ teamOrder, setTeamOrder }: TeamOrderProps) => {
         newOrder.splice(index, 0, movedTeam);
         setTeamOrder(newOrder);
       } else {
-        alert('Invalid position entered');
+        toast.warn('Invalid position entered');
       }
     }
   };

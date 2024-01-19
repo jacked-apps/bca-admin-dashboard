@@ -1,6 +1,7 @@
 import { CurrentUser, Email, Names, PastPlayer } from '../assets/types';
 import { Updates } from '../firebase/firebaseFunctions';
 import { formatName } from '../assets/globalFunctions';
+import { toast } from 'react-toastify';
 
 export const handleUpdatePastPlayer = async (
   email: Email | null,
@@ -11,7 +12,7 @@ export const handleUpdatePastPlayer = async (
   try {
     if (email) {
       await Updates.updatePastPlayerProfile(email, data);
-      alert(`${fieldName} updated successfully`);
+      toast.success(`${fieldName} updated successfully`);
     }
   } catch (error) {
     console.log('Error updating pastPlayer', error);
@@ -27,7 +28,7 @@ export const handleUpdateCurrentUser = async (
   try {
     if (id) {
       await Updates.updateUserProfile(id, data);
-      alert(`${fieldName} updated successfully`);
+      toast.success(`${fieldName} updated successfully`);
     }
   } catch (error) {
     console.log('Error updating currentUser', error);

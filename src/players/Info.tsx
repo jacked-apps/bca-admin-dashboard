@@ -4,6 +4,7 @@ import { CurrentUser, PastPlayer } from '../assets/types';
 // components
 import { NameFields } from './NameFields';
 import { ProfileFields } from './ProfileFields';
+import { ToastTestButton } from '../components/ToastButton';
 // styles
 import './players.css';
 

@@ -53,6 +53,7 @@ export const profileSchema = yup.object().shape({
     .string()
     .max(40, 'City must be less than 40 characters')
     .required('City is required'),
+  state: yup.string(),
   zip: yup
     .string()
     .matches(zipRegEx, 'Please enter a valid ZIP code')

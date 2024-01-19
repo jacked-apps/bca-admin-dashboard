@@ -5,6 +5,7 @@ import { Reads, Updates } from '../firebase/firebaseFunctions';
 import { formatName, formatPhoneNumber } from '../assets/globalFunctions';
 import { validatePastPlayerFields } from '../assets/validateFields';
 import { FieldEntryDialog } from '../components/FieldEntryDialog';
+import { toast } from 'react-toastify';
 
 type Props = {
   pastPlayer: PastPlayer;
@@ -48,7 +49,7 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
       processedValue,
     );
     if (!validated) {
-      alert('Invalid value');
+      toast.warn('Invalid value');
       return;
     }
     try {
@@ -71,7 +72,7 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
       Updates.updatePastPlayerProfile(pastPlayer.email, {
         [fieldName]: value,
       });
-      alert(`${fieldName} updated successfully`);
+      toast.success(`${fieldName} updated successfully`);
     } catch (error) {
       console.log('Error updating pastPlayer', error);
     }
