@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { PastPlayer } from '../assets/types';
-import { Reads, Creates, Deletes } from '../firebase/firebaseFunctions';
+import { Reads, Creates } from '../firebase/firebaseFunctions';
 import { FieldEntryDialog } from '../components/FieldEntryDialog';
 
 type Props = {
@@ -41,7 +41,7 @@ export const EmailField = ({ pastPlayer, setChosenPastPlayer }: Props) => {
       }
       setChosenPastPlayer(newPlayer as PastPlayer);
       // delete the old document
-      await Deletes.deletePastPlayer(pastPlayer.email);
+      // await Deletes.deletePastPlayer(pastPlayer.email);
       toast.success(`Email updated successfully`);
     } catch (error) {
       console.log('Error updating pastPlayer', error);

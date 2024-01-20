@@ -1,5 +1,6 @@
 import { Navigation } from './navigation/Navigation';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './firebaseConfig';
 function App() {
   return (

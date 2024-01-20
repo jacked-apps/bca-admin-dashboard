@@ -32,6 +32,16 @@ import {
   TeamName,
 } from '../assets/types';
 import { generateNickname } from '../assets/globalFunctions';
+import { Reads } from './firebaseFunctions';
+import { toast } from 'react-toastify';
+
+import {
+  failedCreate,
+  tryAgain,
+  createSuccess,
+  updateSuccess,
+} from './firebaseConsts';
+
 // ------------------------------
 // 1. USER-RELATED POSTS
 // ------------------------------
@@ -51,11 +61,20 @@ export const createPastPlayer = async (pastPlayer: PastPlayer) => {
   ) {
     console.error(
       'Past Player must have a first name, last name, email, and  phone number',
+      tryAgain,
     );
     return;
   }
 
   try {
+    // check for duplicate email
+    const existingDoc = await Reads.fetchPastPlayerData(pastPlayer.email);
+    console.log(existingDoc);
+    if (existingDoc) {
+      console.log('Email already in use.');
+      toast.error(`${failedCreate} Player - Email already in use. ${tryAgain}`);
+      return false;
+    }
     const playerRef = doc(db, 'pastPlayers', pastPlayer.email);
     await setDoc(playerRef, {
       firstName: pastPlayer.firstName,
@@ -76,9 +95,10 @@ export const createPastPlayer = async (pastPlayer: PastPlayer) => {
       dob: pastPlayer.dob || '',
       id: pastPlayer.id || pastPlayer.email,
     });
-    console.log('Past Player created successfully');
+    console.log(`Past Player ${createSuccess}`);
+    toast.success(`Player ${createSuccess}`);
   } catch (err) {
-    console.error('Error creating new pastPlayer', err);
+    console.error(failedCreate, ' pastPlayer', err);
   }
 };
 // ------------------------------
@@ -109,7 +129,7 @@ export const addOrUpdateSeason = async (
       // update doc
       if (isConfirmed) {
         await updateDoc(seasonRef, data);
-        console.log('Season updated successfully');
+        console.log('Season', updateSuccess);
       } else {
         // cancel update
         console.log('Season Update cancelled');
@@ -123,7 +143,7 @@ export const addOrUpdateSeason = async (
       // create season
       if (isConfirmed) {
         await setDoc(seasonRef, data);
-        console.log('Season added successfully');
+        console.log('Season ', createSuccess);
       } else {
         // cancel create season
         console.log('Create season cancelled');
@@ -166,7 +186,7 @@ export const addNewTeamToSeason = async (
       teams: arrayUnion(teamRef.id),
     });
   } catch (error) {
-    console.error('Error adding new team to season', error);
+    console.error(failedCreate, 'Team in Season', error);
   }
 };
 // ------------------------------
@@ -190,8 +210,10 @@ export const addFinishedRoundRobin = async (
       finishedSchedule: finishedRoundRobin,
     });
 
-    console.log(`Finished round robin schedule added to ${seasonName}`);
+    console.log(
+      `Finished Round Robin Schedule in ${seasonName} ${createSuccess}`,
+    );
   } catch (error) {
-    console.error('Error adding finished round robin schedule', error);
+    console.error(failedCreate, 'Round Robin Schedule', error);
   }
 };

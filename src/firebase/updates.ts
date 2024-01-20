@@ -38,6 +38,7 @@ import {
   TeamPlayer,
   CurrentUser,
 } from '../assets/types';
+import { failedUpdate, updateSuccess } from './firebaseConsts';
 
 // ------------------------------
 // 1. USER-RELATED UPDATES
@@ -57,9 +58,9 @@ export const updateUserProfile = async (
   try {
     const userRef = doc(db, 'currentUsers', userId);
     await updateDoc(userRef, data);
-    console.log('User profile updated successfully');
+    console.log('User profile', updateSuccess);
   } catch (error) {
-    console.error('Error updating user profile', error);
+    console.error(failedUpdate, 'User profile', error);
   }
 };
 
@@ -77,9 +78,9 @@ export const updatePastPlayerProfile = async (
   try {
     const playerRef = doc(db, 'pastPlayers', email);
     await updateDoc(playerRef, data);
-    console.log('pastPlayer profile updated successfully');
+    console.log('Player profile', updateSuccess);
   } catch (error) {
-    console.error('Error updating pastPlayer profile', error);
+    console.error(failedUpdate, 'Player profile', error);
   }
 };
 
@@ -107,7 +108,7 @@ export const updateTeamData = async (teamId: TeamId, data: Team) => {
     // update team data
     await updateDoc(teamRef, data);
   } catch (error) {
-    console.error('Error updating team', error);
+    console.error(failedUpdate, 'Team', error);
   }
 };
 
@@ -177,6 +178,6 @@ export const updateSeasonSchedule = async (
       schedule: schedule,
     });
   } catch (error) {
-    console.error('Error updating schedule', error);
+    console.error(failedUpdate, 'Schedule', error);
   }
 };

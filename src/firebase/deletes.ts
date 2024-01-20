@@ -12,6 +12,7 @@
 import { doc, deleteDoc, updateDoc, arrayRemove } from '@firebase/firestore'; // Import getFirestore from Firebase
 import { db } from '../firebaseConfig';
 import { Email, SeasonName, TeamId } from '../assets/types';
+import { deleteFailed, deleteSuccess, fromStore } from './firebaseConsts';
 // ------------------------------
 // 1. USER-RELATED
 // ------------------------------
@@ -53,8 +54,14 @@ export const removeTeamFromSeason = async (
 
     // remove the team document from the teams collection
     await deleteDoc(teamRef);
-    console.log('Successfully removed team from season and deleted team');
+    console.log(
+      deleteSuccess,
+      'Team from Season and ',
+      deleteSuccess,
+      'Team',
+      fromStore,
+    );
   } catch (error) {
-    console.error(`Error removing team from ${seasonName}`, error);
+    console.error(`${deleteFailed} Team from ${seasonName}`, error);
   }
 };

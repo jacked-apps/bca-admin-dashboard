@@ -43,6 +43,7 @@ import {
   CurrentUser,
   //TeamId,
 } from '../assets/types';
+import { failedFetch, fromStore, notFound } from './firebaseConsts';
 
 // ------------------------------
 // 1. USER-RELATED READS
@@ -69,7 +70,7 @@ export const fetchAllPastPlayers = async (): Promise<PastPlayer[]> => {
 
     return playersData;
   } catch (error) {
-    console.error('Error fetching all past player data', error);
+    console.error(failedFetch, 'all Past Players', fromStore, error);
     throw error;
   }
 };
@@ -89,11 +90,11 @@ export const fetchPastPlayerData = async (email: Email) => {
       const playerData = playerDoc.data();
       return playerData;
     } else {
-      console.log('Player not found in Firestore');
+      console.log('Player', notFound);
       return null;
     }
   } catch (error) {
-    console.error('Error fetching player profile data:', error);
+    console.error(failedFetch, 'Player profile data', fromStore, error);
     throw error; // Handle the error appropriately in your application
   }
 };
@@ -114,11 +115,11 @@ export const fetchCurrentUserInfo = async (playerId: PlayerId) => {
       console.log('Current User Info Fetch', userData);
       return userData;
     } else {
-      console.log('User not found in Firestore');
+      console.log('User', notFound);
       return null;
     }
   } catch (error) {
-    console.error('Error fetching current user data: ', error);
+    console.error(failedFetch, 'Current User data', fromStore, error);
     throw error;
   }
 };
@@ -144,7 +145,7 @@ export const fetchAllCurrentUsers = async (): Promise<CurrentUser[]> => {
 
     return playersData;
   } catch (error) {
-    console.error('Error fetching all current user data', error);
+    console.error(failedFetch, 'all Current Users.', fromStore, error);
     throw error;
   }
 };
@@ -174,7 +175,7 @@ export const fetchCurrentUserBySearchField = async (
     });
     return results;
   } catch (error) {
-    console.error('Error fetching documents');
+    console.error(failedFetch, 'Current User documents requested', fromStore);
     return [];
   }
 };
@@ -203,12 +204,12 @@ export const fetchRoundRobinSchedule = async (
     if (scheduleDoc.exists()) {
       return scheduleDoc.data() as RoundRobinSchedule;
     } else {
-      console.log(`${scheduleName} not found in Firestore`);
+      console.log(scheduleName, notFound);
       return {};
     }
   } catch (error) {
     console.error(
-      `Error fetching round robin schedule for ${numberOfTeams} teams: `,
+      `${failedFetch} Round Robin Schedule for ${numberOfTeams} teams`,
       error,
     );
     throw error;
@@ -235,13 +236,11 @@ export const fetchFinishedRoundRobinSchedule = async (
       return finishedSchedule.finishedSchedule as RoundRobinScheduleFinished;
     } else {
       // handle errors
-      console.log(
-        `Finished round robin schedule for ${seasonId} not found in Firestore`,
-      );
+      console.log(`Finished Round Robin Schedule for ${seasonId} ${notFound}`);
       return null;
     }
   } catch (error) {
-    console.error(`Error fetching finished round robin for ${seasonId}`);
+    console.error(`${failedFetch} Finished Round Robin for ${seasonId}`);
     throw error;
   }
 };
@@ -266,11 +265,11 @@ export const fetchTeamById = async (teamId: string): Promise<Team | null> => {
       teamData.id = teamDoc.id;
       return teamData;
     } else {
-      console.log('Team not found in Firestore');
+      console.log('Team', notFound);
       return null;
     }
   } catch (error) {
-    console.error('Error fetching team data: ', error);
+    console.error(failedFetch, 'Team data', fromStore, error);
     throw error;
   }
 };
@@ -305,11 +304,11 @@ export const fetchTeamsFromSeason = async (
 
       return teamsOutputArray;
     } else {
-      console.log(`${seasonId} not found in Firestore`);
+      console.log(seasonId, notFound);
       return [];
     }
   } catch (error) {
-    console.error(`Error fetching teams from ${seasonId}: `, error);
+    console.error(`${failedFetch} Teams from ${seasonId}: `, error);
     return []; // Return an empty array in case of an error
   }
 };
@@ -341,7 +340,7 @@ export const fetchCurrentSeasons = async (): Promise<Season[]> => {
 
     return seasonData;
   } catch (error) {
-    console.error('Error fetching current unfinished seasons', error);
+    console.error(failedFetch, 'Current unfinished Seasons', fromStore, error);
     throw error;
   }
 };

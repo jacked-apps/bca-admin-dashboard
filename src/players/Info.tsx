@@ -4,9 +4,9 @@ import { CurrentUser, PastPlayer } from '../assets/types';
 // components
 import { NameFields } from './NameFields';
 import { ProfileFields } from './ProfileFields';
-import { ToastTestButton } from '../components/ToastButton';
 // styles
 import './players.css';
+import { EmailField } from './EmailField';
 
 type InfoProps = {
   pastPlayer: PastPlayer | null;
@@ -31,8 +31,11 @@ export const Info = ({
             pastPlayer={pastPlayer}
             setChosenPastPlayer={setChosenPastPlayer}
           />
-          <div className='grid-label'>Email:</div>
-          <div className='grid-value text-button'>{pastPlayer.email}</div>
+          <EmailField
+            pastPlayer={pastPlayer}
+            setChosenPastPlayer={setChosenPastPlayer}
+          />
+
           <ProfileFields
             pastPlayer={pastPlayer}
             setChosenPastPlayer={setChosenPastPlayer}

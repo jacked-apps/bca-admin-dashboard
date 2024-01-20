@@ -6,7 +6,7 @@
 }
 .info-container {
   height: 70vh;
-  width: 30%;
+  width: 40%;
   margin: 20px;
 
   border: 1px solid var(--button-color);
@@ -38,7 +38,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   margin-top: 20px;
-  width: 30%;
+  width: 25%;
   margin-bottom: 300px;
   gap: 5px;
   border: 1px solid var(--button-color);

@@ -29,7 +29,17 @@ export const FieldEntryDialog = <T,>({
     setInput('');
     setConfirmInput('');
   };
-
+  const inputStyle = {
+    justifySelf: 'center',
+    width: '90%',
+    height: '40px',
+    fontSize: '22px',
+    backgroundColor: 'lightblue',
+    borderWidth: '5px',
+    color: 'black',
+    fontWeight: 'bold',
+    marginTop: '10px',
+  };
   return (
     <dialog
       open={isOpen}
@@ -51,15 +61,7 @@ export const FieldEntryDialog = <T,>({
           style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
           <input
-            style={{
-              justifySelf: 'center',
-
-              width: '90%',
-              height: '40px',
-              fontSize: '20px',
-              backgroundColor: 'lightblue',
-              borderWidth: '5px',
-            }}
+            style={inputStyle}
             value={input}
             onChange={e => setInput(e.target.value)}
           />
@@ -69,16 +71,7 @@ export const FieldEntryDialog = <T,>({
             style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
           >
             <input
-              style={{
-                justifySelf: 'center',
-
-                width: '90%',
-                height: '40px',
-                fontSize: '20px',
-                backgroundColor: 'lightblue',
-                borderWidth: '5px',
-                marginTop: '10px',
-              }}
+              style={inputStyle}
               placeholder='Confirm'
               value={confirmInput}
               onChange={e => setConfirmInput(e.target.value)}
