@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { PastPlayer } from '../assets/types';
-import { Reads, Creates } from '../firebase/firebaseFunctions';
+import { Reads, Creates, Deletes } from '../firebase/firebaseFunctions';
 import { FieldEntryDialog } from '../components/FieldEntryDialog';
+import { failedUpdate, updateSuccess } from '../firebase/firebaseConsts';
+import { validatePastPlayerFields } from '../assets/validateFields';
 
 type Props = {
   pastPlayer: PastPlayer;
@@ -21,30 +23,47 @@ export const EmailField = ({ pastPlayer, setChosenPastPlayer }: Props) => {
 
   const handleDialogClose = async (value: string) => {
     setIsOpen(false);
-
+    const validated = validatePastPlayerFields('email', value);
+    if (!validated) {
+      toast.warn('Not a valid email');
+    }
+    toast(
+      '🦄 To change email we must create an entire new player and remove the old one',
+      { autoClose: 5000 },
+    );
     try {
       // save pastPlayer data in a new variable called updatedPlayer
+      const oldEmail = pastPlayer.id.toLowerCase();
+      console.log('old Email: ', oldEmail);
       const updatedPlayer = pastPlayer;
 
       // change the email in updatedPlayer to the newValue
-      updatedPlayer.email = value;
-      updatedPlayer.id = value;
+      updatedPlayer.email = value.toLowerCase();
+      updatedPlayer.id = value.toLowerCase();
 
       // create a new document in pastPlayers with the newValue as the id and the data from updatedPlayer
-      await Creates.createPastPlayer(updatedPlayer);
+      const { success, message } = await Creates.createPastPlayer(
+        updatedPlayer,
+      );
+      if (!success) {
+        toast.error(message);
+        return;
+      }
 
+      console.log('old emails: ', pastPlayer.email, oldEmail);
       // fetch the newPlayer and set it to the chosenPastPlayer
+      toast.success(`Email ${updateSuccess}`);
+
       const newPlayer = await Reads.fetchPastPlayerData(updatedPlayer.email);
       if (!newPlayer) {
-        toast.error('Error updating pastPlayer');
+        toast.error(`${failedUpdate} Player profile`);
         return;
       }
       setChosenPastPlayer(newPlayer as PastPlayer);
       // delete the old document
-      // await Deletes.deletePastPlayer(pastPlayer.email);
-      toast.success(`Email updated successfully`);
+      //await Deletes.deletePastPlayer(pastPlayer.email);
     } catch (error) {
-      console.log('Error updating pastPlayer', error);
+      console.log(failedUpdate, 'Player profile', error);
     }
   };
 

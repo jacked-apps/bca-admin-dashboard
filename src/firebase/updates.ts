@@ -55,12 +55,17 @@ export const updateUserProfile = async (
   userId: PlayerId,
   data: Partial<CurrentUser>,
 ) => {
+  let message;
   try {
     const userRef = doc(db, 'currentUsers', userId);
     await updateDoc(userRef, data);
-    console.log('User profile', updateSuccess);
+    message = 'User profile' + updateSuccess;
+    console.log(message);
+    return { success: true, message };
   } catch (error) {
-    console.error(failedUpdate, 'User profile', error);
+    message = failedUpdate + 'User profile';
+    console.error(message, error);
+    return { success: false, message };
   }
 };
 
@@ -75,12 +80,17 @@ export const updatePastPlayerProfile = async (
   email: Email,
   data: Partial<PastPlayer>,
 ) => {
+  let message;
   try {
     const playerRef = doc(db, 'pastPlayers', email);
     await updateDoc(playerRef, data);
-    console.log('Player profile', updateSuccess);
+    message = 'Player profile' + updateSuccess;
+    console.log(message);
+    return { success: true, message };
   } catch (error) {
-    console.error(failedUpdate, 'Player profile', error);
+    message = failedUpdate + 'Player profile';
+    console.error(message, error);
+    return { success: false, message };
   }
 };
 
@@ -100,6 +110,7 @@ export const updatePastPlayerProfile = async (
  */
 
 export const updateTeamData = async (teamId: TeamId, data: Team) => {
+  let message;
   try {
     // reference to the team document
     const teamRef = doc(db, 'teams', teamId);
@@ -107,8 +118,14 @@ export const updateTeamData = async (teamId: TeamId, data: Team) => {
 
     // update team data
     await updateDoc(teamRef, data);
+
+    message = 'Team' + updateSuccess;
+    return { success: true, message };
   } catch (error) {
-    console.error(failedUpdate, 'Team', error);
+    (message = failedUpdate), 'Team';
+    console.error(message, error);
+
+    return { success: false, message };
   }
 };
 
@@ -125,6 +142,7 @@ export const removePlayerFromTeam = async (
   role: TeamPlayerRole,
   playerInfo: TeamPlayer,
 ) => {
+  let message;
   try {
     const teamRef = doc(db, 'teams', teamId);
     const teamDoc = await getDoc(teamRef);
@@ -149,10 +167,12 @@ export const removePlayerFromTeam = async (
         });
       }
     }
+    message = `${playerInfo.firstName} ${playerInfo.lastName} removed from Team`;
+    return { success: true, message };
   } catch (error) {
-    console.error(
-      `Error removing ${playerInfo.firstName} ${playerInfo.lastName} from the team`,
-    );
+    message = `Error removing ${playerInfo.firstName} ${playerInfo.lastName} from the team`;
+    console.error(message, error);
+    return { success: false, message };
   }
 };
 
@@ -171,13 +191,18 @@ export const updateSeasonSchedule = async (
   seasonName: SeasonName,
   schedule: Schedule,
 ) => {
+  let message;
   try {
     //reference to the season document
     const seasonRef = doc(db, 'seasons', seasonName);
     await updateDoc(seasonRef, {
       schedule: schedule,
     });
+    message = 'Schedule' + updateSuccess;
+    return { success: true, message };
   } catch (error) {
-    console.error(failedUpdate, 'Schedule', error);
+    message = failedUpdate + 'Schedule';
+    console.error(message, error);
+    return { success: true, message };
   }
 };

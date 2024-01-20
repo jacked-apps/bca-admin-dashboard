@@ -18,11 +18,15 @@ import { deleteFailed, deleteSuccess, fromStore } from './firebaseConsts';
 // ------------------------------
 
 export const deletePastPlayer = async (playerId: Email) => {
+  let message = deleteSuccess + 'Player profile';
   try {
     const playerRef = doc(db, 'pastPlayers', playerId);
     await deleteDoc(playerRef);
+    return { success: true, message };
   } catch (error) {
-    console.log('Error deleting pastPlayer', error);
+    message = deleteFailed + 'Player profile';
+    console.log(message, error);
+    return { success: false, message };
   }
 };
 // ------------------------------
@@ -40,6 +44,7 @@ export const removeTeamFromSeason = async (
   seasonName: SeasonName,
   teamId: TeamId,
 ) => {
+  let message;
   try {
     //reference to the season document
     const seasonRef = doc(db, 'seasons', seasonName);
@@ -54,14 +59,17 @@ export const removeTeamFromSeason = async (
 
     // remove the team document from the teams collection
     await deleteDoc(teamRef);
-    console.log(
-      deleteSuccess,
-      'Team from Season and ',
-      deleteSuccess,
-      'Team',
-      fromStore,
-    );
+    (message =
+      deleteSuccess +
+      'Team from Season and ' +
+      deleteSuccess +
+      'Team' +
+      fromStore),
+      console.log(message);
+    return { success: true, message };
   } catch (error) {
-    console.error(`${deleteFailed} Team from ${seasonName}`, error);
+    message = `${deleteFailed} Team from ${seasonName}`;
+    console.error(message, error);
+    return { success: false, message };
   }
 };

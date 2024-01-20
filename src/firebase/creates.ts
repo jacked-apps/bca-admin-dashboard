@@ -40,6 +40,7 @@ import {
   tryAgain,
   createSuccess,
   updateSuccess,
+  failedUpdate,
 } from './firebaseConsts';
 
 // ------------------------------
@@ -53,6 +54,7 @@ import {
  */
 
 export const createPastPlayer = async (pastPlayer: PastPlayer) => {
+  let message = '';
   if (
     !pastPlayer.email ||
     !pastPlayer.firstName ||
@@ -63,7 +65,8 @@ export const createPastPlayer = async (pastPlayer: PastPlayer) => {
       'Past Player must have a first name, last name, email, and  phone number',
       tryAgain,
     );
-    return;
+    message = `Past Player must have a first name, last name, email, and  phone number${tryAgain}`;
+    return { success: false, message };
   }
 
   try {
@@ -72,8 +75,8 @@ export const createPastPlayer = async (pastPlayer: PastPlayer) => {
     console.log(existingDoc);
     if (existingDoc) {
       console.log('Email already in use.');
-      toast.error(`${failedCreate} Player - Email already in use. ${tryAgain}`);
-      return false;
+      const message = `${failedCreate} Player - Email already in use. ${tryAgain}`;
+      return { success: false, message };
     }
     const playerRef = doc(db, 'pastPlayers', pastPlayer.email);
     await setDoc(playerRef, {
@@ -82,7 +85,7 @@ export const createPastPlayer = async (pastPlayer: PastPlayer) => {
       nickname:
         pastPlayer.nickname ||
         generateNickname(pastPlayer.firstName, pastPlayer.lastName),
-      email: pastPlayer.email,
+      email: pastPlayer.email.toLowerCase(),
       phone: pastPlayer.phone,
       address: pastPlayer.address || '',
       city: pastPlayer.city || '',
@@ -93,12 +96,15 @@ export const createPastPlayer = async (pastPlayer: PastPlayer) => {
       seasons: pastPlayer.seasons || [],
       currentUserId: pastPlayer.currentUserId || '',
       dob: pastPlayer.dob || '',
-      id: pastPlayer.id || pastPlayer.email,
+      id: pastPlayer.id.toLowerCase() || pastPlayer.email.toLowerCase(),
     });
-    console.log(`Past Player ${createSuccess}`);
-    toast.success(`Player ${createSuccess}`);
+    message = `Past Player ${createSuccess}`;
+    console.log(message);
+    return { success: true, message };
   } catch (err) {
-    console.error(failedCreate, ' pastPlayer', err);
+    message = failedCreate + ' pastPlayer';
+    console.error(message, err);
+    return { success: false, message };
   }
 };
 // ------------------------------
@@ -116,6 +122,7 @@ export const addOrUpdateSeason = async (
   seasonName: SeasonName,
   data: Season,
 ) => {
+  let message = '';
   try {
     // get a reference
     const seasonRef = doc(db, 'seasons', seasonName);
@@ -129,11 +136,14 @@ export const addOrUpdateSeason = async (
       // update doc
       if (isConfirmed) {
         await updateDoc(seasonRef, data);
-        console.log('Season', updateSuccess);
+        message = 'Season' + updateSuccess;
+        console.log(message);
+        return { success: true, message };
       } else {
         // cancel update
-        console.log('Season Update cancelled');
-        return;
+        message = 'Season Update cancelled';
+        console.log(message);
+        return { success: false, message };
       }
     } else {
       // no existing season, confirm create season
@@ -143,15 +153,20 @@ export const addOrUpdateSeason = async (
       // create season
       if (isConfirmed) {
         await setDoc(seasonRef, data);
-        console.log('Season ', createSuccess);
+        message = 'Season' + createSuccess;
+        console.log(message);
+        return { success: true, message };
       } else {
         // cancel create season
-        console.log('Create season cancelled');
-        return;
+        message = 'Create season cancelled';
+        console.log(message);
+        return { success: false, message };
       }
     }
   } catch (error) {
-    console.error('Error adding or updating season', error);
+    message = failedCreate + 'or ' + failedUpdate + 'Season';
+    console.error(message, error);
+    return { success: false, message };
   }
 };
 
@@ -170,6 +185,7 @@ export const addNewTeamToSeason = async (
   seasonName: SeasonName,
   teamName: TeamName,
 ) => {
+  let message = '';
   try {
     const teamCollection = collection(db, 'teams');
     // Create new team
@@ -185,8 +201,12 @@ export const addNewTeamToSeason = async (
     await updateDoc(seasonRef, {
       teams: arrayUnion(teamRef.id),
     });
+    message = 'Successfully added Team to Season';
+    return { success: true, message };
   } catch (error) {
-    console.error(failedCreate, 'Team in Season', error);
+    message = failedCreate + 'Team in Season';
+    console.error(message, error);
+    return { success: false, message };
   }
 };
 // ------------------------------
@@ -204,16 +224,18 @@ export const addFinishedRoundRobin = async (
   seasonName: SeasonName,
   finishedRoundRobin: RoundRobinScheduleFinished,
 ) => {
+  let message = '';
   try {
     const finishedRRRef = doc(db, 'finishedRoundRobinSchedules', seasonName);
     await setDoc(finishedRRRef, {
       finishedSchedule: finishedRoundRobin,
     });
-
-    console.log(
-      `Finished Round Robin Schedule in ${seasonName} ${createSuccess}`,
-    );
+    message = `Finished Round Robin Schedule in ${seasonName} ${createSuccess}`;
+    console.log(message);
+    return { success: true, message };
   } catch (error) {
-    console.error(failedCreate, 'Round Robin Schedule', error);
+    message = failedCreate + 'Round Robin Schedule';
+    console.error(message, error);
+    return { success: false, message };
   }
 };
