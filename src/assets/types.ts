@@ -95,8 +95,13 @@ export type PastPlayer = Names & {
   zip: string; // That cities zip code
   phone: string; // The players phone number
   // archived wins and losses for the last 3 seasons if available
-  stats?: {
-    [string: SeasonName]: { wins: number; losses: number };
+  stats: {
+    [dateString: string]: {
+      wins: number;
+      losses: number;
+      seasonName: SeasonName;
+      seasonEnd: Timestamp;
+    };
   };
   seasons?: string[];
   teams?: string[];

@@ -51,8 +51,14 @@ export const PastPlayersList = ({
     <div className='past-players-container'>
       <div className='title'>Past Players</div>
       <div className='buttons'>
-        <button onClick={() => handleSort('firstName')}>First</button>
-        <button onClick={() => handleSort('lastName')}>Last</button>
+        <button className='tooltip' onClick={() => handleSort('firstName')}>
+          First
+          <span className='tooltip-text'>Order by First Name</span>
+        </button>
+        <button className='tooltip' onClick={() => handleSort('lastName')}>
+          Last
+          <span className='tooltip-text'>Order by Last Name</span>
+        </button>
       </div>
       <div className='search-bar'>
         <FaSearch className='search-icon' size={24} />

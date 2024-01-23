@@ -7,6 +7,7 @@ import { ProfileFields } from './ProfileFields';
 // styles
 import './players.css';
 import { EmailField } from './EmailField';
+import { Stats } from './Stats';
 
 type InfoProps = {
   pastPlayer: PastPlayer | null;
@@ -18,52 +19,34 @@ export const Info = ({
   currentUser,
   setChosenPastPlayer,
 }: InfoProps) => {
-  const statKeys =
-    pastPlayer && pastPlayer.stats ? Object.keys(pastPlayer.stats) : [];
-
   return (
     <div className='info-container'>
-      <div className='title'>Information</div>
-
       {pastPlayer && (
-        <div className='info-grid'>
-          <NameFields
-            pastPlayer={pastPlayer}
-            setChosenPastPlayer={setChosenPastPlayer}
-          />
-          <EmailField
-            pastPlayer={pastPlayer}
-            setChosenPastPlayer={setChosenPastPlayer}
-          />
-
-          <ProfileFields
-            pastPlayer={pastPlayer}
-            setChosenPastPlayer={setChosenPastPlayer}
-          />
-        </div>
-      )}
-
-      {pastPlayer && pastPlayer.stats && (
-        <div className='stats-container'>
-          <div className='title'>Stats</div>
+        <>
+          <div className='title'>Information</div>
           <div className='info-grid'>
-            {statKeys.map(key => {
-              const stats = pastPlayer.stats
-                ? pastPlayer.stats[key as keyof PastPlayer['stats']]
-                : { wins: 0, losses: 0 };
+            <NameFields
+              pastPlayer={pastPlayer}
+              setChosenPastPlayer={setChosenPastPlayer}
+            />
+            <EmailField
+              pastPlayer={pastPlayer}
+              setChosenPastPlayer={setChosenPastPlayer}
+            />
 
-              return (
-                <React.Fragment key={key}>
-                  <div className='grid-label'> {key}</div>
-                  <div className='grid-label'>Wins:</div>
-                  <div className='grid-value'>{stats.wins}</div>
-                  <div className='grid-label'>Losses:</div>
-                  <div className='grid-value'>{stats.losses}</div>
-                </React.Fragment>
-              );
-            })}
+            <ProfileFields
+              pastPlayer={pastPlayer}
+              setChosenPastPlayer={setChosenPastPlayer}
+            />
           </div>
-        </div>
+          <div className='title'>Statistics</div>
+          <div className='info-grid'>
+            <Stats
+              pastPlayer={pastPlayer}
+              setChosenPastPlayer={setChosenPastPlayer}
+            />
+          </div>
+        </>
       )}
 
       {currentUser && (

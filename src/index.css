@@ -113,3 +113,65 @@ button:focus-visible {
     color: #747bff;
   }
 }
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: var(--button-color);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px; /* Use half of the width value */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--button-color) transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+/* Breathing effect for small buttons with tooltip */
+.small-button.tooltip:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.6); /* Adjust as needed */
+  transition: box-shadow 0.3s;
+}
+
+/* Breathing effect for regular buttons with tooltip */
+button.tooltip {
+  animation: pulsate 2s infinite;
+}
+/* Keyframes for pulsating effect */
+@keyframes pulsate {
+  0% {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+}

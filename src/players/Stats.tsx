@@ -4,20 +4,30 @@ import { toast } from 'react-toastify';
 import { PastPlayer } from '../assets/types';
 import { Reads, Creates, Deletes } from '../firebase/firebaseFunctions';
 import { FieldEntryDialog } from '../components/FieldEntryDialog';
-import { failedUpdate } from '../firebase/firebaseConsts';
 import { validatePastPlayerFields } from '../assets/validateFields';
+import { failedUpdate } from '../firebase/firebaseConsts';
 
-type EmailFieldProps = {
+type StatsProps = {
   pastPlayer: PastPlayer;
   setChosenPastPlayer: React.Dispatch<React.SetStateAction<PastPlayer | null>>;
 };
 
-export const EmailField = ({
-  pastPlayer,
-  setChosenPastPlayer,
-}: EmailFieldProps) => {
+export const Stats = ({ pastPlayer, setChosenPastPlayer }: StatsProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [title, setTitle] = useState<string | null>(null);
+  const stats = pastPlayer.stats;
+
+  const dateKeys = Object.keys(stats)
+    // sort by newest to oldest
+    .sort((a, b) => {
+      const dateA = new Date(a).getTime();
+      const dateB = new Date(b).getTime();
+      return dateB - dateA;
+    })
+    // get newest 3 dates
+    .slice(0, 3);
+
+  // sort seasons by key (dateString)
 
   const handleDialogOpen = () => {
     setTitle(`Enter a new Email`);
@@ -70,10 +80,27 @@ export const EmailField = ({
 
   return (
     <>
-      <div className='grid-label'>Email:</div>
-      <button className='grid-value text-button' onClick={handleDialogOpen}>
-        {pastPlayer.email}
-      </button>
+      {pastPlayer.stats &&
+        dateKeys.map(date => (
+          <React.Fragment key={date}>
+            <div className='grid-label'>{stats[date].seasonName}</div>
+            <div className='grid-label'>Wins:</div>
+            <button
+              className='grid-value text-button'
+              onClick={handleDialogOpen}
+            >
+              {stats[date].wins}
+            </button>
+            <div className='grid-label'>Losses:</div>
+            <button
+              className='grid-value text-button'
+              onClick={handleDialogOpen}
+            >
+              {stats[date].losses}
+            </button>
+          </React.Fragment>
+        ))}
+
       <FieldEntryDialog<string>
         title={title ? title : ''}
         isOpen={isOpen}
