@@ -1,7 +1,6 @@
 import { Season } from '../assets/types';
 import './seasons.css';
 import { useNavigate } from 'react-router-dom';
-
 type SeasonListProps = {
   seasons: Season[];
   selectedSeason: Season | null;

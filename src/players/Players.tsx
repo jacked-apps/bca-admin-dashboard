@@ -1,33 +1,47 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { PastPlayersList } from './PastPlayersList';
-import { Reads } from '../firebase/firebaseFunctions';
 import { CurrentUser, PastPlayer } from '../assets/types';
+import { useFetchCurrentUsers } from '../customHooks/useFetchCurrentUsers';
+import { useFetchPastPlayers } from '../customHooks/useFetchPastPlayers';
 import { Info } from './Info';
 import { CurrentPlayersList } from './CurrentPlayersList';
+import { failedFetch } from '../firebase/firebaseConsts';
 
 export const Players = () => {
-  const [pastPlayers, setPastPlayers] = useState<PastPlayer[]>([]);
+  const {
+    pastPlayers,
+    isLoading: isLoadingPastPlayers,
+    error: errorPastPlayers,
+  } = useFetchPastPlayers();
+  const {
+    currentUsers,
+    isLoading: isLoadingCurrentUsers,
+    error: errorCurrentUsers,
+  } = useFetchCurrentUsers();
+
   const [chosenPastPlayer, setChosenPastPlayer] = useState<PastPlayer | null>(
     null,
   );
-  const [currentUsers, setCurrentUsers] = useState<CurrentUser[]>([]);
   const [chosenCurrentUser, setChosenCurrentUser] =
     useState<CurrentUser | null>(null);
 
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        const fetchedPastPlayers = await Reads.fetchAllPastPlayers();
-        setPastPlayers(fetchedPastPlayers);
-        const fetchedCurrentUsers = await Reads.fetchAllCurrentUsers();
-        setCurrentUsers(fetchedCurrentUsers);
-      } catch (error) {
-        console.error('Error fetching players from firebase', error);
-      }
-    };
-
-    fetchPlayers();
-  }, []);
+  if (isLoadingPastPlayers || isLoadingCurrentUsers) {
+    return <div>Loading...</div>;
+  }
+  if (errorPastPlayers) {
+    return (
+      <div>
+        {failedFetch} Past Players: {errorPastPlayers.message}
+      </div>
+    );
+  }
+  if (errorCurrentUsers) {
+    return (
+      <div>
+        {failedFetch} Current Users: {errorCurrentUsers.message}
+      </div>
+    );
+  }
   return (
     <div className='player-container'>
       <PastPlayersList

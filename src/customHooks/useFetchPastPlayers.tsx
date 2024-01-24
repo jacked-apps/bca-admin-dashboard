@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { PastPlayer } from '../assets/types';
 import { Reads } from '../firebase/firebaseFunctions';
 
-const useFetchPastPlayers = () => {
+export const useFetchPastPlayers = () => {
   const [pastPlayers, setPastPlayers] = useState<PastPlayer[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,5 +29,3 @@ const useFetchPastPlayers = () => {
 
   return { pastPlayers, isLoading, error };
 };
-
-export default useFetchPastPlayers;

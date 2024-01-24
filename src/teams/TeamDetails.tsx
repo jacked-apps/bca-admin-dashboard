@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import './teams.css';
-import { PastPlayerSearch } from '../components/PastPlayerSearch';
 import { convertPastPlayerToTeamPlayer } from '../assets/globalFunctions';
 import { PastPlayer, Team, TeamPlayer, TeamPlayerRole } from '../assets/types';
 import { playerOrder } from '../assets/globalVariables';
@@ -12,14 +11,13 @@ type TeamDetailsProps = {
   onSave: (editedTeam: Team) => void;
   onDelete: (teamToDelete: Team) => void;
   onCancel: () => void;
-  playerData: PastPlayer[];
 };
+
 export const TeamDetails = ({
   team,
   onSave,
   onDelete,
   onCancel,
-  playerData,
 }: TeamDetailsProps) => {
   // set edited Team
   const [editedTeam, setEditedTeam] = useState<Team>(team);
@@ -93,7 +91,6 @@ export const TeamDetails = ({
                   playerInfo={playerInfo}
                   role={role}
                   onSelect={handleSelect}
-                  playerData={playerData}
                 />
                 <button
                   className='small-button'

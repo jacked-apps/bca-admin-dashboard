@@ -1,6 +1,6 @@
 // hooks
 import { useCallback, useEffect, useState } from 'react';
-import { useFetchSeasons } from '../assets/customHooks';
+import { useFetchSeasons } from '../customHooks/useFetchSeasons';
 // components
 import { SeasonList } from '../seasons/SeasonList';
 import { TeamOrder } from './TeamOrder';
@@ -21,7 +21,8 @@ import { FinishedMatches } from './FinishedMatches';
 
 export const MatchUps = () => {
   // state
-  const { seasons, selectedSeason, setSelectedSeason } = useFetchSeasons();
+  const { seasons, selectedSeason, setSelectedSeason, isLoading, error } =
+    useFetchSeasons();
   const [teams, setTeams] = useState<Team[]>([]);
   const [teamOrder, setTeamOrder] = useState<Team[]>(teams);
   const [schedule, setSchedule] = useState<RoundRobinSchedule | null>(null);
@@ -74,7 +75,12 @@ export const MatchUps = () => {
     fetchTeams(selectedSeason);
   }, [selectedSeason, fetchTeams]);
 
-  // more logic
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div className='container'>
