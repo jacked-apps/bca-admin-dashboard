@@ -1,10 +1,12 @@
 import { Navigation } from './navigation/Navigation';
 import { ToastContainer } from 'react-toastify';
+import { SeasonsProvider } from './context/SeasonsContext';
 import 'react-toastify/dist/ReactToastify.css';
 import './firebaseConfig';
+
 function App() {
   return (
-    <div>
+    <SeasonsProvider>
       <Navigation />
       <ToastContainer
         position='top-left'
@@ -17,7 +19,7 @@ function App() {
         pauseOnHover
         theme='colored'
       />
-    </div>
+    </SeasonsProvider>
   );
 }
 

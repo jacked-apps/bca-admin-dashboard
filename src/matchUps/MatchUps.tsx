@@ -1,9 +1,12 @@
 // hooks
 import { useCallback, useEffect, useState } from 'react';
-import { useFetchSeasons } from '../customHooks/useFetchSeasons';
+import { useSeasons } from '../customHooks/useSeasons';
 // components
 import { SeasonList } from '../seasons/SeasonList';
 import { TeamOrder } from './TeamOrder';
+import { CreateMatches } from './CreateMatches';
+import { FinishedMatches } from './FinishedMatches';
+import { SetTeamsInSchedule } from './SetTeamsInSchedule';
 // types
 import {
   RoundRobinSchedule,
@@ -15,14 +18,10 @@ import {
 import { Reads } from '../firebase/firebaseFunctions';
 // styles
 import './matchups.css';
-import { CreateMatches } from './CreateMatches';
-import { SetTeamsInSchedule } from './SetTeamsInSchedule';
-import { FinishedMatches } from './FinishedMatches';
 
 export const MatchUps = () => {
   // state
-  const { seasons, selectedSeason, setSelectedSeason, isLoading, error } =
-    useFetchSeasons();
+  const { selectedSeason, isLoading, error } = useSeasons();
   const [teams, setTeams] = useState<Team[]>([]);
   const [teamOrder, setTeamOrder] = useState<Team[]>(teams);
   const [schedule, setSchedule] = useState<RoundRobinSchedule | null>(null);
@@ -85,11 +84,7 @@ export const MatchUps = () => {
   return (
     <div className='container'>
       <div className='match-lists'>
-        <SeasonList
-          seasons={seasons}
-          selectedSeason={selectedSeason}
-          setSelectedSeason={setSelectedSeason}
-        />
+        <SeasonList />
         <TeamOrder teamOrder={teamOrder} setTeamOrder={setTeamOrder} />
         <SetTeamsInSchedule
           teamOrder={teamOrder}

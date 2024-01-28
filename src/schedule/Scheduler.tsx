@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useFetchSeasons } from '../customHooks/useFetchSeasons';
 import { SeasonList } from '../seasons/SeasonList';
-
 import './schedule.css';
 import { Schedule } from '../assets/types';
 import { createBasicSchedule } from '../assets/globalFunctions';
@@ -9,18 +7,12 @@ import { notDate } from '../assets/globalVariables';
 import { convertTimestampToDate } from '../assets/dateFunctions';
 import { ScheduleView } from './ScheduleView';
 import { HolidayView } from './HolidayView';
+import { useSeasons } from '../customHooks/useSeasons';
 
 export const Scheduler = () => {
-  const { seasons, selectedSeason, setSelectedSeason, isLoading, error } =
-    useFetchSeasons();
+  const { selectedSeason, isLoading, error } = useSeasons();
   const [editedSchedule, setEditedSchedule] = useState<Schedule>({});
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>{error.message}</div>;
-  }
   const getBasicSchedule = useCallback(() => {
     if (!selectedSeason || selectedSeason.startDate === notDate) {
       setEditedSchedule({});
@@ -42,22 +34,21 @@ export const Scheduler = () => {
       getBasicSchedule();
     }
   }, [selectedSeason, getBasicSchedule]);
-
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>{error.message}</div>;
+  }
   return (
     <div>
       <div className='container'>
-        <SeasonList
-          seasons={seasons}
-          selectedSeason={selectedSeason}
-          setSelectedSeason={setSelectedSeason}
-        />
+        <SeasonList />
 
         {selectedSeason && (
           <div className='container'>
             <ScheduleView editedSchedule={editedSchedule} />
             <HolidayView
-              season={selectedSeason}
-              holidays={selectedSeason.holidays}
               editedSchedule={editedSchedule}
               setEditedSchedule={setEditedSchedule}
               getBasicSchedule={getBasicSchedule}

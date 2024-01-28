@@ -1,18 +1,10 @@
-import { Season } from '../assets/types';
+import { useSeasons } from '../customHooks/useSeasons';
 import './seasons.css';
 import { useNavigate } from 'react-router-dom';
-type SeasonListProps = {
-  seasons: Season[];
-  selectedSeason: Season | null;
-  setSelectedSeason: (season: Season | null) => void;
-};
 
-export const SeasonList = ({
-  seasons,
-  selectedSeason,
-  setSelectedSeason,
-}: SeasonListProps) => {
+export const SeasonList = () => {
   const navigate = useNavigate();
+  const { seasons, selectedSeason, setSelectedSeason } = useSeasons();
   return (
     <div className='list-container'>
       <div className='list-title'>

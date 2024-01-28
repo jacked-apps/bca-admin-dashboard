@@ -13,19 +13,12 @@ import {
 } from '../firebase/firebaseFunctions';
 import './teams.css';
 import { Season, Team, TeamName } from '../assets/types';
-import { useFetchSeasons } from '../customHooks/useFetchSeasons';
+import { useSeasons } from '../customHooks/useSeasons';
 
 export const Teams = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const { seasons, selectedSeason, setSelectedSeason, isLoading, error } =
-    useFetchSeasons();
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>{error.message}</div>;
-  }
+  const { selectedSeason, isLoading, error } = useSeasons();
 
   const fetchTeams = useCallback(async (seasonSelected: Season) => {
     if (seasonSelected) {
@@ -123,15 +116,16 @@ export const Teams = () => {
       console.error('Error fetching team data');
     }
   };
-
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>{error.message}</div>;
+  }
   return (
     <div className='container'>
       <div className='teams-lists'>
-        <SeasonList
-          seasons={seasons}
-          selectedSeason={selectedSeason}
-          setSelectedSeason={setSelectedSeason}
-        />
+        <SeasonList />
         <TeamsList
           teams={teams}
           selectedTeam={selectedTeam}
