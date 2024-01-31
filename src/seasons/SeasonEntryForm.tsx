@@ -24,6 +24,7 @@ import {
 // types
 import { Game, Holiday, PoolHall, Season } from '../assets/types';
 import { Creates } from '../firebase/firebaseFunctions';
+import { useSeasons } from '../customHooks/useSeasons';
 
 type FormValues = {
   poolHall: PoolHall;
@@ -52,6 +53,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   apaEvent,
   setApaEvent,
 }) => {
+  const { refetchSeasons, setSelectedSeason } = useSeasons();
   const {
     register,
     setValue,
@@ -128,6 +130,10 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     } catch (error) {
       console.error('Error adding/updating season', error);
       toast.error(`Failed to update season ${seasonData.seasonName}`);
+    } finally {
+      await refetchSeasons();
+
+      //setSelectedSeason(seasonData.seasonName);
     }
   };
 

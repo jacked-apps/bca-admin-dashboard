@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useContext, useState, useCallback } from 'react';
+import { useFetchSeasons } from '../firebase';
 // Components
 import { TeamsList } from './TeamsList';
 import { TeamDetails } from './TeamDetails';
@@ -14,11 +15,15 @@ import {
 import './teams.css';
 import { Season, Team, TeamName } from '../assets/types';
 import { useSeasons } from '../customHooks/useSeasons';
+import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
 
 export const Teams = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const { selectedSeason, isLoading, error } = useSeasons();
+  const { selectedSeason, setSelectedSeason } = useContext(
+    SelectedSeasonContext,
+  );
+  //const { isLoading, error } = useSeasons();
 
   const fetchTeams = useCallback(async (seasonSelected: Season) => {
     if (seasonSelected) {
