@@ -1,5 +1,9 @@
-import { useContext, useState, useCallback } from 'react';
-import { useFetchSeasons } from '../firebase';
+import { useContext, useState } from 'react';
+import {
+  useFetchSeasons,
+  useFetchTeamsFromSeason,
+  useFetchTeamById,
+} from '../firebase';
 // Components
 import { TeamsList } from './TeamsList';
 import { TeamDetails } from './TeamDetails';
@@ -7,46 +11,25 @@ import { AddTeamButton } from './AddTeamButton';
 import { SeasonList } from '../seasons/SeasonList';
 // Firebase and utility functions
 import {
-  Reads,
+  //Reads,
   Updates,
   Deletes,
   Creates,
 } from '../firebase/firebaseFunctions';
 import './teams.css';
 import { Season, Team, TeamName } from '../assets/types';
-import { useSeasons } from '../customHooks/useSeasons';
+//import { useSeasons } from '../customHooks/useSeasons';
 import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
 
 export const Teams = () => {
-  const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const { selectedSeason, setSelectedSeason } = useContext(
-    SelectedSeasonContext,
-  );
-  //const { isLoading, error } = useSeasons();
+  const { selectedSeason } = useContext(SelectedSeasonContext);
 
-  const fetchTeams = useCallback(async (seasonSelected: Season) => {
-    if (seasonSelected) {
-      try {
-        const fetchedTeams = await Reads.fetchTeamsFromSeason(
-          seasonSelected.id,
-        );
-        setTeams(fetchedTeams || []);
-      } catch (error) {
-        console.error('Error fetching teams from firebase', error);
-      }
-    } else {
-      setTeams([]);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!selectedSeason) {
-      setTeams([]);
-      return;
-    }
-    fetchTeams(selectedSeason);
-  }, [selectedSeason, fetchTeams]);
+  const {
+    data: teams,
+    isLoading,
+    error,
+  } = useFetchTeamsFromSeason(selectedSeason?.id);
 
   const handleSave = async (editedTeam: Team) => {
     if (!selectedTeam) {
@@ -97,6 +80,7 @@ export const Teams = () => {
   const onCancel = () => {
     setSelectedTeam(null);
   };
+
   const handleAddTeam = async (teamName: TeamName) => {
     if (!selectedSeason) {
       console.error('No team selected to save.');
@@ -132,7 +116,7 @@ export const Teams = () => {
       <div className='teams-lists'>
         <SeasonList />
         <TeamsList
-          teams={teams}
+          teams={teams || []}
           selectedTeam={selectedTeam}
           handleTeamSelect={handleTeamSelect}
         />

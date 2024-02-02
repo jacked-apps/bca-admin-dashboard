@@ -116,6 +116,7 @@ export type CurrentUser = Names & {
   stats?: { [game: string]: { wins: number; losses: number } };
   seasons: string[];
   teams: string[];
+  pastPlayerId?: Email;
 };
 
 //Represents a Season document from seasons Collection
@@ -286,7 +287,7 @@ export type TeamPlayer = {
   firstName: string;
   lastName: string;
   nickname: string;
-  email: Email;
+  email?: Email;
   totalWins: number; // career wins for the player (adds up wins from previous 3 seasons)
   totalLosses: number; // career losses for the player (adds up losses from previous 3 seasons)
   pastPlayerId: Email; // players id from pastPlayers collection (also the players Email)

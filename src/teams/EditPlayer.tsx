@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PastPlayerSearch } from '../components/PastPlayerSearch';
 import { TeamPlayer, TeamPlayerRole, PastPlayer } from '../assets/types';
-import { useFetchPastPlayers } from '../customHooks/useFetchPastPlayers';
+//import { useFetchPastPlayers } from '../customHooks/useFetchPastPlayers';
 
 type EditPlayerProps = {
   role: TeamPlayerRole;

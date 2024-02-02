@@ -1,4 +1,11 @@
-import { DayOfWeek, Game, PoolHall, Schedule, TeamPlayerRole } from './types';
+import {
+  DayOfWeek,
+  Game,
+  PoolHall,
+  Schedule,
+  TeamPlayer,
+  TeamPlayerRole,
+} from './types';
 export const notDate = 'Invalid Date';
 export const daysOfTheWeek: DayOfWeek[] = [
   'Sunday',
@@ -24,10 +31,11 @@ export const games: Game[] = ['9 Ball', '8 Ball', '10 Ball'];
 export const bcaWebsite = 'https://www.playcsipool.com/events.html';
 export const apaWebsite = 'https://poolplayers.com/world-pool-championships/';
 
-export const blankPlayerInfoObject = {
+export const blankPlayerInfoObject: TeamPlayer = {
   firstName: '',
   lastName: '',
   nickname: '',
+  email: '',
   pastPlayerId: '',
   currentUserId: '',
   totalWins: 0,

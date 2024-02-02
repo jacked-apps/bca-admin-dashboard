@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import './teams.css';
 import { convertPastPlayerToTeamPlayer } from '../assets/globalFunctions';
-import { PastPlayer, Team, TeamPlayer, TeamPlayerRole } from '../assets/types';
-import { playerOrder } from '../assets/globalVariables';
+import { PastPlayer, Team, TeamPlayerRole } from '../assets/types';
+import { blankPlayerInfoObject, playerOrder } from '../assets/globalVariables';
 import { EditPlayer } from './EditPlayer';
-import { Updates } from '../firebase/firebaseFunctions';
+import { useAddPlayerToTeam } from '../firebase';
 
 type TeamDetailsProps = {
   team: Team;
@@ -21,38 +21,29 @@ export const TeamDetails = ({
 }: TeamDetailsProps) => {
   // set edited Team
   const [editedTeam, setEditedTeam] = useState<Team>(team);
+  const { mutate: addPlayerToTeam } = useAddPlayerToTeam();
 
   // useEffect
   useEffect(() => {
     setEditedTeam(team);
   }, [team]);
 
-  const handleRemovePlayer = async (
-    role: TeamPlayerRole,
-    playerInfo: TeamPlayer,
-  ) => {
+  const handleRemovePlayer = (role: TeamPlayerRole) => {
     const teamId = team.id;
-    try {
-      await Updates.removePlayerFromTeam(teamId, role, playerInfo);
-      // Remove player from local state to trigger a rerender
-      setEditedTeam(prevTeam => {
-        const updatedPlayers = { ...prevTeam.players };
-        updatedPlayers[role] = {
-          currentUserId: '',
-          email: '',
-          firstName: '',
-          lastName: '',
-          nickname: '',
-          pastPlayerId: '',
-          totalWins: 0,
-          totalLosses: 0,
-        };
-        return { ...prevTeam, players: updatedPlayers };
-      });
-    } catch (error) {
-      console.error('Error while removing player', error);
-    }
-    //console.log('Remove Player clicked', role, team, playerInfo);
+
+    addPlayerToTeam({
+      teamId: teamId,
+      playerData: blankPlayerInfoObject,
+      role: role,
+    });
+    setEditedTeam(prevTeam => {
+      const updatedPlayers = { ...prevTeam.players };
+      updatedPlayers[role] = blankPlayerInfoObject;
+      return {
+        ...prevTeam,
+        players: updatedPlayers,
+      };
+    });
   };
 
   const handleSelect = (player: PastPlayer, role: TeamPlayerRole) => {
@@ -94,7 +85,7 @@ export const TeamDetails = ({
                 />
                 <button
                   className='small-button'
-                  onClick={() => handleRemovePlayer(role, playerInfo)}
+                  onClick={() => handleRemovePlayer(role as TeamPlayerRole)}
                 >
                   Remove
                 </button>
