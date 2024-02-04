@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import { SeasonsProvider } from './context/SeasonsContext';
 import { SelectedSeasonProvider } from './context/SelectedSeasonProvider';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import 'react-toastify/dist/ReactToastify.css';
 import './firebaseConfig';
 
@@ -27,6 +28,7 @@ function App() {
           />
         </SeasonsProvider>
       </SelectedSeasonProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

@@ -1,17 +1,27 @@
-import { useEffect } from 'react';
-import './seasons.css';
+import { useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
+//css
+import './seasons.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 // form
 import { useForm } from 'react-hook-form';
 import { seasonSchema } from './schema';
 import { yupResolver } from '@hookform/resolvers/yup';
-// date picker
+
+// components
 import ReactDatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-// variables and functions
+import { LeagueDates } from './LeagueDates';
+import { FormSelect } from './FormSelect';
+
+// types
+import { Game, Holiday, PoolHall, Season } from '../assets/types';
+import { FormValues } from './seasonTypes';
+
+// functions
 import { convertDateToTimestamp } from '../assets/dateFunctions';
 import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
+// variables
 import {
   games,
   poolHalls,
@@ -20,21 +30,12 @@ import {
   seasonLength,
   daysOfTheWeek,
 } from '../assets/globalVariables';
-
-// types
-import { Game, Holiday, PoolHall, Season } from '../assets/types';
-import { Creates } from '../firebase/firebaseFunctions';
-import { useSeasons } from '../customHooks/useSeasons';
-
-type FormValues = {
-  poolHall: PoolHall;
-  startDate: Date;
-  game: Game;
-  bcaStartDate: Date;
-  bcaEndDate: Date;
-  apaStartDate: Date;
-  apaEndDate: Date;
-};
+import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
+import {
+  fetchSeasonRQ,
+  useAddOrUpdateSeason,
+  useFetchSeasons,
+} from '../firebase';
 
 type SeasonEntryFormProps = {
   seasonData: Season;
@@ -53,7 +54,11 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   apaEvent,
   setApaEvent,
 }) => {
-  const { refetchSeasons, setSelectedSeason } = useSeasons();
+  const { setSelectedSeason } = useContext(SelectedSeasonContext);
+  const { mutate: addOrUpdateSeason } = useAddOrUpdateSeason({
+    useToast: false,
+  });
+  const { refetchSeasons } = useFetchSeasons();
   const {
     register,
     setValue,
@@ -117,24 +122,38 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     // console log to make sure data is checked and used here.
     console.log('Form data', data);
     // Uses state date to save to firebase.  Prop data only passed in to validate the form data
+    let seasonExists = false;
+    const updatedSeasonData = {
+      ...seasonData,
+      holidays: [...seasonData.holidays, bcaEvent, apaEvent],
+    };
+    let confirm = true;
     try {
-      const updatedSeasonData = {
-        ...seasonData,
-        holidays: [...seasonData.holidays, bcaEvent, apaEvent],
-      };
-      await Creates.addOrUpdateSeason(seasonData.seasonName, updatedSeasonData);
-      reset();
-      toast.success(
-        '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
+      //await Creates.addOrUpdateSeason(seasonData.seasonName, updatedSeasonData);
+      await fetchSeasonRQ(seasonData.seasonName);
+      seasonExists = true;
+      confirm = window.confirm(
+        'Season already exists.  Do you want to update this season?',
       );
+      // confirm with user to update this season
     } catch (error) {
-      console.error('Error adding/updating season', error);
-      toast.error(`Failed to update season ${seasonData.seasonName}`);
-    } finally {
-      await refetchSeasons();
-
-      //setSelectedSeason(seasonData.seasonName);
+      console.info('Season does not exist proceed');
     }
+    if (!confirm) {
+      return;
+    }
+    if (!seasonExists) {
+      addOrUpdateSeason({
+        seasonName: updatedSeasonData.seasonName,
+        seasonData: updatedSeasonData,
+      });
+    }
+    setSelectedSeason(updatedSeasonData);
+    refetchSeasons();
+    reset();
+    toast.success(
+      '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
+    );
   };
 
   const handleStringChange = (
@@ -175,100 +194,48 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
             <span className='error-message'>{errors.startDate.message}</span>
           )}
         </div>
-        <div className='form-group'>
-          <label htmlFor='game'>Game: </label>
-          <select
-            className='form-input-select'
-            id='game'
-            {...register('game', { required: true })}
-            onChange={e => handleStringChange('game', e.target.value)}
-          >
-            {games.map((game, index) => (
-              <option key={index} value={game}>
-                {game}
-              </option>
-            ))}
-          </select>
-          {errors.game && (
-            <span className='error-message'>{errors.game.message}</span>
-          )}
-        </div>
-        <div className='form-group'>
-          <label htmlFor='poolHall'>Pool Hall:</label>
-          <select
-            className='form-input-select'
-            id='poolHall'
-            {...register('poolHall', { required: true })}
-            onChange={e => handleStringChange('poolHall', e.target.value)}
-          >
-            {poolHalls.map((poolHall, index) => (
-              <option key={index} value={poolHall}>
-                {poolHall}
-              </option>
-            ))}
-          </select>
-          {errors.poolHall && (
-            <span className='error-message'>{errors.poolHall.message}</span>
-          )}
-        </div>
+        <FormSelect
+          label='Game'
+          fieldName='game'
+          register={register}
+          choices={games}
+          onChange={e => handleStringChange('game', e.target.value)}
+          errorMessage={errors.game && errors.game.message}
+        />
+        <FormSelect
+          label='Pool Hall'
+          fieldName='poolHall'
+          register={register}
+          choices={poolHalls}
+          onChange={e => handleStringChange('poolHall', e.target.value)}
+          errorMessage={errors.poolHall && errors.poolHall.message}
+        />
 
-        <div className='champ-label'>BCA Nationals</div>
-        <div className='form-group'>
-          <label htmlFor='bcaStartDate'>Start Date:</label>
-          <ReactDatePicker
-            className='form-input'
-            selected={
-              bcaEvent.start instanceof Date ? bcaEvent.start : new Date()
-            }
-            onChange={(date: Date) => handleDateChange('bca', 'Start', date)}
-          />
-          {errors.bcaStartDate && (
-            <span className='error-message'>{errors.bcaStartDate.message}</span>
-          )}
-        </div>
-        <div className='form-group'>
-          <label htmlFor='bcaEndDate'>End Date: </label>
-          <ReactDatePicker
-            className='form-input'
-            selected={bcaEvent.end instanceof Date ? bcaEvent.end : new Date()}
-            onChange={(date: Date) => handleDateChange('bca', 'End', date)}
-          />
-          {errors.bcaEndDate && (
-            <span className='error-message'>{errors.bcaEndDate.message}</span>
-          )}
-        </div>
-        <a href={bcaWebsite} target='_blank' rel='noopener noreferrer'>
-          Check BCA Dates
-        </a>
-        <div className='champ-label'>APA Nationals</div>
-        <div className='form-group'>
-          <label htmlFor='apaStartDate'>Start Date:</label>
-          <ReactDatePicker
-            className='form-input'
-            selected={
-              apaEvent.start instanceof Date ? apaEvent.start : new Date()
-            }
-            onChange={(date: Date) => handleDateChange('apa', 'Start', date)}
-          />
-          {errors.apaStartDate && (
-            <span className='error-message'>{errors.apaStartDate.message}</span>
-          )}
-        </div>
+        <LeagueDates
+          league='bca'
+          startDate={
+            bcaEvent.start instanceof Date ? bcaEvent.start : new Date()
+          }
+          endDate={bcaEvent.end instanceof Date ? bcaEvent.end : new Date()}
+          onStartChange={(date: Date) => handleDateChange('bca', 'Start', date)}
+          onEndChange={(date: Date) => handleDateChange('bca', 'End', date)}
+          website={bcaWebsite}
+          startError={errors.bcaStartDate?.message}
+          endError={errors.bcaEndDate?.message}
+        />
+        <LeagueDates
+          league='apa'
+          startDate={
+            apaEvent.start instanceof Date ? apaEvent.start : new Date()
+          }
+          endDate={apaEvent.end instanceof Date ? apaEvent.end : new Date()}
+          onStartChange={(date: Date) => handleDateChange('apa', 'Start', date)}
+          onEndChange={(date: Date) => handleDateChange('apa', 'End', date)}
+          website={apaWebsite}
+          startError={errors.apaStartDate?.message}
+          endError={errors.apaEndDate?.message}
+        />
 
-        <div className='form-group'>
-          <label htmlFor='apaEndDate'>End Date: </label>
-          <ReactDatePicker
-            className='form-input'
-            selected={apaEvent.end instanceof Date ? apaEvent.end : new Date()}
-            onChange={(date: Date) => handleDateChange('apa', 'End', date)}
-          />
-          {errors.apaEndDate && (
-            <span className='error-message'>{errors.apaEndDate.message}</span>
-          )}
-        </div>
-        <a href={apaWebsite} target='_blank' rel='noopener noreferrer'>
-          Check APA Dates
-        </a>
         <div className='submit-button-container'>
           <button type='submit'>Create Season</button>
         </div>

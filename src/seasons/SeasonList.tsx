@@ -1,10 +1,21 @@
-import { useSeasons } from '../customHooks/useSeasons';
+//import { useSeasons } from '../customHooks/useSeasons';
+import { useContext } from 'react';
+import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
 import './seasons.css';
 import { useNavigate } from 'react-router-dom';
+import { useFetchSeasons } from '../firebase';
+import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 export const SeasonList = () => {
   const navigate = useNavigate();
-  const { seasons, selectedSeason, setSelectedSeason } = useSeasons();
+  //const { seasons, selectedSeason, setSelectedSeason } = useSeasons();
+  const { selectedSeason, setSelectedSeason } = useContext(
+    SelectedSeasonContext,
+  );
+  const { data: seasons, isLoading, error, refetch } = useFetchSeasons();
+  if (isLoading) return <p>Loading...</p>;
+  if (error instanceof Error)
+    return <ErrorAndRefetch error={error} onRetry={refetch} />;
   return (
     <div className='list-container'>
       <div className='list-title'>
