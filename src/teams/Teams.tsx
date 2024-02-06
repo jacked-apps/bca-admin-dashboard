@@ -10,16 +10,21 @@ import { TeamDetails } from './TeamDetails';
 import { AddTeamButton } from './AddTeamButton';
 import { SeasonList } from '../seasons/SeasonList';
 // Firebase and utility functions
-import {
-  //Reads,
-  Updates,
-  Deletes,
-  Creates,
-} from '../firebase/firebaseFunctions';
+// import {
+//   //Reads,
+//   Updates,
+//   Deletes,
+//   Creates,
+// } from '../firebase/firebaseFunctions';
 import './teams.css';
 import { Season, Team, TeamName } from '../assets/types';
 //import { useSeasons } from '../customHooks/useSeasons';
 import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
+import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+import {
+  useRemoveTeamFromSeason,
+  useUpdateTeamData,
+} from '../firebase/teamUpdateHooks';
 
 export const Teams = () => {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
@@ -29,29 +34,22 @@ export const Teams = () => {
     data: teams,
     isLoading,
     error,
+    refetch: fetchTeams,
   } = useFetchTeamsFromSeason(selectedSeason?.id);
-
+  const { mutate: updateTeam } = useUpdateTeamData({ useToast: true });
+  const { mutate: removeTeam } = useRemoveTeamFromSeason({ useToast: true });
   const handleSave = async (editedTeam: Team) => {
     if (!selectedTeam) {
       console.error('No team selected to save.');
       return;
     }
-    try {
-      if (!selectedSeason) {
-        console.error('No season selected');
-        return;
-      }
-      await Updates.updateTeamData(editedTeam.id, editedTeam);
-      const updatedTeams = teams.map(team =>
-        team.id === selectedTeam.id ? editedTeam : team,
-      );
-      setTeams(updatedTeams);
-
-      setSelectedTeam(null);
-      fetchTeams(selectedSeason);
-    } catch (error) {
-      console.error(`Error updating team data: ${error}`, error);
+    if (!selectedSeason) {
+      console.error('No season selected');
+      return;
     }
+    updateTeam({ teamId: editedTeam.id, data: editedTeam });
+    setSelectedTeam(null);
+    fetchTeams();
   };
 
   const handleDelete = async (teamToDelete: Team) => {
@@ -70,7 +68,7 @@ export const Teams = () => {
           teamToDelete.id,
         );
         setSelectedTeam(null);
-        fetchTeams(selectedSeason);
+        fetchTeams();
       } catch (error) {
         console.error(`Error removing team: ${error}`, error);
       }
@@ -108,9 +106,8 @@ export const Teams = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (error) {
-    return <div>{error.message}</div>;
-  }
+  if (error instanceof Error)
+    return <ErrorAndRefetch error={error} onRetry={fetchTeams} />;
   return (
     <div className='container'>
       <div className='teams-lists'>

@@ -2,11 +2,11 @@
 // TABLE OF CONTENTS
 // ------------------------------
 // 1. Hooks
+//    - usePlayerToTeam ***THIS IS THE MAIN ONE TO USE
 //    - useAddTeamToBothViaPlayer
 //    - useAddTeamToBothViaUser
 //    - useRemoveTeamFromBothViaPlayer
 //    - useRemoveTeamFromBothViaUser
-//    - usePlayerToTeam
 // 2. Utilities
 //    - addTeamToPastPlayer
 //    - addTeamToCurrentUser
@@ -41,6 +41,19 @@ import {
   fetchTeamByIdRQ,
 } from '.';
 import { useMutation } from 'react-query';
+
+// this
+export const useAddPlayerToTeam = () => {
+  return useMutation(addPlayerToTeamRQ, {
+    onSuccess: () => {
+      console.log('success');
+    },
+    onError: () => {
+      console.log('error');
+    },
+    retry: false,
+  });
+};
 
 export const useAddTeamToBothViaPlayer = () => {
   return useMutation(addTeamToBothWithPlayer, {
@@ -80,18 +93,6 @@ export const useRemoveTeamFromBothViaPlayer = () => {
 
 export const useRemoveTeamFromBothViaUser = () => {
   return useMutation(removeTeamFromBothWithUser, {
-    onSuccess: () => {
-      console.log('success');
-    },
-    onError: () => {
-      console.log('error');
-    },
-    retry: false,
-  });
-};
-
-export const useAddPlayerToTeam = () => {
-  return useMutation(addPlayerToTeamRQ, {
     onSuccess: () => {
       console.log('success');
     },

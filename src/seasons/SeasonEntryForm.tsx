@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
 //css
 import './seasons.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -21,6 +21,8 @@ import { FormValues } from './seasonTypes';
 // functions
 import { convertDateToTimestamp } from '../assets/dateFunctions';
 import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
+import { useAddSeason, useFetchSeasons } from '../firebase';
+
 // variables
 import {
   games,
@@ -30,12 +32,6 @@ import {
   seasonLength,
   daysOfTheWeek,
 } from '../assets/globalVariables';
-import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
-import {
-  fetchSeasonRQ,
-  useAddOrUpdateSeason,
-  useFetchSeasons,
-} from '../firebase';
 
 type SeasonEntryFormProps = {
   seasonData: Season;
@@ -55,8 +51,11 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   setApaEvent,
 }) => {
   const { setSelectedSeason } = useContext(SelectedSeasonContext);
-  const { mutate: addOrUpdateSeason } = useAddOrUpdateSeason({
-    useToast: false,
+  const { addSeason } = useAddSeason({
+    useToast: true,
+    successToastLength: 6000,
+    successMessage:
+      '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
   });
   const { refetchSeasons } = useFetchSeasons();
   const {
@@ -118,42 +117,29 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     setSeasonData(updatedData);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const noop = (_: unknown) => {
+    // The noop function is a no-operation placeholder.
+    // It's used here to acknowledge the reception of 'data' which is necessary for form validation.
+    // This approach avoids TypeScript's unused variable warning without affecting the functionality.
+  };
+
   const onSubmit = async (data: FormValues) => {
-    // console log to make sure data is checked and used here.
-    console.log('Form data', data);
-    // Uses state date to save to firebase.  Prop data only passed in to validate the form data
-    let seasonExists = false;
+    // Although 'data' is not directly used, it's required for form validation.
+    // Passing 'data' to noop() to indicate its intentional presence.
+    noop(data);
+    // Add holidays to seasonData
     const updatedSeasonData = {
       ...seasonData,
       holidays: [...seasonData.holidays, bcaEvent, apaEvent],
     };
-    let confirm = true;
-    try {
-      //await Creates.addOrUpdateSeason(seasonData.seasonName, updatedSeasonData);
-      await fetchSeasonRQ(seasonData.seasonName);
-      seasonExists = true;
-      confirm = window.confirm(
-        'Season already exists.  Do you want to update this season?',
-      );
-      // confirm with user to update this season
-    } catch (error) {
-      console.info('Season does not exist proceed');
-    }
-    if (!confirm) {
-      return;
-    }
-    if (!seasonExists) {
-      addOrUpdateSeason({
-        seasonName: updatedSeasonData.seasonName,
-        seasonData: updatedSeasonData,
-      });
-    }
-    setSelectedSeason(updatedSeasonData);
-    refetchSeasons();
-    reset();
-    toast.success(
-      '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
-    );
+    // Add season doc to firebase
+    addSeason(updatedSeasonData.seasonName, updatedSeasonData);
+
+    // Clean up sets the new season to selectedSeason, fetches seasons again and resets the form
+    //setSelectedSeason(updatedSeasonData);
+    //refetchSeasons();
+    //reset();
   };
 
   const handleStringChange = (
