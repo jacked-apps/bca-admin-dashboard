@@ -52,16 +52,21 @@ export const useFetchSeason = (seasonName: string) => {
  *
  * Returns Promise resolving to array of Season objects.
  */
+
 const fetchSeasonsRQ = async (): Promise<Season[]> => {
   const seasonQuery = query(
     collection(db, 'seasons'),
     where('seasonCompleted', '==', false),
   );
   const querySnapshot = await getDocs(seasonQuery);
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...(doc.data() as Omit<Season, 'id'>),
-  }));
+
+  const seasonsArray = querySnapshot.docs.map(doc => {
+    const season = doc.data();
+    season.id = doc.id;
+    return season as Season;
+  });
+
+  return seasonsArray;
 };
 
 /**
@@ -83,10 +88,9 @@ export const fetchSeasonRQ = async (
   const seasonDoc = doc(db, 'seasons', seasonName);
   const seasonDocSnapshot = await getDoc(seasonDoc);
   if (seasonDocSnapshot.exists()) {
-    return {
-      id: seasonDocSnapshot.id,
-      ...(seasonDocSnapshot.data() as Omit<Season, 'id'>),
-    };
+    const season = seasonDocSnapshot.data();
+    season.id = seasonDocSnapshot.id;
+    return season as Season;
   } else {
     throw new Error('Season not found');
   }

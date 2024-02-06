@@ -29,13 +29,13 @@ import {
 export const Teams = () => {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const { selectedSeason } = useContext(SelectedSeasonContext);
-
+  console.log('selectedSeason', selectedSeason);
   const {
     data: teams,
     isLoading,
     error,
     refetch: fetchTeams,
-  } = useFetchTeamsFromSeason(selectedSeason?.id);
+  } = useFetchTeamsFromSeason(selectedSeason?.seasonName);
   const { mutate: updateTeam } = useUpdateTeamData({ useToast: true });
   const { mutate: removeTeam } = useRemoveTeamFromSeason({ useToast: true });
   const handleSave = async (editedTeam: Team) => {
