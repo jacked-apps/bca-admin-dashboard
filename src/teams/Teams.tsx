@@ -95,8 +95,9 @@ export const Teams = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (error instanceof Error)
+  if (error instanceof Error) {
     return <ErrorAndRefetch error={error} onRetry={fetchTeams} />;
+  }
 
   // Render
   return (

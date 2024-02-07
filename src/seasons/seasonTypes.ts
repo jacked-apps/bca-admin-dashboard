@@ -9,3 +9,5 @@ export type FormValues = {
   apaStartDate: Date;
   apaEndDate: Date;
 };
+
+export type FieldNames = keyof FormValues;

@@ -56,7 +56,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     successMessage:
       '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
   });
-  const { refetchSeasons } = useFetchSeasons();
+  const { refetch: refetchSeasons } = useFetchSeasons();
   const {
     register,
     setValue,
@@ -135,10 +135,10 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     // Add season doc to firebase
     addSeason(updatedSeasonData.seasonName, updatedSeasonData);
 
-    // Clean up sets the new season to selectedSeason, fetches seasons again and resets the form
-    //setSelectedSeason(updatedSeasonData);
-    //refetchSeasons();
-    //reset();
+    // Clean up: sets the new season to selectedSeason, fetches seasons again and resets the form
+    setSelectedSeason(updatedSeasonData);
+    refetchSeasons();
+    reset();
   };
 
   const handleStringChange = (

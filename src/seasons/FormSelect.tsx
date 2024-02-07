@@ -1,10 +1,10 @@
 import { UseFormRegister } from 'react-hook-form';
 import { ChangeEventHandler } from 'react';
-import { FormValues } from './seasonTypes';
+import { FieldNames, FormValues } from './seasonTypes';
 
 type FormSelectProps = {
   label: string;
-  fieldName: string;
+  fieldName: FieldNames;
   register: UseFormRegister<FormValues>;
   onChange: ChangeEventHandler<HTMLSelectElement>;
   choices: string[];

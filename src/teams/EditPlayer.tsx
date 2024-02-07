@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 // components
 import { PastPlayerSearch } from '../components/PastPlayerSearch';
+import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 // types
 import { TeamPlayerRole, TeamPlayer } from '../assets/typesFolder/teamTypes';
@@ -9,7 +10,6 @@ import { PastPlayer } from '../assets/typesFolder/userTypes';
 
 // firebase
 import { useFetchPastPlayers } from '../firebase';
-//import { useFetchPastPlayers } from '../customHooks/useFetchPastPlayers';
 
 type EditPlayerProps = {
   role: TeamPlayerRole;
@@ -21,16 +21,21 @@ export const EditPlayer: React.FC<EditPlayerProps> = ({
   playerInfo,
   role,
   onSelect,
-  //playerData,
 }) => {
-  const { data: pastPlayers, isLoading, error } = useFetchPastPlayers();
+  const {
+    data: pastPlayers,
+    isLoading,
+    error,
+    refetch: fetchPastPlayers,
+  } = useFetchPastPlayers();
   const [isEditing, setIsEditing] = useState(false);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (error) {
-    return <div>Error: {error.message}</div>;
+
+  if (error instanceof Error) {
+    return <ErrorAndRefetch error={error} onRetry={fetchPastPlayers} />;
   }
 
   const handleEditClick = () => {
