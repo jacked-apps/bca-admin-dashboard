@@ -37,6 +37,7 @@ import {
   PastPlayer,
   TeamPlayer,
   Schedule,
+  SeasonName,
 } from './types';
 
 // ------------------------------
@@ -151,6 +152,7 @@ export const convertPastPlayerToTeamPlayer = (
   pastPlayer: PastPlayer,
 ): TeamPlayer => {
   const teamPlayerInfo: Partial<TeamPlayer> = {};
+  const { totalWins, totalLosses } = getStatsTotals(pastPlayer.stats);
 
   addFieldIfDefined(teamPlayerInfo, 'firstName', pastPlayer.firstName);
   addFieldIfDefined(teamPlayerInfo, 'lastName', pastPlayer.lastName);
@@ -158,21 +160,43 @@ export const convertPastPlayerToTeamPlayer = (
   addFieldIfDefined(teamPlayerInfo, 'currentUserId', pastPlayer.currentUserId);
   addFieldIfDefined(teamPlayerInfo, 'pastPlayerId', pastPlayer.id);
   addFieldIfDefined(teamPlayerInfo, 'email', pastPlayer.email);
-  // TODO fix this to align with new stats object
-  const totalWins =
-    safeParseInt(pastPlayer.seasonOneWins) +
-    safeParseInt(pastPlayer.seasonTwoWins) +
-    safeParseInt(pastPlayer.seasonThreeWins);
-  const totalLosses =
-    safeParseInt(pastPlayer.seasonOneLosses) +
-    safeParseInt(pastPlayer.seasonTwoLosses) +
-    safeParseInt(pastPlayer.seasonThreeLosses);
-
   addFieldIfDefined(teamPlayerInfo, 'totalWins', totalWins);
   addFieldIfDefined(teamPlayerInfo, 'totalLosses', totalLosses);
 
   return teamPlayerInfo as TeamPlayer;
 };
+
+export const getStatsTotals = (
+  stats: Record<string, { wins: number; losses: number }>,
+): { totalWins: number; totalLosses: number } => {
+  const seasonsSorted = Object.keys(stats)
+    .sort((a, b) => b.localeCompare(a))
+    .slice(0, 3);
+  const totals = seasonsSorted.reduce(
+    (acc, season) => {
+      acc.totalWins += safeParseInt(stats[season].wins);
+      acc.totalLosses += safeParseInt(stats[season].losses);
+      return acc;
+    },
+    { totalWins: 0, totalLosses: 0 },
+  );
+  return totals;
+};
+
+export const createNewTeamData = (teamName: string, seasonId: SeasonName) => ({
+  teamName,
+  seasonId,
+  players: {
+    captain: {},
+    player2: {},
+    player3: {},
+    player4: {},
+    player5: {},
+  },
+  wins: 0,
+  losses: 0,
+  points: 0,
+});
 
 // ------------------------------
 // 4. HELPER Functions
@@ -184,7 +208,8 @@ export const convertPastPlayerToTeamPlayer = (
  * @returns {number} - The number string as a number, invalid number strings or undefined returns zero
  */
 
-export const safeParseInt = (value: string | undefined): number => {
+export const safeParseInt = (value: string | number | undefined): number => {
+  if (typeof value === 'number') return value;
   return parseInt(value ?? '0', 10) || 0;
 };
 

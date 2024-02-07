@@ -1,35 +1,30 @@
 import { useContext, useState } from 'react';
-import {
-  useFetchSeasons,
-  useFetchTeamsFromSeason,
-  useFetchTeamById,
-} from '../firebase';
+import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
+
 // Components
 import { TeamsList } from './TeamsList';
 import { TeamDetails } from './TeamDetails';
 import { AddTeamButton } from './AddTeamButton';
 import { SeasonList } from '../seasons/SeasonList';
-// Firebase and utility functions
-// import {
-//   //Reads,
-//   Updates,
-//   Deletes,
-//   Creates,
-// } from '../firebase/firebaseFunctions';
-import './teams.css';
-import { Season, Team, TeamName } from '../assets/types';
-//import { useSeasons } from '../customHooks/useSeasons';
-import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
 import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+
+// Firebase and utility functions
+import { useFetchTeamsFromSeason, fetchTeamByIdRQ } from '../firebase';
 import {
+  useAddNewTeamToSeason,
   useRemoveTeamFromSeason,
   useUpdateTeamData,
 } from '../firebase/teamUpdateHooks';
 
+// CSS and Types
+import './teams.css';
+import { Team, TeamName } from '../assets/types';
+
 export const Teams = () => {
+  // state
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const { selectedSeason } = useContext(SelectedSeasonContext);
-  console.log('selectedSeason', selectedSeason);
+  // database
   const {
     data: teams,
     isLoading,
@@ -38,6 +33,9 @@ export const Teams = () => {
   } = useFetchTeamsFromSeason(selectedSeason?.seasonName);
   const { mutate: updateTeam } = useUpdateTeamData({ useToast: true });
   const { mutate: removeTeam } = useRemoveTeamFromSeason({ useToast: true });
+  const { mutate: addNewTeam } = useAddNewTeamToSeason({ useToast: true });
+
+  // Event handlers
   const handleSave = async (editedTeam: Team) => {
     if (!selectedTeam) {
       console.error('No team selected to save.');
@@ -54,25 +52,11 @@ export const Teams = () => {
 
   const handleDelete = async (teamToDelete: Team) => {
     if (!selectedSeason) {
-      console.error('No team selected to save.');
+      console.error('No team selected.');
       return;
     }
-    if (
-      window.confirm(
-        `Are you sure you want to delete ${teamToDelete.teamName}?`,
-      )
-    ) {
-      try {
-        await Deletes.removeTeamFromSeason(
-          selectedSeason.seasonName,
-          teamToDelete.id,
-        );
-        setSelectedTeam(null);
-        fetchTeams();
-      } catch (error) {
-        console.error(`Error removing team: ${error}`, error);
-      }
-    }
+    removeTeam({ seasonName: selectedSeason.id, teamId: teamToDelete.id });
+    fetchTeams();
   };
 
   const onCancel = () => {
@@ -84,30 +68,32 @@ export const Teams = () => {
       console.error('No team selected to save.');
       return;
     }
-    try {
-      await Creates.addNewTeamToSeason(selectedSeason.id, teamName);
-      fetchTeams(selectedSeason);
-    } catch (error) {
-      console.error(`Error adding new team: ${error}`, error);
-    }
+    addNewTeam({ seasonName: selectedSeason.id, teamName });
+    fetchTeams();
   };
+
   const handleTeamSelect = async (teamId: string | null) => {
     if (!teamId) {
       setSelectedTeam(null);
       return;
     }
+
     try {
-      const upDatedTeamData = await Reads.fetchTeamById(teamId);
+      const upDatedTeamData = await fetchTeamByIdRQ(teamId);
       setSelectedTeam(upDatedTeamData);
     } catch (error) {
       console.error('Error fetching team data');
     }
   };
+
+  // Loading and Error handling
   if (isLoading) {
     return <div>Loading...</div>;
   }
   if (error instanceof Error)
     return <ErrorAndRefetch error={error} onRetry={fetchTeams} />;
+
+  // Render
   return (
     <div className='container'>
       <div className='teams-lists'>

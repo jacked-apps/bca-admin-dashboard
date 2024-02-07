@@ -18,6 +18,7 @@
 //    - removeTeamFromBothWithUser
 //    - addPlayerToTeamRQ
 //    - insertPlayerOntoTeam
+//    - removeAllPlayersFromTeamRQ
 
 import {
   doc,
@@ -25,6 +26,7 @@ import {
   getDoc,
   arrayUnion,
   arrayRemove,
+  runTransaction,
 } from '@firebase/firestore'; // Import getFirestore from Firebase
 import { db } from '../firebaseConfig';
 import {
@@ -317,4 +319,55 @@ const insertPlayerOntoTeam = async (
     };
     await updateDoc(teamRef, newTeamData);
   }
+};
+
+/**
+ * Removes all players from a team by:
+ * 1. Getting the team document.
+ * 2. Getting the player IDs from the team document.
+ * 3. Looping through each player ID:
+ *   3a. Get the pastPlayer document.
+ *   3b. Remove the team ID from the pastPlayer's teams array.
+ *   3c. If the pastPlayer has a currentUserId, get that document.
+ *   3d. Remove the team ID from the currentUser's teams array.
+ *
+ * This is done in a transaction to ensure consistency.
+ */
+
+export const removeAllPlayersFromTeamRQ = async (teamId: TeamId) => {
+  await runTransaction(db, async transaction => {
+    const teamRef = doc(db, 'teams', teamId);
+    const teamDoc = await transaction.get(teamRef);
+    if (!teamDoc.exists()) {
+      throw new Error('Team not found');
+    }
+
+    const teamData = teamDoc.data() as Team;
+    const playerIds = Object.values(teamData.players)
+      .map(player => player.pastPlayerId)
+      .filter(pastPlayerId => pastPlayerId);
+
+    for (const pastPlayerId of playerIds) {
+      const pastPlayerRef = doc(db, 'pastPlayers', pastPlayerId);
+      const pastPlayerDoc = await transaction.get(pastPlayerRef);
+      const pastPlayerData = pastPlayerDoc.data();
+
+      // Update the pastPlayer document
+      transaction.update(pastPlayerRef, {
+        teams: arrayRemove(teamId),
+      });
+
+      // If there is an associated current user, update that document too
+      if (pastPlayerData?.currentUserId) {
+        const currentUserRef = doc(
+          db,
+          'currentUsers',
+          pastPlayerData.currentUserId,
+        );
+        transaction.update(currentUserRef, {
+          teams: arrayRemove(teamId),
+        });
+      }
+    }
+  });
 };

@@ -16,11 +16,12 @@ import {
   query,
   where,
   updateDoc,
+  deleteDoc,
   addDoc,
   doc,
   setDoc,
 } from '@firebase/firestore';
-import { Season, SeasonName } from '../assets/types';
+import { Season, SeasonName, TeamId } from '../assets/types';
 import { fetchSeasonRQ } from '.';
 import { ConfirmContext } from '../context/ConfirmContext';
 import { useContext } from 'react';
@@ -64,6 +65,12 @@ export const useUpdateSeason = (props: HookProps = {}) => {
 // 2. FIREBASE FUNCTIONS
 // ------------------------------
 
+/**
+ * Adds a new season document to Firestore.
+ *
+ * @param seasonName - The name of the season to add.
+ * @param seasonData - The season data object to add.
+ */
 export const addSeasonRQ = async ({
   seasonName,
   seasonData,
@@ -75,6 +82,12 @@ export const addSeasonRQ = async ({
   await setDoc(seasonRef, { ...seasonData, seasonCompleted: false });
 };
 
+/**
+ * Updates an existing season document in Firestore.
+ *
+ * @param seasonName - The name of the season to update.
+ * @param seasonData - The partial season data to update.
+ */
 export const updateSeasonRQ = async ({
   seasonName,
   seasonData,
