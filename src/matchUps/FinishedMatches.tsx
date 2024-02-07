@@ -1,4 +1,8 @@
-import { RoundRobinScheduleFinished, Season } from '../assets/types';
+// types
+import { RoundRobinScheduleFinished } from '../assets/typesFolder/matchupTypes';
+import { Season } from '../assets/typesFolder/seasonTypes';
+
+// css
 import './matchups.css';
 
 type FinishedMatchesProps = {

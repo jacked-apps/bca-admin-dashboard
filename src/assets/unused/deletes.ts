@@ -10,9 +10,13 @@
 // IMPORTS and VARIABLES
 // ------------------------------
 import { doc, deleteDoc, updateDoc, arrayRemove } from '@firebase/firestore'; // Import getFirestore from Firebase
-import { db } from '../firebaseConfig';
+import { db } from '../../firebaseConfig';
 import { Email, SeasonName, TeamId } from '../assets/types';
-import { deleteFailed, deleteSuccess, fromStore } from './firebaseConsts';
+import {
+  deleteFailed,
+  deleteSuccess,
+  fromStore,
+} from '../../firebase/firebaseConsts';
 // ------------------------------
 // 1. USER-RELATED
 // ------------------------------

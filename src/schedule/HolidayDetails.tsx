@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
+
+// utilities
 import { readableDateWithDay, toJSDate } from '../assets/dateFunctions';
-import { Holiday, Schedule } from '../assets/types';
-import './schedule.css';
 import {
   checkForConflicts,
   insertHolidayIntoSchedule,
 } from '../assets/globalFunctions';
+
+// css
+import './schedule.css';
+
+// types
+import { Holiday, Schedule } from '../assets/typesFolder/seasonTypes';
 
 type HolidayDetailsProps = {
   activeHoliday: Holiday;

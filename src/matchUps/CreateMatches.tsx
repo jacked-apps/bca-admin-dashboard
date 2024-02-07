@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { RoundRobinSchedule } from '../assets/types';
-import { Reads } from '../firebase/firebaseFunctions';
+import { Reads } from '../assets/unused/firebaseFunctions';
 import './matchups.css';
+import { RoundRobinSchedule } from '../assets/typesFolder/matchupTypes';
 
 type CreateMatchesProps = {
   numberOfTeams: number;

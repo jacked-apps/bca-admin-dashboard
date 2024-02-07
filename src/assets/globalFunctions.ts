@@ -30,15 +30,14 @@ import { daysOfTheWeek, notDate } from './globalVariables';
 import { getTimeOfYear, readableDate, toJSDate } from './dateFunctions';
 import Holidays from 'date-holidays';
 import {
-  Game,
-  Holiday,
-  PoolHall,
   DateOrStamp,
-  PastPlayer,
-  TeamPlayer,
-  Schedule,
+  Game,
+  PoolHall,
   SeasonName,
-} from './types';
+} from './typesFolder/sharedTypes';
+import { Holiday, Schedule } from './typesFolder/seasonTypes';
+import { PastPlayer } from './typesFolder/userTypes';
+import { TeamPlayer } from './typesFolder/teamTypes';
 
 // ------------------------------
 // 1. SEASON-RELATED Functions
@@ -140,7 +139,6 @@ export const createHolidayObject = (
 // ------------------------------
 // 3. TEAM-RELATED Functions
 // ------------------------------
-
 /**
  * Converts a pastPlayer object to a teamPlayerObject and assigns it to the specified role.
  * @param {PastPlayer} pastPlayer - A pastPlayer's data to be converted

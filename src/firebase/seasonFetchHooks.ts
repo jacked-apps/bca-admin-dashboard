@@ -21,7 +21,8 @@ import {
   doc,
   getDoc,
 } from '@firebase/firestore';
-import { Season, SeasonName } from '../assets/types';
+import { Season } from '../assets/typesFolder/seasonTypes';
+import { SeasonName } from '../assets/typesFolder/sharedTypes';
 
 // ------------------------------
 // 1. HOOKS

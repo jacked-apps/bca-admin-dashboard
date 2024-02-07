@@ -18,7 +18,8 @@
 import { useQuery } from 'react-query';
 import { db } from '../firebaseConfig';
 import { collection, doc, getDoc, getDocs } from '@firebase/firestore';
-import { CurrentUser, Email, PastPlayer } from '../assets/types';
+import { Email } from '../assets/typesFolder/sharedTypes';
+import { CurrentUser, PastPlayer } from '../assets/typesFolder/userTypes';
 
 // ------------------------------
 // 1. HOOKS

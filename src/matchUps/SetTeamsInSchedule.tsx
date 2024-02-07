@@ -1,12 +1,18 @@
 import { useMemo, useState, useEffect } from 'react';
+
+// utilities
+import { Creates } from '../assets/unused/firebaseFunctions';
+import { toast } from 'react-toastify';
+
+// types
 import {
   RoundRobinSchedule,
-  Team,
   RoundRobinScheduleFinished,
-} from '../assets/types';
+} from '../assets/typesFolder/matchupTypes';
+import { Team } from '../assets/typesFolder/teamTypes';
+
+// css
 import './matchups.css';
-import { Creates } from '../firebase/firebaseFunctions';
-import { toast } from 'react-toastify';
 
 type SetTeamsInScheduleProps = {
   teamOrder: Team[];

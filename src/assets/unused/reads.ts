@@ -29,7 +29,7 @@ import {
   query,
   where,
 } from '@firebase/firestore';
-import { db } from '../firebaseConfig';
+import { db } from '../../firebaseConfig';
 import {
   Email,
   PastPlayer,
@@ -43,7 +43,11 @@ import {
   CurrentUser,
   //TeamId,
 } from '../assets/types';
-import { failedFetch, fromStore, notFound } from './firebaseConsts';
+import {
+  failedFetch,
+  fromStore,
+  notFound,
+} from '../../firebase/firebaseConsts';
 
 // ------------------------------
 // 1. USER-RELATED READS

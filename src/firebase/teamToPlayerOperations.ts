@@ -29,14 +29,7 @@ import {
   runTransaction,
 } from '@firebase/firestore'; // Import getFirestore from Firebase
 import { db } from '../firebaseConfig';
-import {
-  Email,
-  PlayerId,
-  Team,
-  TeamId,
-  TeamPlayer,
-  TeamPlayerRole,
-} from '../assets/types';
+
 import {
   fetchCurrentUserById,
   fetchPastPlayerByIdRQ,
@@ -44,7 +37,14 @@ import {
 } from '.';
 import { useMutation } from 'react-query';
 
-// this
+// types
+import { TeamId, Email, PlayerId } from '../assets/typesFolder/sharedTypes';
+import {
+  TeamPlayerRole,
+  TeamPlayer,
+  Team,
+} from '../assets/typesFolder/teamTypes';
+
 export const useAddPlayerToTeam = () => {
   return useMutation(addPlayerToTeamRQ, {
     onSuccess: () => {

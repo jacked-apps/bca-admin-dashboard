@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
 
-import { PastPlayer } from '../assets/types';
-import { Reads, Creates, Deletes } from '../firebase/firebaseFunctions';
+// utilities
+import { toast } from 'react-toastify';
 import { FieldEntryDialog } from '../components/FieldEntryDialog';
 import { failedUpdate } from '../firebase/firebaseConsts';
 import { validatePastPlayerFields } from '../assets/validateFields';
+
+// types
+import { PastPlayer } from '../assets/typesFolder/userTypes';
+// firebase
+import { Reads, Creates, Deletes } from '../assets/unused/firebaseFunctions';
 
 type EmailFieldProps = {
   pastPlayer: PastPlayer;

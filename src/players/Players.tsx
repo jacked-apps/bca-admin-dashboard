@@ -1,10 +1,15 @@
 import { useState } from 'react';
+// components
 import { PastPlayersList } from './PastPlayersList';
-import { CurrentUser, PastPlayer } from '../assets/types';
+import { CurrentPlayersList } from './CurrentPlayersList';
+import { Info } from './Info';
+
+// types
+import { PastPlayer, CurrentUser } from '../assets/typesFolder/userTypes';
+
+// firebase
 import { useFetchCurrentUsers } from '../customHooks/useFetchCurrentUsers';
 import { useFetchPastPlayers } from '../customHooks/useFetchPastPlayers';
-import { Info } from './Info';
-import { CurrentPlayersList } from './CurrentPlayersList';
 import { failedFetch } from '../firebase/firebaseConsts';
 
 export const Players = () => {

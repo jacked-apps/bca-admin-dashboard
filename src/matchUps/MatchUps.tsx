@@ -1,6 +1,7 @@
 // hooks
 import { useCallback, useEffect, useState } from 'react';
 import { useSeasons } from '../customHooks/useSeasons';
+
 // components
 import { SeasonList } from '../seasons/SeasonList';
 import { TeamOrder } from './TeamOrder';
@@ -11,11 +12,12 @@ import { SetTeamsInSchedule } from './SetTeamsInSchedule';
 import {
   RoundRobinSchedule,
   RoundRobinScheduleFinished,
-  Season,
-  Team,
-} from '../assets/types';
+} from '../assets/typesFolder/matchupTypes';
+import { Season } from '../assets/typesFolder/seasonTypes';
+import { Team } from '../assets/typesFolder/teamTypes';
+
 // firebase
-import { Reads } from '../firebase/firebaseFunctions';
+import { Reads } from '../assets/unused/firebaseFunctions';
 // styles
 import './matchups.css';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidV4 } from 'uuid';
-import { PastPlayer } from '../assets/types';
+import { PastPlayer } from '../assets/typesFolder/userTypes';
 
 type PastPlayerSearchProps = {
   list: PastPlayer[];

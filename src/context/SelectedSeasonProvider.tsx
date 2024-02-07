@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { Season } from '../assets/types';
+import { Season } from '../assets/typesFolder/seasonTypes';
 
 export const SelectedSeasonContext = createContext({
   selectedSeason: null as Season | null,

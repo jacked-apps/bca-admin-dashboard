@@ -1,4 +1,4 @@
-import { Schedule } from '../assets/types';
+import { Schedule } from '../assets/typesFolder/seasonTypes';
 import './schedule.css';
 
 type ScheduleViewProps = {

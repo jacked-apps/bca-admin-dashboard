@@ -12,9 +12,14 @@
 // ------------------------------
 //import { daysOfTheWeek } from './globalVariables';
 import { Timestamp } from '@firebase/firestore';
-import { TimeOfYear, DateFormat, StampOrInvalid, NotDate } from './types';
 import { seasonLength } from './globalVariables';
 import { notDate } from './globalVariables';
+import {
+  DateFormat,
+  NotDate,
+  StampOrInvalid,
+  TimeOfYear,
+} from './typesFolder/sharedTypes';
 // ------------------------------
 // 1. Date Conversion Functions
 // ------------------------------

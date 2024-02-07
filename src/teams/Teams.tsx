@@ -1,14 +1,16 @@
 import { useContext, useState } from 'react';
+
+// context
 import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
 
-// Components
+// components
 import { TeamsList } from './TeamsList';
 import { TeamDetails } from './TeamDetails';
 import { AddTeamButton } from './AddTeamButton';
 import { SeasonList } from '../seasons/SeasonList';
 import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
-// Firebase and utility functions
+// firebase
 import { useFetchTeamsFromSeason, fetchTeamByIdRQ } from '../firebase';
 import {
   useAddNewTeamToSeason,
@@ -16,9 +18,12 @@ import {
   useUpdateTeamData,
 } from '../firebase/teamUpdateHooks';
 
-// CSS and Types
+// css
 import './teams.css';
-import { Team, TeamName } from '../assets/types';
+
+// types
+import { TeamName } from '../assets/typesFolder/sharedTypes';
+import { Team } from '../assets/typesFolder/teamTypes';
 
 export const Teams = () => {
   // state

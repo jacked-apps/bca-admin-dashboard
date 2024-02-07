@@ -22,8 +22,8 @@ import {
   collection,
   arrayUnion,
 } from '@firebase/firestore'; // Import getFirestore from Firebase
-import { db } from '../firebaseConfig';
-import { blankPlayerObject } from '../assets/globalVariables';
+import { db } from '../../firebaseConfig';
+import { blankPlayerObject } from '../globalVariables';
 import {
   PastPlayer,
   RoundRobinScheduleFinished,
@@ -31,7 +31,7 @@ import {
   SeasonName,
   TeamName,
 } from '../assets/types';
-import { generateNickname } from '../assets/globalFunctions';
+import { generateNickname } from '../globalFunctions';
 import { Reads } from './firebaseFunctions';
 import { toast } from 'react-toastify';
 
@@ -41,7 +41,7 @@ import {
   createSuccess,
   updateSuccess,
   failedUpdate,
-} from './firebaseConsts';
+} from '../../firebase/firebaseConsts';
 
 // ------------------------------
 // 1. USER-RELATED POSTS

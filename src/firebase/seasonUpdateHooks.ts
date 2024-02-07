@@ -21,12 +21,13 @@ import {
   doc,
   setDoc,
 } from '@firebase/firestore';
-import { Season, SeasonName, TeamId } from '../assets/types';
 import { fetchSeasonRQ } from '.';
 import { ConfirmContext } from '../context/ConfirmContext';
 import { useContext } from 'react';
 import { HookProps, mutationConfig } from './utilities';
 import { toast } from 'react-toastify';
+import { Season } from '../assets/typesFolder/seasonTypes';
+import { SeasonName } from '../assets/typesFolder/sharedTypes';
 
 // ------------------------------
 // 1. HOOKS

@@ -1,7 +1,11 @@
+// utilities
 import { shuffleArray } from '../assets/globalFunctions';
-import { Team } from '../assets/types';
-import './matchups.css';
 import { toast } from 'react-toastify';
+
+// types
+import { Team } from '../assets/typesFolder/teamTypes';
+
+import './matchups.css';
 
 type TeamOrderProps = {
   teamOrder: Team[];

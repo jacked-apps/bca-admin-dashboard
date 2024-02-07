@@ -14,8 +14,9 @@
 import { useQuery } from 'react-query';
 import { db } from '../firebaseConfig';
 import { doc, getDoc } from '@firebase/firestore';
-import { SeasonName, Team } from '../assets/types';
 import { fetchSeasonRQ } from './seasonFetchHooks';
+import { SeasonName } from '../assets/typesFolder/sharedTypes';
+import { Team } from '../assets/typesFolder/teamTypes';
 
 // ------------------------------
 // 1. HOOKS

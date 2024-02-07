@@ -13,7 +13,10 @@
 //------------------------
 // IMPORTS
 //------------------------
+// react-query
 import { useMutation } from 'react-query';
+
+//firebase
 import { db } from '../firebaseConfig';
 import {
   collection,
@@ -26,13 +29,19 @@ import {
   runTransaction,
   setDoc,
 } from '@firebase/firestore';
-import { Season, SeasonName, Team, TeamId, TeamName } from '../assets/types';
 import { updateSeasonRQ, fetchSeasonRQ, removeAllPlayersFromTeamRQ } from '.';
+
+// utilities
 import { HookProps, mutationConfig } from './utilities';
+import { createNewTeamData } from '../assets/globalFunctions';
+
+// contexts
 import { useContext } from 'react';
 import { ConfirmContext } from '../context/ConfirmContext';
-import { toast } from 'react-toastify';
-import { createNewTeamData } from '../assets/globalFunctions';
+
+// types
+import { SeasonName, TeamId } from '../assets/typesFolder/sharedTypes';
+import { Team } from '../assets/typesFolder/teamTypes';
 
 // ------------------------------
 // 1. HOOKS

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CurrentUser, PastPlayer } from '../assets/types';
+import { PastPlayer, CurrentUser } from '../assets/typesFolder/userTypes';
 
 type PastPlayerTitleProps = {
   pastPlayer: PastPlayer;

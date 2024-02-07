@@ -1,17 +1,24 @@
-import React, { useRef } from 'react';
 import { toast } from 'react-toastify';
 
+// components
 import { Explanation } from './Explanation';
+
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { addHolidaySchema } from './schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 // date picker
 import ReactDatePicker from 'react-datepicker';
+
+// css
 import 'react-datepicker/dist/react-datepicker.css';
-import { Holiday } from '../assets/types';
 import './schedule.css';
+
+// utilities
 import { readableDate } from '../assets/dateFunctions';
+
+// types
+import { Holiday } from '../assets/typesFolder/seasonTypes';
 
 type AddHolidayProps = {
   setEditedHolidays: (updater: (prevHolidays: Holiday[]) => Holiday[]) => void;

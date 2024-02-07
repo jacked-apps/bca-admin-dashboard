@@ -1,29 +1,14 @@
 import { useContext, useEffect } from 'react';
 import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
-//css
-import './seasons.css';
-import 'react-datepicker/dist/react-datepicker.css';
-
-// form
-import { useForm } from 'react-hook-form';
-import { seasonSchema } from './schema';
-import { yupResolver } from '@hookform/resolvers/yup';
-
 // components
 import ReactDatePicker from 'react-datepicker';
 import { LeagueDates } from './LeagueDates';
 import { FormSelect } from './FormSelect';
 
-// types
-import { Game, Holiday, PoolHall, Season } from '../assets/types';
-import { FormValues } from './seasonTypes';
-
-// functions
+// utilities
 import { convertDateToTimestamp } from '../assets/dateFunctions';
 import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
 import { useAddSeason, useFetchSeasons } from '../firebase';
-
-// variables
 import {
   games,
   poolHalls,
@@ -32,6 +17,20 @@ import {
   seasonLength,
   daysOfTheWeek,
 } from '../assets/globalVariables';
+
+// form
+import { useForm } from 'react-hook-form';
+import { seasonSchema } from './schema';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+//css
+import './seasons.css';
+import 'react-datepicker/dist/react-datepicker.css';
+
+// types
+import { FormValues } from './seasonTypes';
+import { Season, Holiday } from '../assets/typesFolder/seasonTypes';
+import { PoolHall, Game } from '../assets/typesFolder/sharedTypes';
 
 type SeasonEntryFormProps = {
   seasonData: Season;

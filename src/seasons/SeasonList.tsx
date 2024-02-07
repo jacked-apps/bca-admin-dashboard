@@ -1,10 +1,18 @@
-//import { useSeasons } from '../customHooks/useSeasons';
+// context
 import { useContext } from 'react';
 import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
-import './seasons.css';
-import { useNavigate } from 'react-router-dom';
-import { useFetchSeasons } from '../firebase';
+
+// components
 import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+
+// utilities
+import { useNavigate } from 'react-router-dom';
+
+// firebase
+import { useFetchSeasons } from '../firebase';
+
+// css
+import './seasons.css';
 
 export const SeasonList = () => {
   const navigate = useNavigate();

@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import './schedule.css';
 
 type FinishScheduleProps = {

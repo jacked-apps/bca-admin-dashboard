@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import { PastPlayer } from '../assets/types';
+// components
+import { FieldEntryDialog } from '../components/FieldEntryDialog';
+
+// utilities
 import { PastPlayerProfileFields, profileFields } from './buttonFields';
-import { Reads, Updates } from '../firebase/firebaseFunctions';
 import { formatName, formatPhoneNumber } from '../assets/globalFunctions';
 import { validatePastPlayerFields } from '../assets/validateFields';
-import { FieldEntryDialog } from '../components/FieldEntryDialog';
 import { toast } from 'react-toastify';
+
+// types
+import { PastPlayer } from '../assets/typesFolder/userTypes';
+
+// firebase
+import { Reads, Updates } from '../assets/unused/firebaseFunctions';
 
 type Props = {
   pastPlayer: PastPlayer;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { CurrentUser } from '../assets/types';
 import { FaSearch } from 'react-icons/fa';
+import { CurrentUser } from '../assets/typesFolder/userTypes';
 
 type CurrentUserListProps = {
   currentUsers: CurrentUser[];

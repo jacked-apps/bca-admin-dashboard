@@ -1,4 +1,4 @@
-import { shuffleArray } from '../assets/globalFunctions';
+import { shuffleArray } from '../../globalFunctions';
 import { generateRoundRobinSchedule } from './newRoundRobinGenerator';
 
 type RRSchedule = { [week: string]: [number, number][] };

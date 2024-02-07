@@ -1,5 +1,5 @@
-import { Holiday, Season } from '../assets/types';
 import { readableDate } from '../assets/dateFunctions';
+import { Season, Holiday } from '../assets/typesFolder/seasonTypes';
 import './seasons.css';
 
 type SeasonEntryDetailsProps = {

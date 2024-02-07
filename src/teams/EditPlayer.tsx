@@ -1,13 +1,20 @@
 import { useState } from 'react';
+
+// components
 import { PastPlayerSearch } from '../components/PastPlayerSearch';
-import { TeamPlayer, TeamPlayerRole, PastPlayer } from '../assets/types';
+
+// types
+import { TeamPlayerRole, TeamPlayer } from '../assets/typesFolder/teamTypes';
+import { PastPlayer } from '../assets/typesFolder/userTypes';
+
+// firebase
+import { useFetchPastPlayers } from '../firebase';
 //import { useFetchPastPlayers } from '../customHooks/useFetchPastPlayers';
 
 type EditPlayerProps = {
   role: TeamPlayerRole;
   playerInfo: TeamPlayer;
   onSelect: (player: PastPlayer, role: TeamPlayerRole) => void;
-  //playerData: PastPlayer[];
 };
 
 export const EditPlayer: React.FC<EditPlayerProps> = ({
@@ -16,7 +23,7 @@ export const EditPlayer: React.FC<EditPlayerProps> = ({
   onSelect,
   //playerData,
 }) => {
-  const { pastPlayers, isLoading, error } = useFetchPastPlayers();
+  const { data: pastPlayers, isLoading, error } = useFetchPastPlayers();
   const [isEditing, setIsEditing] = useState(false);
 
   if (isLoading) {
@@ -37,7 +44,7 @@ export const EditPlayer: React.FC<EditPlayerProps> = ({
       <div style={{ display: 'flex' }}>
         <div style={{ marginRight: '15px' }}>{role}:</div>
         <PastPlayerSearch
-          list={pastPlayers}
+          list={pastPlayers ? pastPlayers : []}
           onSelect={player => {
             onSelect(player, role);
             setIsEditing(false);

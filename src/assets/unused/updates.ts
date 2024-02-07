@@ -25,7 +25,7 @@ import {
   //arrayUnion,
   arrayRemove,
 } from '@firebase/firestore'; // Import getFirestore from Firebase
-import { db } from '../firebaseConfig';
+import { db } from '../../firebaseConfig';
 import {
   Email,
   PastPlayer,
@@ -38,7 +38,7 @@ import {
   TeamPlayer,
   CurrentUser,
 } from '../assets/types';
-import { failedUpdate, updateSuccess } from './firebaseConsts';
+import { failedUpdate, updateSuccess } from '../../firebase/firebaseConsts';
 
 // ------------------------------
 // 1. USER-RELATED UPDATES

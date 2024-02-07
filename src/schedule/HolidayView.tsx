@@ -5,7 +5,7 @@ import { HolidayList } from './HolidayList';
 import { HolidayDetails } from './HolidayDetails';
 import { FinishSchedule } from './FinishSchedule';
 import { AddHoliday } from './AddHoliday';
-import { updateSeasonSchedule } from '../firebase/updates';
+import { updateSeasonSchedule } from '../assets/unused/updates';
 import { toast } from 'react-toastify';
 import { useSeasons } from '../customHooks/useSeasons';
 

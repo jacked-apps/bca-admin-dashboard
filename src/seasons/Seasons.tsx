@@ -1,18 +1,21 @@
 import { useState } from 'react';
-// Types
-import { Holiday, Season } from '../assets/types';
-// Components
+// components
 import { SeasonEntryForm } from './SeasonEntryForm';
 import { SeasonEntryDetails } from './SeasonEntryDetails';
-// Variables and Functions
+
+// utilities
 import { daysOfTheWeek, initialSchedule } from '../assets/globalVariables';
 import {
   convertDateToTimestamp,
   getSeasonEndDate,
 } from '../assets/dateFunctions';
 import { createHolidayObject } from '../assets/globalFunctions';
-// CSS
+
+// css
 import './seasons.css';
+
+// types
+import { Holiday, Season } from '../assets/typesFolder/seasonTypes';
 
 export const Seasons: React.FC = () => {
   //state

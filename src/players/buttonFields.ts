@@ -1,4 +1,5 @@
-import { Names, PastPlayer } from '../assets/types';
+import { Names } from '../assets/typesFolder/sharedTypes';
+import { PastPlayer } from '../assets/typesFolder/userTypes';
 
 export const nameFields: Array<{ fieldName: keyof Names; name: string }> = [
   {

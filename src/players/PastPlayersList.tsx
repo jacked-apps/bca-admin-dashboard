@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
-import { PastPlayer } from '../assets/types';
+
+// icons
 import { FaSearch } from 'react-icons/fa';
+
+// types
+import { PastPlayer } from '../assets/typesFolder/userTypes';
+
+// css
 import './players.css';
 
 type PastPlayersListProps = {

@@ -1,4 +1,4 @@
-import { TeamName } from '../assets/types';
+import { TeamName } from '../assets/typesFolder/sharedTypes';
 import './teams.css';
 
 type AddTeamButtonProps = {

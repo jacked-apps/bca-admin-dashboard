@@ -1,6 +1,5 @@
 import React from 'react';
 // types
-import { CurrentUser, PastPlayer } from '../assets/types';
 // components
 import { NameFields } from './NameFields';
 import { ProfileFields } from './ProfileFields';
@@ -8,6 +7,7 @@ import { ProfileFields } from './ProfileFields';
 import './players.css';
 import { EmailField } from './EmailField';
 import { Stats } from './Stats';
+import { PastPlayer, CurrentUser } from '../assets/typesFolder/userTypes';
 
 type InfoProps = {
   pastPlayer: PastPlayer | null;

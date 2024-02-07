@@ -1,12 +1,18 @@
+// components
 import { Navigation } from './navigation/Navigation';
 import { ToastContainer } from 'react-toastify';
-import { SeasonsProvider } from './context/SeasonsContext';
+
+// context
 import { SelectedSeasonProvider } from './context/SelectedSeasonProvider';
 import { ConfirmDialogProvider } from './context/ConfirmContext';
 import { QueryClientProvider, QueryClient } from 'react-query';
+
+// firebase
 import { ReactQueryDevtools } from 'react-query/devtools';
-import 'react-toastify/dist/ReactToastify.css';
 import './firebaseConfig';
+
+// css
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 
@@ -15,20 +21,18 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <SelectedSeasonProvider>
         <ConfirmDialogProvider>
-          <SeasonsProvider>
-            <Navigation />
-            <ToastContainer
-              position='top-left'
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              draggable
-              pauseOnHover
-              theme='colored'
-            />
-          </SeasonsProvider>
+          <Navigation />
+          <ToastContainer
+            position='top-left'
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            draggable
+            pauseOnHover
+            theme='colored'
+          />
         </ConfirmDialogProvider>
       </SelectedSeasonProvider>
       <ReactQueryDevtools initialIsOpen={false} />

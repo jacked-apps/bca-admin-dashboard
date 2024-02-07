@@ -1,13 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
+// components
 import { SeasonList } from '../seasons/SeasonList';
-import './schedule.css';
-import { Schedule } from '../assets/types';
+import { ScheduleView } from './ScheduleView';
+import { HolidayView } from './HolidayView';
+
+// utilities
 import { createBasicSchedule } from '../assets/globalFunctions';
 import { notDate } from '../assets/globalVariables';
 import { convertTimestampToDate } from '../assets/dateFunctions';
-import { ScheduleView } from './ScheduleView';
-import { HolidayView } from './HolidayView';
+
+// css
+import './schedule.css';
+
+// firebase
 import { useSeasons } from '../customHooks/useSeasons';
+
+// types
+import { Schedule } from '../assets/typesFolder/seasonTypes';
 
 export const Scheduler = () => {
   const { selectedSeason, isLoading, error } = useSeasons();

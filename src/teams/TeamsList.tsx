@@ -1,4 +1,4 @@
-import { Team } from '../assets/types';
+import { Team } from '../assets/typesFolder/teamTypes';
 import './teams.css';
 
 type TeamsListProps = {

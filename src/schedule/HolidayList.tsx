@@ -1,5 +1,5 @@
 import { readableDateWithDay } from '../assets/dateFunctions';
-import { Holiday } from '../assets/types';
+import { Holiday } from '../assets/typesFolder/seasonTypes';
 import './schedule.css';
 
 type HolidayListProps = {

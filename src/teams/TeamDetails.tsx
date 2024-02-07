@@ -1,9 +1,19 @@
 import { useState, useEffect } from 'react';
-import './teams.css';
-import { convertPastPlayerToTeamPlayer } from '../assets/globalFunctions';
-import { PastPlayer, Team, TeamPlayerRole } from '../assets/types';
-import { blankPlayerInfoObject, playerOrder } from '../assets/globalVariables';
+// components
 import { EditPlayer } from './EditPlayer';
+
+// utilities
+import { convertPastPlayerToTeamPlayer } from '../assets/globalFunctions';
+import { blankPlayerInfoObject, playerOrder } from '../assets/globalVariables';
+
+// css
+import './teams.css';
+
+// types
+import { Team, TeamPlayerRole } from '../assets/typesFolder/teamTypes';
+import { PastPlayer } from '../assets/typesFolder/userTypes';
+
+// firebase
 import { useAddPlayerToTeam } from '../firebase';
 
 type TeamDetailsProps = {

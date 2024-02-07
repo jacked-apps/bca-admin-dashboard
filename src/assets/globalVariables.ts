@@ -1,11 +1,7 @@
-import {
-  DayOfWeek,
-  Game,
-  PoolHall,
-  Schedule,
-  TeamPlayer,
-  TeamPlayerRole,
-} from './types';
+import { Schedule } from './typesFolder/seasonTypes';
+import { DayOfWeek, Game, PoolHall } from './typesFolder/sharedTypes';
+import { TeamPlayer, TeamPlayerRole } from './typesFolder/teamTypes';
+
 export const notDate = 'Invalid Date';
 export const daysOfTheWeek: DayOfWeek[] = [
   'Sunday',

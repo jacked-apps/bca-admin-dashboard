@@ -1,4 +1,4 @@
-import { Game, PoolHall } from '../assets/types';
+import { PoolHall, Game } from '../assets/typesFolder/sharedTypes';
 
 export type FormValues = {
   poolHall: PoolHall;
