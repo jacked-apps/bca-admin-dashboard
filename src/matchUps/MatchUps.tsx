@@ -1,6 +1,5 @@
 // hooks
-import { useCallback, useEffect, useState } from 'react';
-import { useSeasons } from '../customHooks/useSeasons';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 // components
 import { SeasonList } from '../seasons/SeasonList';
@@ -8,6 +7,7 @@ import { TeamOrder } from './TeamOrder';
 import { CreateMatches } from './CreateMatches';
 import { FinishedMatches } from './FinishedMatches';
 import { SetTeamsInSchedule } from './SetTeamsInSchedule';
+import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 // types
 import {
   RoundRobinSchedule,
@@ -17,13 +17,16 @@ import { Season } from '../assets/typesFolder/seasonTypes';
 import { Team } from '../assets/typesFolder/teamTypes';
 
 // firebase
+import { useFetchSeasons } from '../firebase';
 import { Reads } from '../assets/unused/firebaseFunctions';
 // styles
 import './matchups.css';
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 export const MatchUps = () => {
   // state
-  const { selectedSeason, isLoading, error } = useSeasons();
+  const { selectedSeason } = useContext(SelectedItemContext);
+  const { isLoading, error, refetch: fetchSeasons } = useFetchSeasons();
   const [teams, setTeams] = useState<Team[]>([]);
   const [teamOrder, setTeamOrder] = useState<Team[]>(teams);
   const [schedule, setSchedule] = useState<RoundRobinSchedule | null>(null);
@@ -79,8 +82,11 @@ export const MatchUps = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (error instanceof Error) {
+    return <ErrorAndRefetch error={error} onRetry={fetchSeasons} />;
+  }
+  if (!selectedSeason) {
+    return <div>No season selected</div>;
   }
 
   return (

@@ -1,6 +1,6 @@
 // context
 import { useContext } from 'react';
-import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 // components
 import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
@@ -16,10 +16,7 @@ import './seasons.css';
 
 export const SeasonList = () => {
   const navigate = useNavigate();
-  //const { seasons, selectedSeason, setSelectedSeason } = useSeasons();
-  const { selectedSeason, setSelectedSeason } = useContext(
-    SelectedSeasonContext,
-  );
+  const { selectedSeason, setSelectedSeason } = useContext(SelectedItemContext);
   const { data: seasons, isLoading, error, refetch } = useFetchSeasons();
   if (isLoading) return <p>Loading...</p>;
   if (error instanceof Error)

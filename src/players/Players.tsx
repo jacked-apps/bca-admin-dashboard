@@ -8,18 +8,18 @@ import { Info } from './Info';
 import { PastPlayer, CurrentUser } from '../assets/typesFolder/userTypes';
 
 // firebase
-import { useFetchCurrentUsers } from '../customHooks/useFetchCurrentUsers';
-import { useFetchPastPlayers } from '../customHooks/useFetchPastPlayers';
 import { failedFetch } from '../firebase/firebaseConsts';
+import { useFetchPastPlayers } from '../firebase';
+import { useFetchCurrentUsers } from '../firebase';
 
 export const Players = () => {
   const {
-    pastPlayers,
+    data: pastPlayers,
     isLoading: isLoadingPastPlayers,
     error: errorPastPlayers,
   } = useFetchPastPlayers();
   const {
-    currentUsers,
+    data: currentUsers,
     isLoading: isLoadingCurrentUsers,
     error: errorCurrentUsers,
   } = useFetchCurrentUsers();
@@ -51,7 +51,7 @@ export const Players = () => {
     <div className='player-container'>
       <PastPlayersList
         setChosenPastPlayer={setChosenPastPlayer}
-        pastPlayers={pastPlayers}
+        pastPlayers={pastPlayers || []}
       />
       <Info
         pastPlayer={chosenPastPlayer}
@@ -60,7 +60,7 @@ export const Players = () => {
       />
       <CurrentPlayersList
         setChosenCurrentUser={setChosenCurrentUser}
-        currentUsers={currentUsers}
+        currentUsers={currentUsers || []}
       />
     </div>
   );

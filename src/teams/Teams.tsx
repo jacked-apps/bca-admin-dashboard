@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 
 // context
-import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 // components
 import { TeamsList } from './TeamsList';
@@ -17,6 +17,7 @@ import {
   useRemoveTeamFromSeason,
   useUpdateTeamData,
 } from '../firebase/teamUpdateHooks';
+import { useQueryClient } from 'react-query';
 
 // css
 import './teams.css';
@@ -27,8 +28,9 @@ import { Team } from '../assets/typesFolder/teamTypes';
 
 export const Teams = () => {
   // state
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const { selectedSeason } = useContext(SelectedSeasonContext);
+  const { selectedSeason, selectedTeam, setSelectedTeam } =
+    useContext(SelectedItemContext);
+
   // database
   const {
     data: teams,
@@ -39,6 +41,7 @@ export const Teams = () => {
   const { mutate: updateTeam } = useUpdateTeamData({ useToast: true });
   const { mutate: removeTeam } = useRemoveTeamFromSeason({ useToast: true });
   const { mutate: addNewTeam } = useAddNewTeamToSeason({ useToast: true });
+  const queryClient = useQueryClient();
 
   // Event handlers
   const handleSave = async (editedTeam: Team) => {
@@ -84,8 +87,14 @@ export const Teams = () => {
     }
 
     try {
-      const upDatedTeamData = await fetchTeamByIdRQ(teamId);
-      setSelectedTeam(upDatedTeamData);
+      await queryClient.prefetchQuery(['teams', teamId], () =>
+        fetchTeamByIdRQ(teamId),
+      );
+      const teamData = queryClient.getQueryData([
+        'teams',
+        teamId,
+      ]) as Team | null;
+      setSelectedTeam(teamData);
     } catch (error) {
       console.error('Error fetching team data');
     }
@@ -104,11 +113,7 @@ export const Teams = () => {
     <div className='container'>
       <div className='teams-lists'>
         <SeasonList />
-        <TeamsList
-          teams={teams || []}
-          selectedTeam={selectedTeam}
-          handleTeamSelect={handleTeamSelect}
-        />
+        <TeamsList teams={teams || []} handleTeamSelect={handleTeamSelect} />
         {selectedSeason && <AddTeamButton onAddTeam={handleAddTeam} />}
       </div>
       <div className='teams-details'>

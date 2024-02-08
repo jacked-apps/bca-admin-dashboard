@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { SelectedSeasonContext } from '../context/SelectedSeasonProvider';
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 // components
 import ReactDatePicker from 'react-datepicker';
 import { LeagueDates } from './LeagueDates';
@@ -8,7 +8,6 @@ import { FormSelect } from './FormSelect';
 // utilities
 import { convertDateToTimestamp } from '../assets/dateFunctions';
 import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
-import { useAddSeason, useFetchSeasons } from '../firebase';
 import {
   games,
   poolHalls,
@@ -26,6 +25,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 //css
 import './seasons.css';
 import 'react-datepicker/dist/react-datepicker.css';
+
+// firebase
+import { useAddSeason, useFetchSeasons } from '../firebase';
 
 // types
 import { FormValues } from './seasonTypes';
@@ -49,7 +51,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   apaEvent,
   setApaEvent,
 }) => {
-  const { setSelectedSeason } = useContext(SelectedSeasonContext);
+  const { setSelectedSeason } = useContext(SelectedItemContext);
   const { addSeason } = useAddSeason({
     useToast: true,
     successToastLength: 6000,

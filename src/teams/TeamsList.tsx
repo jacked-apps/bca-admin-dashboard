@@ -1,17 +1,16 @@
+import { useContext } from 'react';
 import { Team } from '../assets/typesFolder/teamTypes';
+
 import './teams.css';
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 type TeamsListProps = {
   teams: Team[];
-  selectedTeam: Team | null;
   handleTeamSelect: (teamId: string | null) => void;
 };
 
-export const TeamsList = ({
-  teams,
-  selectedTeam,
-  handleTeamSelect,
-}: TeamsListProps) => {
+export const TeamsList = ({ teams, handleTeamSelect }: TeamsListProps) => {
+  const { selectedTeam } = useContext(SelectedItemContext);
   return (
     <div className='list-container'>
       <div className='list-title'>

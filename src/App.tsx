@@ -3,9 +3,9 @@ import { Navigation } from './navigation/Navigation';
 import { ToastContainer } from 'react-toastify';
 
 // context
-import { SelectedSeasonProvider } from './context/SelectedSeasonProvider';
 import { ConfirmDialogProvider } from './context/ConfirmContext';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { SelectedItemProvider } from './context/SelectedItemProvider';
 
 // firebase
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -19,7 +19,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SelectedSeasonProvider>
+      <SelectedItemProvider>
         <ConfirmDialogProvider>
           <Navigation />
           <ToastContainer
@@ -34,7 +34,7 @@ function App() {
             theme='colored'
           />
         </ConfirmDialogProvider>
-      </SelectedSeasonProvider>
+      </SelectedItemProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

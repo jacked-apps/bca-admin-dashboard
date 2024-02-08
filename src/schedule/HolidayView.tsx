@@ -1,13 +1,29 @@
-import { useState } from 'react';
-import { Holiday, Schedule, Season } from '../assets/types';
-import './schedule.css';
+import { useState, useContext } from 'react';
+
+// components
 import { HolidayList } from './HolidayList';
 import { HolidayDetails } from './HolidayDetails';
 import { FinishSchedule } from './FinishSchedule';
 import { AddHoliday } from './AddHoliday';
-import { updateSeasonSchedule } from '../assets/unused/updates';
+import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+
+// context
+import { SelectedItemContext } from '../context/SelectedItemProvider';
+
+// utilities
 import { toast } from 'react-toastify';
-import { useSeasons } from '../customHooks/useSeasons';
+
+// firebase
+//import { useSeasons } from '../customHooks/useSeasons';
+import { useFetchSeasons } from '../firebase';
+//TODO update to RQ
+import { updateSeasonSchedule } from '../assets/unused/updates';
+
+// types
+import { Schedule, Holiday } from '../assets/typesFolder/seasonTypes';
+
+// css
+import './schedule.css';
 
 type HolidayViewProps = {
   editedSchedule: Schedule;
@@ -19,7 +35,8 @@ export const HolidayView = ({
   setEditedSchedule,
   getBasicSchedule,
 }: HolidayViewProps) => {
-  const { selectedSeason, isLoading, error } = useSeasons();
+  const { selectedSeason } = useContext(SelectedItemContext);
+  const { isLoading, error, refetch: fetchSeasons } = useFetchSeasons();
   const holidays = selectedSeason?.holidays || [];
   const [editedHolidays, setEditedHolidays] = useState<Holiday[]>(holidays);
   const [activeHoliday, setActiveHoliday] = useState<Holiday | null>(null);
@@ -59,8 +76,8 @@ export const HolidayView = ({
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (error) {
-    return <div>{error.message}</div>;
+  if (error instanceof Error) {
+    return <ErrorAndRefetch error={error} onRetry={fetchSeasons} />;
   }
   return (
     <div className='holiday-view-container'>

@@ -31,7 +31,7 @@ export const TeamDetails = ({
 }: TeamDetailsProps) => {
   // set edited Team
   const [editedTeam, setEditedTeam] = useState<Team>(team);
-  const { mutate: addPlayerToTeam } = useAddPlayerToTeam();
+  const { mutate: addPlayerToTeam, isLoading } = useAddPlayerToTeam();
 
   // useEffect
   useEffect(() => {
@@ -66,7 +66,9 @@ export const TeamDetails = ({
       },
     }));
   };
-
+  if (isLoading) {
+    return <div>Adding player...</div>;
+  }
   return (
     <div className='d2-container'>
       <div className='details-name-group'>

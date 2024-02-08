@@ -13,7 +13,6 @@ import { convertTimestampToDate } from '../assets/dateFunctions';
 import './schedule.css';
 
 // firebase
-import { useSeasons } from '../customHooks/useSeasons';
 
 // types
 import { Schedule } from '../assets/typesFolder/seasonTypes';
