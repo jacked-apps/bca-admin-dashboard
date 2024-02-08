@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 // context
 import { SelectedItemContext } from '../context/SelectedItemProvider';

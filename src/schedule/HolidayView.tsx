@@ -14,7 +14,6 @@ import { SelectedItemContext } from '../context/SelectedItemProvider';
 import { toast } from 'react-toastify';
 
 // firebase
-//import { useSeasons } from '../customHooks/useSeasons';
 import { useFetchSeasons } from '../firebase';
 //TODO update to RQ
 import { updateSeasonSchedule } from '../assets/unused/updates';

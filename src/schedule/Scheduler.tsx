@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 // components
 import { SeasonList } from '../seasons/SeasonList';
 import { ScheduleView } from './ScheduleView';
 import { HolidayView } from './HolidayView';
+
+//context
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 // utilities
 import { createBasicSchedule } from '../assets/globalFunctions';
@@ -13,12 +16,15 @@ import { convertTimestampToDate } from '../assets/dateFunctions';
 import './schedule.css';
 
 // firebase
+import { useFetchSeasons } from '../firebase';
 
 // types
 import { Schedule } from '../assets/typesFolder/seasonTypes';
+import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 export const Scheduler = () => {
-  const { selectedSeason, isLoading, error } = useSeasons();
+  const { selectedSeason } = useContext(SelectedItemContext);
+  const { refetch: fetchSeasons, isLoading, error } = useFetchSeasons();
   const [editedSchedule, setEditedSchedule] = useState<Schedule>({});
 
   const getBasicSchedule = useCallback(() => {
@@ -45,8 +51,8 @@ export const Scheduler = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (error) {
-    return <div>{error.message}</div>;
+  if (error instanceof Error) {
+    return <ErrorAndRefetch error={error} onRetry={fetchSeasons} />;
   }
   return (
     <div>
