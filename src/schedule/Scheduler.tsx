@@ -3,6 +3,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { SeasonList } from '../seasons/SeasonList';
 import { ScheduleView } from './ScheduleView';
 import { HolidayView } from './HolidayView';
+import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 //context
 import { SelectedItemContext } from '../context/SelectedItemProvider';
@@ -20,7 +21,6 @@ import { useFetchSeasons } from '../firebase';
 
 // types
 import { Schedule } from '../assets/typesFolder/seasonTypes';
-import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 export const Scheduler = () => {
   const { selectedSeason } = useContext(SelectedItemContext);

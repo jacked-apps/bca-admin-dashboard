@@ -5,7 +5,6 @@ import { HolidayList } from './HolidayList';
 import { HolidayDetails } from './HolidayDetails';
 import { FinishSchedule } from './FinishSchedule';
 import { AddHoliday } from './AddHoliday';
-import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 // context
 import { SelectedItemContext } from '../context/SelectedItemProvider';
@@ -14,10 +13,8 @@ import { SelectedItemContext } from '../context/SelectedItemProvider';
 import { toast } from 'react-toastify';
 
 // firebase
-import { useFetchSeasons } from '../firebase';
-//TODO update to RQ
-import { updateSeasonSchedule } from '../assets/unused/updates';
 
+import { useUpdateSeasonSchedule } from '../firebase/scheduleUpdateHooks';
 // types
 import { Schedule, Holiday } from '../assets/typesFolder/seasonTypes';
 
@@ -35,7 +32,18 @@ export const HolidayView = ({
   getBasicSchedule,
 }: HolidayViewProps) => {
   const { selectedSeason } = useContext(SelectedItemContext);
-  const { isLoading, error, refetch: fetchSeasons } = useFetchSeasons();
+
+  const mutateObject = {
+    useToast: true,
+    successMessage: `Your new schedule has been added to ${
+      selectedSeason ? selectedSeason.seasonName : 'Season'
+    }.\nChoose a new season or move on to Match Ups.`,
+    failedMessage: 'Failed to add schedule to season.',
+    successToastLength: 6000,
+  };
+
+  const { mutate: updateSchedule, isLoading } =
+    useUpdateSeasonSchedule(mutateObject);
   const holidays = selectedSeason?.holidays || [];
   const [editedHolidays, setEditedHolidays] = useState<Holiday[]>(holidays);
   const [activeHoliday, setActiveHoliday] = useState<Holiday | null>(null);
@@ -57,27 +65,21 @@ export const HolidayView = ({
       toast.error('No season selected to save schedule.');
       return;
     }
-    try {
-      await updateSeasonSchedule(selectedSeason.seasonName, editedSchedule);
-      toast.success(
-        `Your new schedule has been added ${selectedSeason.seasonName}.\nChoose a new season or move on to Match Ups.`,
-      );
-    } catch (error) {
-      console.error('Failed to update schedule', error);
-      toast.error('Failed to update the schedule please try again.');
-    }
+    updateSchedule({
+      seasonName: selectedSeason.seasonName,
+      schedule: editedSchedule,
+    });
   };
 
   const handleResetSchedule = () => {
     setEditedHolidays(holidays);
     getBasicSchedule();
   };
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Updating...</div>;
   }
-  if (error instanceof Error) {
-    return <ErrorAndRefetch error={error} onRetry={fetchSeasons} />;
-  }
+
   return (
     <div className='holiday-view-container'>
       <div className='view-title'>Holidays</div>
