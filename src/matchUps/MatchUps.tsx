@@ -1,5 +1,5 @@
 // hooks
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 // components
 import { SeasonList } from '../seasons/SeasonList';
@@ -8,113 +8,102 @@ import { CreateMatches } from './CreateMatches';
 import { FinishedMatches } from './FinishedMatches';
 import { SetTeamsInSchedule } from './SetTeamsInSchedule';
 import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+
+// context
+import { SelectedItemContext } from '../context/SelectedItemProvider';
+
+// firebase
+import {
+  useFetchTeamsFromSeason,
+  useFetchFinishedRoundRobin,
+  useFetchRoundRobin,
+} from '../firebase';
+
 // types
+import { Team } from '../assets/typesFolder/teamTypes';
+
+// styles
+import './matchups.css';
 import {
   RoundRobinSchedule,
   RoundRobinScheduleFinished,
 } from '../assets/typesFolder/matchupTypes';
-import { Season } from '../assets/typesFolder/seasonTypes';
-import { Team } from '../assets/typesFolder/teamTypes';
-
-// firebase
-import { useFetchSeasons } from '../firebase';
-import { Reads } from '../assets/unused/firebaseFunctions';
-// styles
-import './matchups.css';
-import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 export const MatchUps = () => {
   // state
+  const [teamOrder, setTeamOrder] = useState<Team[]>([]);
+  const [modifiedSchedule, setModifiedSchedule] = useState<
+    RoundRobinSchedule | RoundRobinScheduleFinished | null
+  >(null);
+  const [matchupSchedule, setMatchupSchedule] = useState < Match;
   const { selectedSeason } = useContext(SelectedItemContext);
-  const { isLoading, error, refetch: fetchSeasons } = useFetchSeasons();
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [teamOrder, setTeamOrder] = useState<Team[]>(teams);
-  const [schedule, setSchedule] = useState<RoundRobinSchedule | null>(null);
-  const [finishedSchedule, setFinishedSchedule] =
-    useState<RoundRobinScheduleFinished | null>(null);
 
-  // effects
-  const fetchTeams = useCallback(async (seasonSelected: Season) => {
-    if (seasonSelected) {
-      try {
-        const fetchedTeams = await Reads.fetchTeamsFromSeason(
-          seasonSelected.id,
-        );
-        setTeamOrder(fetchedTeams || []);
-      } catch (error) {
-        console.error('Error fetching teams from firebase', error);
-      }
-    } else {
-      setTeams([]);
-    }
-  }, []);
+  const {
+    data: teams,
+    isLoading: isLoadingTeams,
+    error: errorTeams,
+    refetch: fetchTeams,
+  } = useFetchTeamsFromSeason(selectedSeason?.id);
 
-  useEffect(() => {
-    const fetchFinishedSchedule = async () => {
-      if (selectedSeason) {
-        try {
-          const fetchedFinishedSchedule =
-            await Reads.fetchFinishedRoundRobinSchedule(selectedSeason.id);
+  const {
+    data: initialSchedule,
+    isLoading: isLoadingInitialSchedule,
+    error: errorInitialSchedule,
+    refetch: fetchRoundRobin,
+  } = useFetchRoundRobin(teams?.length);
 
-          setFinishedSchedule(fetchedFinishedSchedule);
+  const {
+    data: finishedSchedule,
+    isLoading: isLoadingFinishedSchedule,
+    error: errorFinishedSchedule,
+    refetch: fetchFinishedRoundRobin,
+  } = useFetchFinishedRoundRobin(selectedSeason?.id);
 
-          console.log(fetchedFinishedSchedule);
-        } catch (error) {
-          console.error(
-            `Error fetching finished round robin for ${selectedSeason.id}`,
-          );
-        }
-      } else {
-        setFinishedSchedule(null);
-      }
-    };
-    fetchFinishedSchedule();
-  }, [selectedSeason]);
-
-  useEffect(() => {
-    if (!selectedSeason) {
-      setTeamOrder([]);
-      return;
-    }
-    fetchTeams(selectedSeason);
-  }, [selectedSeason, fetchTeams]);
-
-  if (isLoading) {
+  // loading handling
+  if (isLoadingTeams || isLoadingFinishedSchedule) {
     return <div>Loading...</div>;
   }
-  if (error instanceof Error) {
-    return <ErrorAndRefetch error={error} onRetry={fetchSeasons} />;
-  }
-  if (!selectedSeason) {
-    return <div>No season selected</div>;
-  }
+
+  // error handling
+  // const errors = [
+  //   { error: errorTeams, refetch: fetchTeams },
+  //   { error: errorFinishedSchedule, refetch: fetchFinishedRoundRobin },
+  // ];
+
+  // const activeError = errors.find(error => error.error instanceof Error);
+  // if (activeError instanceof Error) {
+  //   return (
+  //     <ErrorAndRefetch
+  //       error={activeError.error as Error}
+  //       onRetry={activeError.refetch}
+  //     />
+  //   );
+  // }
 
   return (
     <div className='container'>
       <div className='match-lists'>
         <SeasonList />
-        <TeamOrder teamOrder={teamOrder} setTeamOrder={setTeamOrder} />
+        <TeamOrder
+          teams={teams as Team[]}
+          teamOrder={teamOrder}
+          setTeamOrder={setTeamOrder}
+        />
         <SetTeamsInSchedule
           teamOrder={teamOrder}
-          schedule={schedule}
-          setFinishedSchedule={setFinishedSchedule}
-          finishedSchedule={finishedSchedule}
+          schedule={initialSchedule}
+          setModifiedSchedule={setModifiedSchedule}
+          modifiedSchedule={modifiedSchedule}
           seasonId={selectedSeason ? selectedSeason.id : ''}
         />
       </div>
       <div className='match-working-area'>
-        {finishedSchedule ? (
-          <FinishedMatches
+        {/* {<FinishedMatches
             finishedSchedule={finishedSchedule}
             selectedSeason={selectedSeason}
-          />
-        ) : (
-          <CreateMatches
-            numberOfTeams={teamOrder.length}
-            schedule={schedule}
-            setSchedule={setSchedule}
-          />
-        )}
+          />} */}
+
+        <CreateMatches schedule={initialSchedule} />
       </div>
     </div>
   );

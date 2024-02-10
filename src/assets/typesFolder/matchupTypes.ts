@@ -1,7 +1,7 @@
 import * as Shared from './sharedTypes';
 
-// Represents a Matchup document from the matchups Collection
-export type Matchup = {
+// Represents a document in the matchWeek collection
+export type MatchWeek = {
   // Table on which the teams will be playing e.g. 'Table 1'
   [tableNumber: string]: {
     home: TeamInfo; // Object includes teamName, lineup(object with the 3 players information) =>

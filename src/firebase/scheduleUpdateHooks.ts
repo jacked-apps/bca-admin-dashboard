@@ -2,11 +2,9 @@
 // TABLE OF CONTENTS
 // ------------------------------
 // 1. Hooks
-//    - useFetchSeasons
-//    - useFetchSeason
+//    - useUpdateSeasonSchedule
 // 2. FireBaseFunctions
-//    - fetchSeasonsRQ
-//    - fetchSeasonRQ
+//    - updateSeasonScheduleRQ
 
 //------------------------
 // IMPORTS
@@ -37,6 +35,12 @@ export const useUpdateSeasonSchedule = (props: HookProps = {}) => {
 // ------------------------------
 // 2. FIREBASE FUNCTIONS
 // ------------------------------
+/**
+ * Updates the schedule for the given season in Firestore.
+ *
+ * @param seasonName - The name of the season document to update.
+ * @param schedule - The updated schedule object to save.
+ */
 
 export const updateSeasonScheduleRQ = async ({
   seasonName,

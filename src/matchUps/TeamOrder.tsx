@@ -6,13 +6,27 @@ import { toast } from 'react-toastify';
 import { Team } from '../assets/typesFolder/teamTypes';
 
 import './matchups.css';
+import { useEffect, useRef } from 'react';
 
 type TeamOrderProps = {
+  teams: Team[] | null;
   teamOrder: Team[];
-  setTeamOrder: (array: Team[]) => void;
+  setTeamOrder: React.Dispatch<React.SetStateAction<Team[]>>;
 };
 
-export const TeamOrder = ({ teamOrder, setTeamOrder }: TeamOrderProps) => {
+export const TeamOrder = ({
+  teams,
+  teamOrder,
+  setTeamOrder,
+}: TeamOrderProps) => {
+  const prevTeamsRef = useRef<Team[] | undefined>();
+  useEffect(() => {
+    if (teams && teams !== prevTeamsRef.current) {
+      setTeamOrder([...teams]);
+      prevTeamsRef.current = teams;
+    }
+  }, [teams, teamOrder, setTeamOrder]);
+
   // change order functions
   const handleMove = (teamId: string, name: string) => {
     const newPosition = prompt(`Enter new position for ${name}`);

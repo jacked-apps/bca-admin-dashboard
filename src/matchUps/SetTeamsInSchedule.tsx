@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 // utilities
 import { Creates } from '../assets/unused/firebaseFunctions';
@@ -16,21 +16,25 @@ import './matchups.css';
 
 type SetTeamsInScheduleProps = {
   teamOrder: Team[];
-  schedule: RoundRobinSchedule | null;
-  setFinishedSchedule: (
-    finishedSchedule: RoundRobinScheduleFinished | null,
-  ) => void;
-  finishedSchedule: RoundRobinScheduleFinished | null;
+  schedule: RoundRobinSchedule | null | undefined;
+  setModifiedSchedule: Dispatch<
+    SetStateAction<RoundRobinSchedule | RoundRobinScheduleFinished | null>
+  >;
+  modifiedSchedule:
+    | RoundRobinSchedule
+    | RoundRobinScheduleFinished
+    | null
+    | undefined;
   seasonId: string;
 };
 export const SetTeamsInSchedule = ({
   teamOrder,
   schedule,
-  finishedSchedule,
-  setFinishedSchedule,
+  modifiedSchedule,
+  setModifiedSchedule,
   seasonId,
 }: SetTeamsInScheduleProps) => {
-  const [inserted, setInserted] = useState(!!finishedSchedule);
+  const [inserted, setInserted] = useState(false);
 
   const useTeamOrder = useMemo(() => {
     const order = teamOrder.map(team => {
@@ -45,25 +49,25 @@ export const SetTeamsInSchedule = ({
   }, [teamOrder]);
 
   useEffect(() => {
-    setInserted(!!finishedSchedule);
-  }, [finishedSchedule]);
+    setInserted(!!modifiedSchedule);
+  }, [modifiedSchedule]);
 
   const handleRevert = () => {
-    setFinishedSchedule(null);
+    setModifiedSchedule(null);
     setInserted(false);
   };
 
   const handleSave = async () => {
-    if (!finishedSchedule) {
+    if (!modifiedSchedule) {
       return;
     }
-    try {
-      await Creates.addFinishedRoundRobin(seasonId, finishedSchedule);
-      toast.success(`Finished schedule added to ${seasonId} successfully`);
-    } catch (error) {
-      console.error(`Error adding finished schedule: ${error}`);
-      toast.error('An Error occurred while saving this schedule');
-    }
+    // try {
+    //   await Creates.addFinishedRoundRobin(seasonId, finishedSchedule);
+    //   toast.success(`Finished schedule added to ${seasonId} successfully`);
+    // } catch (error) {
+    //   console.error(`Error adding finished schedule: ${error}`);
+    //   toast.error('An Error occurred while saving this schedule');
+    // }
   };
 
   const handleInsertTeams = () => {
@@ -90,7 +94,8 @@ export const SetTeamsInSchedule = ({
         finishedRoundRobin[week] = finishedWeekArray;
       });
     }
-    setFinishedSchedule(finishedRoundRobin);
+    setModifiedSchedule(finishedRoundRobin);
+    console.log(finishedRoundRobin);
     setInserted(true);
   };
 

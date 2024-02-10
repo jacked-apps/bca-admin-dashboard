@@ -1,35 +1,11 @@
-import { useEffect } from 'react';
-import { Reads } from '../assets/unused/firebaseFunctions';
 import './matchups.css';
 import { RoundRobinSchedule } from '../assets/typesFolder/matchupTypes';
 
 type CreateMatchesProps = {
-  numberOfTeams: number;
-  schedule: RoundRobinSchedule | null;
-  setSchedule: (schedule: RoundRobinSchedule) => void;
+  schedule: RoundRobinSchedule | null | undefined;
 };
 
-export const CreateMatches = ({
-  numberOfTeams,
-  schedule,
-  setSchedule,
-}: CreateMatchesProps) => {
-  useEffect(() => {
-    const fetchSchedule = async () => {
-      let useNumber = numberOfTeams;
-      if (numberOfTeams % 2 === 1) {
-        useNumber++;
-      }
-      try {
-        const fetchedSchedule = await Reads.fetchRoundRobinSchedule(useNumber);
-        setSchedule(fetchedSchedule);
-      } catch (error) {
-        console.error('Error fetching schedule', error);
-      }
-    };
-    fetchSchedule();
-  }, [numberOfTeams, setSchedule]);
-
+export const CreateMatches = ({ schedule }: CreateMatchesProps) => {
   return (
     <div>
       Create Matches

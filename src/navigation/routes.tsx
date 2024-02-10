@@ -4,6 +4,7 @@ import { Teams } from '../teams/Teams';
 import { Scheduler } from '../schedule/Scheduler';
 import { MatchUps } from '../matchUps/MatchUps';
 import { Players } from '../players/Players';
+import { Matchups2 } from '../matchUps/Matchups2';
 
 export const routes = [
   { name: 'Home', path: '/', Component: Home },

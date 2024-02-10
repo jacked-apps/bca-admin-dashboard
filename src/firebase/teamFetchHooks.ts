@@ -11,7 +11,7 @@
 //------------------------
 // IMPORTS
 //------------------------
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 import { db } from '../firebaseConfig';
 import { doc, getDoc } from '@firebase/firestore';
 import { fetchSeasonRQ } from './seasonFetchHooks';
@@ -28,12 +28,19 @@ export const useFetchTeamById = (teamId: string | undefined) => {
   });
 };
 
-export const useFetchTeamsFromSeason = (seasonName: SeasonName | undefined) => {
-  return useQuery(
+interface FetchTeamsOptions extends UseQueryOptions<Team[], unknown> {
+  onSuccess?: (team: Team[]) => void;
+}
+export const useFetchTeamsFromSeason = (
+  seasonName: SeasonName | undefined,
+  options?: FetchTeamsOptions,
+) => {
+  return useQuery<Team[], unknown>(
     ['teamsFromSeason', seasonName],
     () => fetchTeamsFromSeasonRQ(seasonName),
     {
       enabled: !!seasonName,
+      ...options,
     },
   );
 };
