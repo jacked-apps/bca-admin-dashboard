@@ -28,19 +28,20 @@ import {
   RoundRobinSchedule,
   RoundRobinScheduleFinished,
 } from '../assets/typesFolder/matchupTypes';
+import { useStateUpdater } from '../assets/useStateUpdater';
 
 export const MatchUps = () => {
   // state
-  const [teamOrder, setTeamOrder] = useState<Team[]>([]);
+  //const [teamOrder, setTeamOrder] = useState<Team[]>([]);
   const [modifiedSchedule, setModifiedSchedule] = useState<
     RoundRobinSchedule | RoundRobinScheduleFinished | null
   >(null);
-  const [matchupSchedule, setMatchupSchedule] = useState < Match;
   const { selectedSeason } = useContext(SelectedItemContext);
-
   const {
     data: teams,
     isLoading: isLoadingTeams,
+    state: teamOrder,
+    setState: setTeamOrder,
     error: errorTeams,
     refetch: fetchTeams,
   } = useFetchTeamsFromSeason(selectedSeason?.id);
@@ -59,6 +60,7 @@ export const MatchUps = () => {
     refetch: fetchFinishedRoundRobin,
   } = useFetchFinishedRoundRobin(selectedSeason?.id);
 
+  //useStateUpdater(teams, setTeamOrder);
   // loading handling
   if (isLoadingTeams || isLoadingFinishedSchedule) {
     return <div>Loading...</div>;

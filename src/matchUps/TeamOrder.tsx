@@ -14,19 +14,7 @@ type TeamOrderProps = {
   setTeamOrder: React.Dispatch<React.SetStateAction<Team[]>>;
 };
 
-export const TeamOrder = ({
-  teams,
-  teamOrder,
-  setTeamOrder,
-}: TeamOrderProps) => {
-  const prevTeamsRef = useRef<Team[] | undefined>();
-  useEffect(() => {
-    if (teams && teams !== prevTeamsRef.current) {
-      setTeamOrder([...teams]);
-      prevTeamsRef.current = teams;
-    }
-  }, [teams, teamOrder, setTeamOrder]);
-
+export const TeamOrder = ({ teamOrder, setTeamOrder }: TeamOrderProps) => {
   // change order functions
   const handleMove = (teamId: string, name: string) => {
     const newPosition = prompt(`Enter new position for ${name}`);

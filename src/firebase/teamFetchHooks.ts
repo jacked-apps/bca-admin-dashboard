@@ -17,6 +17,8 @@ import { doc, getDoc } from '@firebase/firestore';
 import { fetchSeasonRQ } from './seasonFetchHooks';
 import { SeasonName } from '../assets/typesFolder/sharedTypes';
 import { Team } from '../assets/typesFolder/teamTypes';
+import { useState } from 'react';
+import { useStateCreator, useStateUpdater } from '../assets/useStateUpdater';
 
 // ------------------------------
 // 1. HOOKS
@@ -28,21 +30,17 @@ export const useFetchTeamById = (teamId: string | undefined) => {
   });
 };
 
-interface FetchTeamsOptions extends UseQueryOptions<Team[], unknown> {
-  onSuccess?: (team: Team[]) => void;
-}
-export const useFetchTeamsFromSeason = (
-  seasonName: SeasonName | undefined,
-  options?: FetchTeamsOptions,
-) => {
-  return useQuery<Team[], unknown>(
+export const useFetchTeamsFromSeason = (seasonName: SeasonName | undefined) => {
+  const query = useQuery<Team[], unknown>(
     ['teamsFromSeason', seasonName],
     () => fetchTeamsFromSeasonRQ(seasonName),
     {
       enabled: !!seasonName,
-      ...options,
     },
   );
+  // creates and returns a state and setter that will update whenever the teams does a fetch
+  const [state, setState] = useStateCreator(query.data);
+  return { ...query, state, setState };
 };
 
 // ------------------------------
