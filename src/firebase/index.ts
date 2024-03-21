@@ -7,3 +7,4 @@ export * from './seasonUpdateHooks';
 export * from './teamFetchHooks';
 export * from './teamToPlayerOperations';
 export * from './teamUpdateHooks';
+export * from './useAuth'

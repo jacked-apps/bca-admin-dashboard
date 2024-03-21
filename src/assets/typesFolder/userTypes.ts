@@ -29,7 +29,7 @@ export type PastPlayer = Shared.Names & {
 // needed to run most of the seasons data.
 export type CurrentUser = Shared.Names & {
   id: string;
-  isAdmin?: boolean;
+  isAdmin?: boolean | string;
   email: Shared.Email;
   stats?: { [game: string]: { wins: number; losses: number } };
   seasons: string[];

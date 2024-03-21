@@ -28,7 +28,7 @@ type SetTeamsInScheduleProps = {
   seasonId: string;
 };
 export const SetTeamsInSchedule = ({
-  teamOrder,
+  teamOrder = [],
   schedule,
   modifiedSchedule,
   setModifiedSchedule,
@@ -37,7 +37,7 @@ export const SetTeamsInSchedule = ({
   const [inserted, setInserted] = useState(false);
 
   const useTeamOrder = useMemo(() => {
-    const order = teamOrder.map(team => {
+    const order = teamOrder.map((team) => {
       return { teamName: team.teamName, id: team.id };
     });
 
@@ -74,9 +74,9 @@ export const SetTeamsInSchedule = ({
     const finishedRoundRobin: RoundRobinScheduleFinished = {};
     if (schedule) {
       const scheduleKeys = Object.keys(schedule);
-      scheduleKeys.forEach(week => {
+      scheduleKeys.forEach((week) => {
         const weekArray = schedule[week];
-        const finishedWeekArray = weekArray.map(match => {
+        const finishedWeekArray = weekArray.map((match) => {
           const homeTeamNumber = match.home - 1;
           const awayTeamNumber = match.away - 1;
 
@@ -100,7 +100,7 @@ export const SetTeamsInSchedule = ({
   };
 
   return (
-    <div className='set-team-button'>
+    <div className="set-team-button">
       {inserted ? (
         <button onClick={handleRevert}>Revert</button>
       ) : (
@@ -111,7 +111,7 @@ export const SetTeamsInSchedule = ({
         </button>
       )}
       {inserted && (
-        <button className='indent' onClick={handleSave}>
+        <button className="indent" onClick={handleSave}>
           Save
         </button>
       )}

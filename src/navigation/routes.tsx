@@ -4,10 +4,19 @@ import { Teams } from '../teams/Teams';
 import { Scheduler } from '../schedule/Scheduler';
 import { MatchUps } from '../matchUps/MatchUps';
 import { Players } from '../players/Players';
-import { Matchups2 } from '../matchUps/Matchups2';
+import { ElementType } from 'react';
 
-export const routes = [
+type Route = {
+  name: string;
+  path: string;
+  Component: ElementType;
+};
+
+export const publicRoutes: Route[] = [
   { name: 'Home', path: '/', Component: Home },
+];
+
+export const privateRoutes: Route[] = [
   { name: 'Seasons', path: '/seasons', Component: Seasons },
   { name: 'Teams', path: '/teams', Component: Teams },
   { name: 'Schedule', path: '/schedule', Component: Scheduler },
