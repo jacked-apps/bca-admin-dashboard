@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { Team } from '../assets/typesFolder/teamTypes';
 
 import './matchups.css';
-import { useEffect, useRef } from 'react';
 
 type TeamOrderProps = {
   teams: Team[] | null;

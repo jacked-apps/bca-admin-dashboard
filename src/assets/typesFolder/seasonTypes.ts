@@ -5,6 +5,7 @@ export type Season = {
   id: Shared.SeasonName; //  string; built by buildSeasonName()
   startDate: Shared.StampOrInvalid; // firebase Timestamp or "Invalid Date"
   endDate: Shared.StampOrInvalid; // firebase Timestamp or "Invalid Date"
+  seasonLength: number;
   game: Shared.Game; //'8 Ball' | '9 Ball' | '10 Ball';
   holidays: Holiday[]; // Array of Holiday Objects from fetchHolidays() or createHolidayObject()
   night: Shared.DayOfWeek; // 'Sunday'| 'Monday'| 'Tuesday'| 'Wednesday'| 'Thursday'| 'Friday'| 'Saturday';
@@ -28,7 +29,7 @@ export type Schedule = {
     matchUps: Shared.MatchupId; // matchup id from the matchups collection
   };
 
-  // this will be at least 18 dates more is probable as holidays will interfere with gameplay
+  // this will be at least 18 dates more is probable as holidays will interfere with game play
 };
 
 // Embedded on Season

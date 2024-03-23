@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SelectedItemContext } from '../context/SelectedItemProvider';
 // components
 import ReactDatePicker from 'react-datepicker';
@@ -6,15 +6,18 @@ import { LeagueDates } from './LeagueDates';
 import { FormSelect } from './FormSelect';
 
 // utilities
-import { convertDateToTimestamp } from '../assets/dateFunctions';
+import {
+  convertDateToTimestamp,
+  getSeasonEndDate,
+} from '../assets/dateFunctions';
 import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
 import {
   games,
   poolHalls,
   bcaWebsite,
   apaWebsite,
-  seasonLength,
   daysOfTheWeek,
+  notDate,
 } from '../assets/globalVariables';
 
 // form
@@ -34,6 +37,11 @@ import { FormValues } from './seasonTypes';
 import { Season, Holiday } from '../assets/typesFolder/seasonTypes';
 import { PoolHall, Game } from '../assets/typesFolder/sharedTypes';
 
+export type IgnoreDatesType = {
+  apa: boolean;
+  bca: boolean;
+};
+
 type SeasonEntryFormProps = {
   seasonData: Season;
   setSeasonData: (data: Season) => void;
@@ -52,13 +60,19 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   setApaEvent,
 }) => {
   const { setSelectedSeason } = useContext(SelectedItemContext);
+
   const { addSeason } = useAddSeason({
     useToast: true,
     successToastLength: 6000,
     successMessage:
       '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
   });
+
   const { refetch: refetchSeasons } = useFetchSeasons();
+  const [ignoreDates, setIgnoreDates] = useState<IgnoreDatesType>({
+    apa: false,
+    bca: false,
+  });
   const {
     register,
     setValue,
@@ -66,7 +80,10 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     watch,
     reset,
     formState: { errors },
-  } = useForm<FormValues>({ resolver: yupResolver(seasonSchema) });
+  } = useForm<FormValues>({
+    resolver: yupResolver(seasonSchema),
+    context: { ignoreDates: ignoreDates },
+  });
 
   useEffect(() => {
     register('startDate');
@@ -79,7 +96,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   const handleDateChange = (
     event: 'bca' | 'apa',
     position: 'Start' | 'End',
-    value: Date,
+    value: Date
   ) => {
     setValue(`${event}${position}Date`, value);
     const setter = event === 'bca' ? setBcaEvent : setApaEvent;
@@ -97,15 +114,13 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     setValue('startDate', newValue);
     // things to update
     const startDate = convertDateToTimestamp(newValue);
-    const endDate = convertDateToTimestamp(
-      new Date(newValue.getTime() + seasonLength),
-    );
+    const endDate = getSeasonEndDate(startDate, seasonData.seasonLength);
     const night = daysOfTheWeek[newValue.getDay()];
     const holidays = fetchHolidays(newValue);
     const seasonName = buildSeasonName(
       newValue,
       seasonData.poolHall,
-      seasonData.game,
+      seasonData.game
     );
     const updatedData: Season = {
       ...seasonData,
@@ -145,7 +160,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
 
   const handleStringChange = (
     fieldName: 'poolHall' | 'game',
-    newValue: string,
+    newValue: string
   ) => {
     setValue(fieldName, newValue as PoolHall | Game);
 
@@ -153,7 +168,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     const newSeasonName = buildSeasonName(
       seasonData.startDate,
       fieldName === 'poolHall' ? (newValue as PoolHall) : seasonData.poolHall,
-      fieldName === 'game' ? (newValue as Game) : seasonData.game,
+      fieldName === 'game' ? (newValue as Game) : seasonData.game
     );
 
     const updatedData: Season = {
@@ -166,40 +181,62 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     setSeasonData(updatedData);
   };
 
+  const handleSeasonLengthChange = (newValue: number) => {
+    setValue('seasonLength', newValue);
+    const startDate = convertDateToTimestamp(watch('startDate'));
+    const endDate = getSeasonEndDate(startDate, newValue);
+    const updatedData: Season = {
+      ...seasonData,
+      seasonLength: newValue,
+      endDate: endDate === notDate ? seasonData.endDate : endDate,
+    };
+    setSeasonData(updatedData);
+  };
+
   return (
-    <div className='form-container'>
-      <div className='season-title'>Build a Season</div>
+    <div className="form-container">
+      <div className="season-title">Build a Season</div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className='form-group'>
-          <label htmlFor='startDate'>Start Date: </label>
+        <div className="form-group">
+          <label htmlFor="startDate">Start Date: </label>
           <ReactDatePicker
-            className='form-input'
+            className="form-input"
             selected={watch('startDate')}
             onChange={(date: Date) => handleStartDateChange(date)}
           />
           {errors.startDate && (
-            <span className='error-message'>{errors.startDate.message}</span>
+            <span className="error-message">{errors.startDate.message}</span>
           )}
         </div>
         <FormSelect
-          label='Game'
-          fieldName='game'
+          label="Weeks"
+          fieldName="seasonLength"
+          register={register}
+          //choices={Array.from({ length: 21 }, (_, i) => String(i + 10))}
+          choices={Array.from({ length: 21 }, (_, index) => index + 10)}
+          onChange={(e) => handleSeasonLengthChange(Number(e.target.value))}
+          errorMessage={errors.game && errors.game.message}
+          defaultValue={'16'}
+        />
+        <FormSelect
+          label="Game"
+          fieldName="game"
           register={register}
           choices={games}
-          onChange={e => handleStringChange('game', e.target.value)}
+          onChange={(e) => handleStringChange('game', e.target.value)}
           errorMessage={errors.game && errors.game.message}
         />
         <FormSelect
-          label='Pool Hall'
-          fieldName='poolHall'
+          label="Pool Hall"
+          fieldName="poolHall"
           register={register}
           choices={poolHalls}
-          onChange={e => handleStringChange('poolHall', e.target.value)}
+          onChange={(e) => handleStringChange('poolHall', e.target.value)}
           errorMessage={errors.poolHall && errors.poolHall.message}
         />
 
         <LeagueDates
-          league='bca'
+          league="bca"
           startDate={
             bcaEvent.start instanceof Date ? bcaEvent.start : new Date()
           }
@@ -209,9 +246,10 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           website={bcaWebsite}
           startError={errors.bcaStartDate?.message}
           endError={errors.bcaEndDate?.message}
+          setIgnoreDates={setIgnoreDates}
         />
         <LeagueDates
-          league='apa'
+          league="apa"
           startDate={
             apaEvent.start instanceof Date ? apaEvent.start : new Date()
           }
@@ -221,10 +259,11 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           website={apaWebsite}
           startError={errors.apaStartDate?.message}
           endError={errors.apaEndDate?.message}
+          setIgnoreDates={setIgnoreDates}
         />
 
-        <div className='submit-button-container'>
-          <button type='submit'>Create Season</button>
+        <div className="submit-button-container">
+          <button type="submit">Create Season</button>
         </div>
       </form>
     </div>

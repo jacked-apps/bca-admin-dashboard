@@ -7,8 +7,9 @@ type FormSelectProps = {
   fieldName: FieldNames;
   register: UseFormRegister<FormValues>;
   onChange: ChangeEventHandler<HTMLSelectElement>;
-  choices: string[];
+  choices: string[] | number[];
   errorMessage?: string;
+  defaultValue?: string;
 };
 
 export const FormSelect = ({
@@ -18,15 +19,17 @@ export const FormSelect = ({
   onChange,
   choices,
   errorMessage,
+  defaultValue,
 }: FormSelectProps) => {
   return (
-    <div className='form-group'>
+    <div className="form-group">
       <label htmlFor={fieldName}>{label}: </label>
       <select
-        className='form-input-select'
+        className="form-input-select"
         id={fieldName}
         {...register(fieldName, { required: true })}
         onChange={onChange}
+        defaultValue={defaultValue}
       >
         {choices.map((choice, index) => (
           <option key={index} value={choice}>
@@ -34,7 +37,7 @@ export const FormSelect = ({
           </option>
         ))}
       </select>
-      {errorMessage && <span className='error-message'>{errorMessage}</span>}
+      {errorMessage && <span className="error-message">{errorMessage}</span>}
     </div>
   );
 };

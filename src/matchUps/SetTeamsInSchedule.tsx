@@ -1,8 +1,8 @@
 import { useMemo, useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 // utilities
-import { Creates } from '../assets/unused/firebaseFunctions';
-import { toast } from 'react-toastify';
+//import { Creates } from '../assets/unused/firebaseFunctions';
+//import { toast } from 'react-toastify';
 
 // types
 import {
@@ -35,6 +35,7 @@ export const SetTeamsInSchedule = ({
   seasonId,
 }: SetTeamsInScheduleProps) => {
   const [inserted, setInserted] = useState(false);
+  console.log('setTeamsInSchedule unneeded', seasonId);
 
   const useTeamOrder = useMemo(() => {
     const order = teamOrder.map((team) => {

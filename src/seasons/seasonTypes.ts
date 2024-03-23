@@ -4,6 +4,7 @@ export type FormValues = {
   poolHall: PoolHall;
   startDate: Date;
   game: Game;
+  seasonLength: number;
   bcaStartDate: Date;
   bcaEndDate: Date;
   apaStartDate: Date;

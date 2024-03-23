@@ -55,7 +55,7 @@ import { TeamPlayer } from './typesFolder/teamTypes';
 export const buildSeasonName = (
   startDate: Timestamp | Date | string,
   poolHall?: PoolHall,
-  game?: Game,
+  game?: Game
 ) => {
   const date = toJSDate(startDate);
   if (date === notDate) {
@@ -105,7 +105,7 @@ export const fetchHolidays = (startDate: Date | Timestamp | string) => {
     holidays.push(...hd.getHolidays(year));
   }
 
-  return holidays.filter(holiday => {
+  return holidays.filter((holiday) => {
     const holidayDate = new Date(holiday.date);
     return holidayDate >= start && holidayDate <= end;
   });
@@ -122,7 +122,7 @@ export const fetchHolidays = (startDate: Date | Timestamp | string) => {
 export const createHolidayObject = (
   startDate: DateOrStamp,
   endDate: DateOrStamp,
-  type: 'bca' | 'apa',
+  type: 'bca' | 'apa'
 ): Holiday => {
   const name = `${type.toUpperCase()} National Championships`;
   const object = {
@@ -147,7 +147,7 @@ export const createHolidayObject = (
  */
 
 export const convertPastPlayerToTeamPlayer = (
-  pastPlayer: PastPlayer,
+  pastPlayer: PastPlayer
 ): TeamPlayer => {
   const teamPlayerInfo: Partial<TeamPlayer> = {};
   const { totalWins, totalLosses } = getStatsTotals(pastPlayer.stats);
@@ -165,7 +165,7 @@ export const convertPastPlayerToTeamPlayer = (
 };
 
 export const getStatsTotals = (
-  stats: Record<string, { wins: number; losses: number }>,
+  stats: Record<string, { wins: number; losses: number }>
 ): { totalWins: number; totalLosses: number } => {
   const seasonsSorted = Object.keys(stats)
     .sort((a, b) => b.localeCompare(a))
@@ -176,7 +176,7 @@ export const getStatsTotals = (
       acc.totalLosses += safeParseInt(stats[season].losses);
       return acc;
     },
-    { totalWins: 0, totalLosses: 0 },
+    { totalWins: 0, totalLosses: 0 }
   );
   return totals;
 };
@@ -221,7 +221,7 @@ export const safeParseInt = (value: string | number | undefined): number => {
 export const addFieldIfDefined = <T, K extends keyof T>(
   object: T,
   key: K,
-  value: T[K] | undefined,
+  value: T[K] | undefined
 ) => {
   if (value !== undefined && value !== null && value !== '') {
     object[key] = value;
@@ -296,7 +296,7 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
   // put parentheses around first three digits
   newPhoneNumber = `(${newPhoneNumber.substring(
     0,
-    3,
+    3
   )}) ${newPhoneNumber.substring(3)}`;
   console.log('parens : ', newPhoneNumber);
 
@@ -319,7 +319,7 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
 
 export const createBasicSchedule = (
   startDate: Date,
-  seasonLength: number = 16,
+  seasonLength: number = 16
 ): Schedule => {
   const basicSchedule: Schedule = {};
   let currentDate = new Date(startDate.getTime());
@@ -376,7 +376,7 @@ export const createBasicSchedule = (
 export const insertHolidayIntoSchedule = (
   holidayName: string,
   dateKey: string,
-  schedule: Schedule,
+  schedule: Schedule
 ) => {
   // create a new schedule
   const newSchedule = { ...schedule };
@@ -445,7 +445,7 @@ export const insertHolidayIntoSchedule = (
 export const checkForConflicts = (
   schedule: Schedule,
   start: Date,
-  end: Date,
+  end: Date
 ) => {
   // Extend the conflict check range: 2 days before start, 2 days after end
   const rangeStart = new Date(new Date(start).setDate(start.getDate() - 2));
@@ -453,7 +453,7 @@ export const checkForConflicts = (
 
   // Filter and return dates from the schedule that fall within the conflict range
   // and have 'leaguePlay' set to true
-  return Object.keys(schedule).filter(date => {
+  return Object.keys(schedule).filter((date) => {
     const scheduleDate = new Date(date);
     const isInRange = scheduleDate >= rangeStart && scheduleDate <= rangeEnd;
     const isLeaguePlay = schedule[date].leaguePlay;
@@ -475,7 +475,7 @@ export const checkForConflicts = (
 
 export const generateNickname = (
   firstName: string,
-  lastName: string,
+  lastName: string
 ): string => {
   // create the full name
   let fullName = `${firstName} ${lastName}`;

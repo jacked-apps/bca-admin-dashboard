@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { Login } from '../login/Login';
-import { ConfirmContext } from '../context/ConfirmContext';
-import { useContext } from 'react';
-import { useFetchSeasons } from '../firebase';
+//import { ConfirmContext } from '../context/ConfirmContext';
+//import { useContext } from 'react';
+//import { useFetchSeasons } from '../firebase';
 import { LogoutButton } from '../login/LogoutButton';
 import { useAuthContext } from '../context/useAuthContext';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ export const Home = () => {
   //const [welcomeName, setUser] = useState<User | null>(null);
   //const [user, setUser] = useState<User | null>(null);
   const auth = getAuth();
-  const { confirmMe } = useContext(ConfirmContext);
+  //const { confirmMe } = useContext(ConfirmContext);
 
   //const { data: seasons } = useFetchSeasons();
   //console.log('HOME', isAdmin, currentUser);

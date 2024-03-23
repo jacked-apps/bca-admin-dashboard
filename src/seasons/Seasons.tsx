@@ -20,17 +20,17 @@ import { Holiday, Season } from '../assets/typesFolder/seasonTypes';
 export const Seasons: React.FC = () => {
   //state
   const [bcaEvent, setBcaEvent] = useState<Holiday>(
-    createHolidayObject(new Date(), new Date(), 'bca'),
+    createHolidayObject(new Date(), new Date(), 'bca')
   );
   const [apaEvent, setApaEvent] = useState<Holiday>(
-    createHolidayObject(new Date(), new Date(), 'apa'),
+    createHolidayObject(new Date(), new Date(), 'apa')
   );
 
   //variables
   const today = new Date();
   const defaultStartDate = convertDateToTimestamp(today);
 
-  const defaultEndDate = getSeasonEndDate(defaultStartDate);
+  const defaultEndDate = getSeasonEndDate(defaultStartDate, 16);
 
   const [seasonData, setSeasonData] = useState<Season>({
     // default values for the Season object
@@ -38,17 +38,18 @@ export const Seasons: React.FC = () => {
     startDate: defaultStartDate,
     endDate: defaultEndDate,
     game: '9 Ball',
+    seasonLength: 16,
     holidays: [],
     night: daysOfTheWeek[today.getDay()],
     poolHall: 'Billiard Plaza',
     seasonCompleted: false,
-    seasonName: '',
+    seasonName: 'TBD',
     teams: [],
     schedule: { ...initialSchedule },
   });
 
   return (
-    <div className='container'>
+    <div className="container">
       <SeasonEntryForm
         seasonData={seasonData}
         setSeasonData={setSeasonData}

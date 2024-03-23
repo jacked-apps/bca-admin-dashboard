@@ -12,7 +12,6 @@
 // ------------------------------
 //import { daysOfTheWeek } from './globalVariables';
 import { Timestamp } from '@firebase/firestore';
-import { seasonLength } from './globalVariables';
 import { notDate } from './globalVariables';
 import {
   DateFormat,
@@ -31,7 +30,7 @@ import {
  */
 
 export const convertDateToTimestamp = (
-  date: Date | undefined,
+  date: Date | undefined
 ): Timestamp | NotDate => {
   if (date === undefined) {
     return notDate;
@@ -86,7 +85,7 @@ export const toJSDate = (date: Date | string | Timestamp): Date | NotDate => {
 
 export const readableDate = (
   date: Date | string | Timestamp,
-  format: DateFormat = 'short',
+  format: DateFormat = 'short'
 ): string => {
   const jsDate = toJSDate(date);
   return jsDate === notDate
@@ -107,7 +106,7 @@ export const readableDate = (
 
 export const readableDateWithDay = (
   dateInput: Date | string | Timestamp,
-  format: DateFormat = 'short',
+  format: DateFormat = 'short'
 ) => {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const date = new Date(toJSDate(dateInput));
@@ -141,17 +140,23 @@ export const getTimeOfYear = (date: Date): TimeOfYear | NotDate => {
 /**
  * Calculates the end date of a season given its start date
  * @param {Date | Timestamp | Invalid} startDate - The start date of the season, can be a Firebase Timestamp or 'notDate'
+ * @param {number} seasonLength - The number of weeks in a season.
  * @returns {Timestamp | NotDate} - The end date of the season as a Firebase Timestamp, or 'notDate' if the start date is invalid
  */
-
 export const getSeasonEndDate = (
   startDate: Date | StampOrInvalid,
+  seasonLength: number
 ): StampOrInvalid => {
   const start = toJSDate(startDate);
+  const weeks = seasonLength + 2; // Add 2 weeks for the off week and championship round
+  console.log('calc End Date', seasonLength, weeks);
+
+  const millisecondsInWeek = 7 * 24 * 60 * 60 * 1000; // Number of milliseconds in a week
+  const totalMilliseconds = weeks * millisecondsInWeek;
   if (start === notDate) {
     return notDate;
   } else {
-    const endDate = new Date(start.getTime() + seasonLength);
+    const endDate = new Date(start.getTime() + totalMilliseconds);
     return isNaN(endDate.getTime()) ? notDate : Timestamp.fromDate(endDate);
   }
 };
