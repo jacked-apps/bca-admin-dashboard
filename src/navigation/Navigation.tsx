@@ -1,34 +1,56 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { publicRoutes, privateRoutes } from './routes';
+import { publicRoutes, privateRoutes, adminRoutes } from './routes';
 import { useAuthContext } from '../context/useAuthContext';
+import { ProtectedRoute } from './ProtectedRoute';
+
 import './navigation.css';
 
 export const Navigation = () => {
-  const { isAdmin } = useAuthContext();
+  const { isLoggedIn, isAdmin } = useAuthContext();
 
   return (
     <Router>
       <nav>
         <ul>
-          {publicRoutes.map((route, index) => (
-            <li key={index}>
-              <Link to={route.path}>{route.name}</Link>
-            </li>
-          ))}
-          {isAdmin &&
+          {/* Public Routes */}
+          {!isLoggedIn &&
+            publicRoutes.map((route, index) => (
+              <li key={index}>
+                <Link to={route.path}>{route.name}</Link>
+              </li>
+            ))}
+          {/* Private Routes for logged-in users */}
+          {isLoggedIn &&
             privateRoutes.map((route, index) => (
+              <li key={index}>
+                <Link to={route.path}>{route.name}</Link>
+              </li>
+            ))}
+          {/* Admin Routes, additionally for administrators */}
+          {isAdmin &&
+            adminRoutes.map((route, index) => (
               <li key={index}>
                 <Link to={route.path}>{route.name}</Link>
               </li>
             ))}
         </ul>
       </nav>
+
       <Routes>
-        {publicRoutes
-          .concat(privateRoutes.concat(isAdmin ? publicRoutes : []))
-          .map(({ path, Component }, index) => (
-            <Route key={index} path={path} element={<Component />} />
-          ))}
+        {publicRoutes.map(({ name, path, Component }) => (
+          <Route key={name} path={path} element={<Component />} />
+        ))}
+        {privateRoutes.map(({ name, path, Component }) => (
+          <Route
+            key={name}
+            path={path}
+            element={
+              <ProtectedRoute>
+                <Component />
+              </ProtectedRoute>
+            }
+          />
+        ))}
       </Routes>
     </Router>
   );

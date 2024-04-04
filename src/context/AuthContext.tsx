@@ -8,6 +8,7 @@ type AuthContextType = {
   user: User | null;
   isAdmin: boolean;
   currentUser: CurrentUser | null | undefined;
+  isLoggedIn: boolean;
 };
 type AuthProviderProps = {
   children: ReactNode;
@@ -16,6 +17,7 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   isAdmin: false,
   currentUser: null,
+  isLoggedIn: false,
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     isAdmin,
     currentUser,
+    isLoggedIn: !!user,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
