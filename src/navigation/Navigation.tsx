@@ -12,13 +12,6 @@ export const Navigation = () => {
     <Router>
       <nav>
         <ul>
-          {/* Public Routes */}
-          {!isLoggedIn &&
-            publicRoutes.map((route, index) => (
-              <li key={index}>
-                <Link to={route.path}>{route.name}</Link>
-              </li>
-            ))}
           {/* Private Routes for logged-in users */}
           {isLoggedIn &&
             privateRoutes.map((route, index) => (

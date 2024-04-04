@@ -17,6 +17,8 @@ import { Players } from '../players/Players';
 //types
 import { ElementType } from 'react';
 import Test from '../test/Test';
+import { Register } from '../login/Register';
+import { ForgotPassword } from '../login/ForgotPassword';
 
 type Route = {
   name: string;
@@ -28,6 +30,13 @@ const protect = { protect: true };
 
 export const publicRoutes: Route[] = [
   { name: 'Log In', path: '/login', Component: Login },
+  { name: 'Register', path: '/register', Component: Register },
+  {
+    name: 'Forgot Password',
+    path: '/forgot-password',
+    Component: ForgotPassword,
+  },
+
   { name: 'Test', path: '/test', Component: Test },
 ];
 

@@ -80,3 +80,12 @@
   color: #007bff;
   font-size: 0.9em;
 }
+
+.login-form .forgot {
+  font-size: '12px';
+}
+
+.login-form . {
+  margin-top: '15px';
+  margin-bottom: '45px';
+}
