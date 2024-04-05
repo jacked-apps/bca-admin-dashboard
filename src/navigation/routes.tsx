@@ -19,6 +19,7 @@ import { ElementType } from 'react';
 import Test from '../test/Test';
 import { Register } from '../login/Register';
 import { ForgotPassword } from '../login/ForgotPassword';
+import { VerifyEmail } from '../login/VerifyEmail';
 
 type Route = {
   name: string;
@@ -36,6 +37,7 @@ export const publicRoutes: Route[] = [
     path: '/forgot-password',
     Component: ForgotPassword,
   },
+  { name: 'Verify Email', path: '/verify-email', Component: VerifyEmail },
 
   { name: 'Test', path: '/test', Component: Test },
 ];

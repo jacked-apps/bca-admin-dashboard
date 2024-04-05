@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     isAdmin,
     currentUser,
-    isLoggedIn: !!user,
+    isLoggedIn: !!user && user.emailVerified,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
