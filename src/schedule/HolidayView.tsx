@@ -1,25 +1,25 @@
-import { useState, useContext } from 'react';
+import { useState, useContext } from "react";
 
 // components
-import { HolidayList } from './HolidayList';
-import { HolidayDetails } from './HolidayDetails';
-import { FinishSchedule } from './FinishSchedule';
-import { AddHoliday } from './AddHoliday';
+import { HolidayList } from "./HolidayList";
+import { HolidayDetails } from "./HolidayDetails";
+import { FinishSchedule } from "./FinishSchedule";
+import { AddHoliday } from "./AddHoliday";
 
 // context
-import { SelectedItemContext } from '../context/SelectedItemProvider';
+import { SelectedItemContext } from "../context/SelectedItemProvider";
 
 // utilities
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 // firebase
 
-import { useUpdateSeasonSchedule } from '../firebase/scheduleUpdateHooks';
+import { useUpdateSeasonSchedule } from "bca-firebase-queries";
 // types
-import { Schedule, Holiday } from '../assets/typesFolder/seasonTypes';
+import { Schedule, Holiday } from "../assets/typesFolder/seasonTypes";
 
 // css
-import './schedule.css';
+import "./schedule.css";
 
 type HolidayViewProps = {
   editedSchedule: Schedule;
@@ -36,9 +36,9 @@ export const HolidayView = ({
   const mutateObject = {
     useToast: true,
     successMessage: `Your new schedule has been added to ${
-      selectedSeason ? selectedSeason.seasonName : 'Season'
+      selectedSeason ? selectedSeason.seasonName : "Season"
     }.\nChoose a new season or move on to Match Ups.`,
-    failedMessage: 'Failed to add schedule to season.',
+    failedMessage: "Failed to add schedule to season.",
     successToastLength: 6000,
   };
 
@@ -51,7 +51,7 @@ export const HolidayView = ({
 
   const handleDismissHoliday = (holiday: Holiday) => {
     // remove activeHoliday from holiday array
-    const updatedHolidays = editedHolidays.filter(h => h !== holiday);
+    const updatedHolidays = editedHolidays.filter((h) => h !== holiday);
     setEditedHolidays(updatedHolidays);
     if (activeHoliday === holiday) {
       setActiveHoliday(null);
@@ -62,7 +62,7 @@ export const HolidayView = ({
   };
   const handleSaveSchedule = async () => {
     if (!selectedSeason) {
-      toast.error('No season selected to save schedule.');
+      toast.error("No season selected to save schedule.");
       return;
     }
     updateSchedule({
@@ -81,8 +81,8 @@ export const HolidayView = ({
   }
 
   return (
-    <div className='holiday-view-container'>
-      <div className='view-title'>Holidays</div>
+    <div className="holiday-view-container">
+      <div className="view-title">Holidays</div>
       {!activeHoliday && (
         <HolidayList
           handleDismissHoliday={handleDismissHoliday}

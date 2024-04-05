@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import './login.css';
-import { TextInput } from '../components/TextInput';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
+import "./login.css";
+import { TextInput } from "../components/TextInput";
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -15,9 +15,9 @@ export const Login = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/'); // Redirect to the dashboard after login
+      navigate("/"); // Redirect to the dashboard after login
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   };
 
@@ -32,7 +32,7 @@ export const Login = () => {
         required
       />
       <TextInput
-        type={'password'}
+        type={"password"}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
@@ -41,7 +41,7 @@ export const Login = () => {
 
       <Link
         to="/forgot-password"
-        style={{ fontSize: '12px', marginBottom: '15px' }}
+        style={{ fontSize: "12px", marginBottom: "15px" }}
       >
         Forgot Password
       </Link>
@@ -49,7 +49,7 @@ export const Login = () => {
         Login
       </button>
 
-      <Link to="/register" style={{ marginTop: '45px' }}>
+      <Link to="/register" style={{ marginTop: "45px" }}>
         Register here
       </Link>
     </form>

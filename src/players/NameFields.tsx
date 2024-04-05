@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 // utilities
-import { toast } from 'react-toastify';
-import { nameFields } from './buttonFields';
-import { formatName } from '../assets/globalFunctions';
-import { validatePastPlayerFields } from '../assets/validateFields';
+import { toast } from "react-toastify";
+import { nameFields } from "./buttonFields";
+import { formatName } from "../assets/globalFunctions";
+import { validatePastPlayerFields } from "../assets/validateFields";
 
 // components
-import { FieldEntryDialog } from '../components/FieldEntryDialog';
+import { FieldEntryDialog } from "../components/FieldEntryDialog";
 
 // types
-import { PastPlayer } from '../assets/typesFolder/userTypes';
-import { Names } from '../assets/typesFolder/sharedTypes';
+import { Names } from "../assets/typesFolder/sharedTypes";
 
 // firebase
-import { Reads, Updates } from '../assets/unused/firebaseFunctions';
+import { fetchPastPlayerByIdRQ, PastPlayer, Email } from "bca-firebase-queries";
 
 type Props = {
   pastPlayer: PastPlayer;
@@ -25,7 +24,7 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [title, setTitle] = useState<string | null>(null);
   const [currentFieldName, setCurrentFieldName] = useState<keyof Names | null>(
-    null,
+    null
   );
 
   const handleDialogOpen = (fieldName: keyof Names, name: string) => {
@@ -38,28 +37,31 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
     setIsOpen(false);
     if (!currentFieldName) return;
     let processedValue = value;
-    if (!currentFieldName || value === null || value === '') return;
+    if (!currentFieldName || value === null || value === "") return;
     processedValue =
-      currentFieldName !== 'nickname' ? formatName(value) : value;
+      currentFieldName !== "nickname" ? formatName(value) : value;
 
     const validated = validatePastPlayerFields(
       currentFieldName,
-      processedValue,
+      processedValue
     );
     if (!validated) {
-      toast.warn('Invalid value');
+      toast.warn("Invalid value");
       return;
     }
     try {
-      await updatePlayer(currentFieldName, processedValue);
-      const updatedPlayer = await Reads.fetchPastPlayerData(pastPlayer.email); //refetch pastPlayer
+      // await updatePlayer(currentFieldName, processedValue);
+      const updatedPlayer = await fetchPastPlayerByIdRQ(
+        pastPlayer.email as Email
+      ); //refetch pastPlayer
       if (updatedPlayer) {
         setChosenPastPlayer(updatedPlayer as PastPlayer);
       }
     } catch (error) {
-      console.log('Error updating pastPlayer', error);
+      console.log("Error updating pastPlayer", error);
     }
   };
+  /*
   const updatePlayer = async (fieldName: keyof Names, value: string) => {
     const userId = pastPlayer.currentUserId || null;
     try {
@@ -76,15 +78,16 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
     }
     setCurrentFieldName(null);
   };
+   */
   return (
     <>
-      {nameFields.map(field => {
+      {nameFields.map((field) => {
         const fieldName = field.fieldName as keyof Names;
         return (
           <React.Fragment key={field.fieldName}>
-            <div className='grid-label'>{field.name}:</div>
+            <div className="grid-label">{field.name}:</div>
             <button
-              className='grid-value text-button'
+              className="grid-value text-button"
               onClick={() => handleDialogOpen(fieldName, field.name)}
             >
               {pastPlayer[fieldName]}
@@ -93,10 +96,10 @@ export const NameFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
         );
       })}
       <FieldEntryDialog<string>
-        title={title ? title : ''}
+        title={title ? title : ""}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        setValue={value => handleDialogClose(value)}
+        setValue={(value) => handleDialogClose(value)}
       />
     </>
   );

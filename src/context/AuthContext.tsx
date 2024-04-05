@@ -1,8 +1,7 @@
-import { createContext, useState, useEffect, ReactNode } from 'react';
-import { useAuth } from '../firebase';
-import { useFetchCurrentUserById } from '../firebase';
-import { User } from 'firebase/auth';
-import { CurrentUser } from '../assets/typesFolder/userTypes';
+import { createContext, useState, useEffect, ReactNode } from "react";
+import { useAuth, useFetchCurrentUserById } from "bca-firebase-queries";
+import { User } from "firebase/auth";
+import { CurrentUser } from "../assets/typesFolder/userTypes";
 
 type AuthContextType = {
   user: User | null;
@@ -28,7 +27,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { data: currentUser } = useFetchCurrentUserById(userId);
 
   useEffect(() => {
-    setIsAdmin(currentUser?.isAdmin === 'true');
+    setIsAdmin(currentUser?.isAdmin === "true");
   }, [currentUser]);
 
   const value = {

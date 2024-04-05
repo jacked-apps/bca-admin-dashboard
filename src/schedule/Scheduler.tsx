@@ -1,26 +1,26 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from "react";
 // components
-import { SeasonList } from '../seasons/SeasonList';
-import { ScheduleView } from './ScheduleView';
-import { HolidayView } from './HolidayView';
-import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+import { SeasonList } from "../seasons/SeasonList";
+import { ScheduleView } from "./ScheduleView";
+import { HolidayView } from "./HolidayView";
+import { ErrorAndRefetch } from "../components/ErrorAndRefetch";
 
 //context
-import { SelectedItemContext } from '../context/SelectedItemProvider';
+import { SelectedItemContext } from "../context/SelectedItemProvider";
 
 // utilities
-import { createBasicSchedule } from '../assets/globalFunctions';
-import { notDate } from '../assets/globalVariables';
-import { convertTimestampToDate } from '../assets/dateFunctions';
+import { createBasicSchedule } from "../assets/globalFunctions";
+import { notDate } from "../assets/globalVariables";
+import { convertTimestampToDate } from "../assets/dateFunctions";
 
 // css
-import './schedule.css';
+import "./schedule.css";
 
 // firebase
-import { useFetchSeasons } from '../firebase';
+import { useFetchSeasons } from "bca-firebase-queries";
 
 // types
-import { Schedule } from '../assets/typesFolder/seasonTypes';
+import { Schedule } from "../assets/typesFolder/seasonTypes";
 
 export const Scheduler = () => {
   const { selectedSeason } = useContext(SelectedItemContext);
@@ -56,11 +56,11 @@ export const Scheduler = () => {
   }
   return (
     <div>
-      <div className='container'>
+      <div className="container">
         <SeasonList />
 
         {selectedSeason && (
-          <div className='container'>
+          <div className="container">
             <ScheduleView editedSchedule={editedSchedule} />
             <HolidayView
               editedSchedule={editedSchedule}
