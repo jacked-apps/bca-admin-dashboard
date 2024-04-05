@@ -1,20 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 // components
-import { EditPlayer } from './EditPlayer';
+import { EditPlayer } from "./EditPlayer";
 
 // utilities
-import { convertPastPlayerToTeamPlayer } from '../assets/globalFunctions';
-import { blankPlayerInfoObject, playerOrder } from '../assets/globalVariables';
+import { convertPastPlayerToTeamPlayer } from "../assets/globalFunctions";
+import { blankPlayerInfoObject, playerOrder } from "../assets/globalVariables";
 
 // css
-import './teams.css';
+import "./teams.css";
 
 // types
-import { Team, TeamPlayerRole } from '../assets/typesFolder/teamTypes';
-import { PastPlayer } from '../assets/typesFolder/userTypes';
+import { Team, TeamPlayerRole } from "../assets/typesFolder/teamTypes";
+import { PastPlayer } from "../assets/typesFolder/userTypes";
 
 // firebase
-import { useAddPlayerToTeam } from '../firebase';
+import { useAddPlayerToTeam } from "bca-firebase-queries";
 
 type TeamDetailsProps = {
   team: Team;
@@ -46,7 +46,7 @@ export const TeamDetails = ({
       playerData: blankPlayerInfoObject,
       role: role,
     });
-    setEditedTeam(prevTeam => {
+    setEditedTeam((prevTeam) => {
       const updatedPlayers = { ...prevTeam.players };
       updatedPlayers[role] = blankPlayerInfoObject;
       return {
@@ -58,7 +58,7 @@ export const TeamDetails = ({
 
   const handleSelect = (player: PastPlayer, role: TeamPlayerRole) => {
     const newPlayerData = convertPastPlayerToTeamPlayer(player);
-    setEditedTeam(prevTeam => ({
+    setEditedTeam((prevTeam) => ({
       ...prevTeam,
       players: {
         ...prevTeam.players,
@@ -70,25 +70,25 @@ export const TeamDetails = ({
     return <div>Adding player...</div>;
   }
   return (
-    <div className='d2-container'>
-      <div className='details-name-group'>
-        <div className='details-title'>Team Name:</div>
+    <div className="d2-container">
+      <div className="details-name-group">
+        <div className="details-title">Team Name:</div>
         <input
           value={editedTeam.teamName}
-          onChange={e =>
+          onChange={(e) =>
             setEditedTeam({ ...editedTeam, teamName: e.target.value })
           }
         />
       </div>
-      <div className='details-player-group'>
-        <div className='details-title'>Players:</div>
+      <div className="details-player-group">
+        <div className="details-title">Players:</div>
         {team &&
-          playerOrder.map(role => {
+          playerOrder.map((role) => {
             const playerInfo =
               editedTeam.players[role as keyof typeof team.players];
 
             return (
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: "flex" }}>
                 <EditPlayer
                   key={role}
                   playerInfo={playerInfo}
@@ -96,7 +96,7 @@ export const TeamDetails = ({
                   onSelect={handleSelect}
                 />
                 <button
-                  className='small-button'
+                  className="small-button"
                   onClick={() => handleRemovePlayer(role as TeamPlayerRole)}
                 >
                   Remove
@@ -105,8 +105,8 @@ export const TeamDetails = ({
             );
           })}
       </div>
-      <div className='details-button-group'>
-        {' '}
+      <div className="details-button-group">
+        {" "}
         <button onClick={() => onSave(editedTeam)}>Save</button>
         <button onClick={() => onDelete(team)}>Delete</button>
         <button onClick={onCancel}>Cancel</button>

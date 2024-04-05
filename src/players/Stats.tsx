@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // utilities
-import { toast } from 'react-toastify';
-import { failedUpdate } from '../firebase/firebaseConsts';
-import { validatePastPlayerFields } from '../assets/validateFields';
+import { toast } from "react-toastify";
+import {
+  Email,
+  PastPlayer,
+  failedUpdate,
+  fetchPastPlayerByIdRQ,
+  //  createPastPlayer,
+  //  deletePastPlayer,
+} from "bca-firebase-queries";
+import { validatePastPlayerFields } from "../assets/validateFields";
 
 // components
-import { FieldEntryDialog } from '../components/FieldEntryDialog';
+import { FieldEntryDialog } from "../components/FieldEntryDialog";
 
 // types
-import { PastPlayer } from '../assets/typesFolder/userTypes';
-
-// firebase
-import { Reads, Creates, Deletes } from '../assets/unused/firebaseFunctions';
 
 type StatsProps = {
   pastPlayer: PastPlayer;
@@ -43,34 +46,35 @@ export const Stats = ({ pastPlayer, setChosenPastPlayer }: StatsProps) => {
   const handleDialogClose = async (value: string) => {
     setIsOpen(false);
 
-    const validated = validatePastPlayerFields('email', value);
+    const validated = validatePastPlayerFields("email", value);
     if (!validated) {
-      toast.warn('Not a valid email');
+      toast.warn("Not a valid email");
     }
 
     try {
       // save pastPlayer data and old email
-      const oldEmail = pastPlayer.id.toLowerCase();
+      // const oldEmail = pastPlayer.id.toLowerCase();
       const updatedPlayer = pastPlayer;
 
       // change the email in updatedPlayer to the newValue
-      updatedPlayer.email = value.toLowerCase();
-      updatedPlayer.id = value.toLowerCase();
+      updatedPlayer.email = value.toLowerCase() as Email;
+      updatedPlayer.id = value.toLowerCase() as Email;
 
       // create a new document in pastPlayers with the newValue as the id and the data from updatedPlayer
-      const { success, message } = await Creates.createPastPlayer(
-        updatedPlayer,
-      );
+      /*
+      const { success, message } = await createPastPlayer(updatedPlayer);
       if (!success) {
         toast.error(message);
         return;
       }
 
-      console.log('old emails: ', pastPlayer.email, oldEmail);
+      console.log("old emails: ", pastPlayer.email, oldEmail);
       // fetch the newPlayer and set it to the chosenPastPlayer
       toast.success(message);
-
-      const newPlayer = await Reads.fetchPastPlayerData(updatedPlayer.email);
+      */
+      const newPlayer = await fetchPastPlayerByIdRQ(
+        updatedPlayer.email as Email
+      );
       if (!newPlayer) {
         toast.error(`${failedUpdate} Player profile`);
         return;
@@ -78,28 +82,28 @@ export const Stats = ({ pastPlayer, setChosenPastPlayer }: StatsProps) => {
 
       setChosenPastPlayer(newPlayer as PastPlayer);
       // delete the old document
-      await Deletes.deletePastPlayer(oldEmail);
+      // await deletePastPlayer(oldEmail);
     } catch (error) {
-      console.log(failedUpdate, 'Player profile', error);
+      console.log(failedUpdate, "Player profile", error);
     }
   };
 
   return (
     <>
       {pastPlayer.stats &&
-        dateKeys.map(date => (
+        dateKeys.map((date) => (
           <React.Fragment key={date}>
-            <div className='grid-label'>{stats[date].seasonName}</div>
-            <div className='grid-label'>Wins:</div>
+            <div className="grid-label">{stats[date].seasonName}</div>
+            <div className="grid-label">Wins:</div>
             <button
-              className='grid-value text-button'
+              className="grid-value text-button"
               onClick={handleDialogOpen}
             >
               {stats[date].wins}
             </button>
-            <div className='grid-label'>Losses:</div>
+            <div className="grid-label">Losses:</div>
             <button
-              className='grid-value text-button'
+              className="grid-value text-button"
               onClick={handleDialogOpen}
             >
               {stats[date].losses}
@@ -108,10 +112,10 @@ export const Stats = ({ pastPlayer, setChosenPastPlayer }: StatsProps) => {
         ))}
 
       <FieldEntryDialog<string>
-        title={title ? title : ''}
+        title={title ? title : ""}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        setValue={value => handleDialogClose(value)}
+        setValue={(value) => handleDialogClose(value)}
         confirmMe
       />
     </>

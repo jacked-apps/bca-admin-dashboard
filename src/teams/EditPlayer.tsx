@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 // components
-import { PastPlayerSearch } from '../components/PastPlayerSearch';
-import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+import { PastPlayerSearch } from "../components/PastPlayerSearch";
+import { ErrorAndRefetch } from "../components/ErrorAndRefetch";
 
 // types
-import { TeamPlayerRole, TeamPlayer } from '../assets/typesFolder/teamTypes';
-import { PastPlayer } from '../assets/typesFolder/userTypes';
+import { TeamPlayerRole, TeamPlayer } from "../assets/typesFolder/teamTypes";
+import { PastPlayer } from "../assets/typesFolder/userTypes";
 
 // firebase
-import { useFetchPastPlayers } from '../firebase';
+import { useFetchPastPlayers } from "bca-firebase-queries";
 
 type EditPlayerProps = {
   role: TeamPlayerRole;
@@ -44,20 +44,20 @@ export const EditPlayer: React.FC<EditPlayerProps> = ({
   const handleCancelClick = () => {
     setIsEditing(false);
   };
-  if (isEditing || playerInfo.firstName === '') {
+  if (isEditing || playerInfo.firstName === "") {
     return (
-      <div style={{ display: 'flex' }}>
-        <div style={{ marginRight: '15px' }}>{role}:</div>
+      <div style={{ display: "flex" }}>
+        <div style={{ marginRight: "15px" }}>{role}:</div>
         <PastPlayerSearch
           list={pastPlayers ? pastPlayers : []}
-          onSelect={player => {
+          onSelect={(player) => {
             onSelect(player, role);
             setIsEditing(false);
           }}
         />
 
-        {playerInfo.firstName !== '' && (
-          <button className='small-button' onClick={handleCancelClick}>
+        {playerInfo.firstName !== "" && (
+          <button className="small-button" onClick={handleCancelClick}>
             Cancel
           </button>
         )}
@@ -68,7 +68,7 @@ export const EditPlayer: React.FC<EditPlayerProps> = ({
   return (
     <div>
       {role}: {playerInfo.firstName} {playerInfo.lastName}
-      <button className='small-button' onClick={handleEditClick}>
+      <button className="small-button" onClick={handleEditClick}>
         Edit
       </button>
     </div>

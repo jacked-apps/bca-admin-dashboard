@@ -1,30 +1,32 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
 // context
-import { SelectedItemContext } from '../context/SelectedItemProvider';
+import { SelectedItemContext } from "../context/SelectedItemProvider";
 
 // components
-import { TeamsList } from './TeamsList';
-import { TeamDetails } from './TeamDetails';
-import { AddTeamButton } from './AddTeamButton';
-import { SeasonList } from '../seasons/SeasonList';
-import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+import { TeamsList } from "./TeamsList";
+import { TeamDetails } from "./TeamDetails";
+import { AddTeamButton } from "./AddTeamButton";
+import { SeasonList } from "../seasons/SeasonList";
+import { ErrorAndRefetch } from "../components/ErrorAndRefetch";
 
 // firebase
-import { useFetchTeamsFromSeason, fetchTeamByIdRQ } from '../firebase';
 import {
+  useFetchTeamsFromSeason,
+  fetchTeamByIdRQ,
   useAddNewTeamToSeason,
   useRemoveTeamFromSeason,
   useUpdateTeamData,
-} from '../firebase/teamUpdateHooks';
-import { useQueryClient } from 'react-query';
+  Team,
+} from "bca-firebase-queries";
+
+import { useQueryClient } from "react-query";
 
 // css
-import './teams.css';
+import "./teams.css";
 
 // types
-import { TeamName } from '../assets/typesFolder/sharedTypes';
-import { Team } from '../assets/typesFolder/teamTypes';
+import { TeamName } from "../assets/typesFolder/sharedTypes";
 
 export const Teams = () => {
   // state
@@ -38,19 +40,19 @@ export const Teams = () => {
     error,
     refetch: fetchTeams,
   } = useFetchTeamsFromSeason(selectedSeason?.seasonName);
-  const { mutate: updateTeam } = useUpdateTeamData({ useToast: true });
-  const { mutate: removeTeam } = useRemoveTeamFromSeason({ useToast: true });
-  const { mutate: addNewTeam } = useAddNewTeamToSeason({ useToast: true });
+  const { mutate: updateTeam } = useUpdateTeamData();
+  const { mutate: removeTeam } = useRemoveTeamFromSeason();
+  const { mutate: addNewTeam } = useAddNewTeamToSeason();
   const queryClient = useQueryClient();
 
   // Event handlers
   const handleSave = async (editedTeam: Team) => {
     if (!selectedTeam) {
-      console.error('No team selected to save.');
+      console.error("No team selected to save.");
       return;
     }
     if (!selectedSeason) {
-      console.error('No season selected');
+      console.error("No season selected");
       return;
     }
     updateTeam({ teamId: editedTeam.id, data: editedTeam });
@@ -60,7 +62,7 @@ export const Teams = () => {
 
   const handleDelete = async (teamToDelete: Team) => {
     if (!selectedSeason) {
-      console.error('No team selected.');
+      console.error("No team selected.");
       return;
     }
     removeTeam({ seasonName: selectedSeason.id, teamId: teamToDelete.id });
@@ -73,7 +75,7 @@ export const Teams = () => {
 
   const handleAddTeam = async (teamName: TeamName) => {
     if (!selectedSeason) {
-      console.error('No team selected to save.');
+      console.error("No team selected to save.");
       return;
     }
     addNewTeam({ seasonName: selectedSeason.id, teamName });
@@ -87,16 +89,16 @@ export const Teams = () => {
     }
 
     try {
-      await queryClient.prefetchQuery(['teams', teamId], () =>
-        fetchTeamByIdRQ(teamId),
+      await queryClient.prefetchQuery(["teams", teamId], () =>
+        fetchTeamByIdRQ(teamId)
       );
       const teamData = queryClient.getQueryData([
-        'teams',
+        "teams",
         teamId,
       ]) as Team | null;
       setSelectedTeam(teamData);
     } catch (error) {
-      console.error('Error fetching team data');
+      console.error("Error fetching team data");
     }
   };
 
@@ -110,13 +112,13 @@ export const Teams = () => {
 
   // Render
   return (
-    <div className='container'>
-      <div className='teams-lists'>
+    <div className="container">
+      <div className="teams-lists">
         <SeasonList />
         <TeamsList teams={teams || []} handleTeamSelect={handleTeamSelect} />
         {selectedSeason && <AddTeamButton onAddTeam={handleAddTeam} />}
       </div>
-      <div className='teams-details'>
+      <div className="teams-details">
         {selectedTeam && (
           <TeamDetails
             team={selectedTeam}

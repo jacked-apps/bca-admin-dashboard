@@ -1,16 +1,16 @@
-import { useContext, useEffect, useState } from 'react';
-import { SelectedItemContext } from '../context/SelectedItemProvider';
+import { useContext, useEffect, useState } from "react";
+import { SelectedItemContext } from "../context/SelectedItemProvider";
 // components
-import ReactDatePicker from 'react-datepicker';
-import { LeagueDates } from './LeagueDates';
-import { FormSelect } from './FormSelect';
+import ReactDatePicker from "react-datepicker";
+import { LeagueDates } from "./LeagueDates";
+import { FormSelect } from "./FormSelect";
 
 // utilities
 import {
   convertDateToTimestamp,
   getSeasonEndDate,
-} from '../assets/dateFunctions';
-import { buildSeasonName, fetchHolidays } from '../assets/globalFunctions';
+} from "../assets/dateFunctions";
+import { buildSeasonName, fetchHolidays } from "../assets/globalFunctions";
 import {
   games,
   poolHalls,
@@ -18,24 +18,24 @@ import {
   apaWebsite,
   daysOfTheWeek,
   notDate,
-} from '../assets/globalVariables';
+} from "../assets/globalVariables";
 
 // form
-import { useForm } from 'react-hook-form';
-import { seasonSchema } from './schema';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from "react-hook-form";
+import { seasonSchema } from "./schema";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 //css
-import './seasons.css';
-import 'react-datepicker/dist/react-datepicker.css';
+import "./seasons.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 // firebase
-import { useAddSeason, useFetchSeasons } from '../firebase';
+import { useAddSeason, useFetchSeasons } from "bca-firebase-queries";
 
 // types
-import { FormValues } from './seasonTypes';
-import { Season, Holiday } from '../assets/typesFolder/seasonTypes';
-import { PoolHall, Game } from '../assets/typesFolder/sharedTypes';
+import { FormValues } from "./seasonTypes";
+import { Season, Holiday } from "../assets/typesFolder/seasonTypes";
+import { PoolHall, Game } from "../assets/typesFolder/sharedTypes";
 
 export type IgnoreDatesType = {
   apa: boolean;
@@ -65,7 +65,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     useToast: true,
     successToastLength: 6000,
     successMessage:
-      '\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons',
+      "\nSeason added successfully!\n\n You can now create another season or press the teams link to add teams to the created seasons",
   });
 
   const { refetch: refetchSeasons } = useFetchSeasons();
@@ -86,21 +86,21 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   });
 
   useEffect(() => {
-    register('startDate');
-    register('bcaStartDate');
-    register('bcaEndDate');
-    register('apaStartDate');
-    register('apaEndDate');
+    register("startDate");
+    register("bcaStartDate");
+    register("bcaEndDate");
+    register("apaStartDate");
+    register("apaEndDate");
   }, [register]);
 
   const handleDateChange = (
-    event: 'bca' | 'apa',
-    position: 'Start' | 'End',
+    event: "bca" | "apa",
+    position: "Start" | "End",
     value: Date
   ) => {
     setValue(`${event}${position}Date`, value);
-    const setter = event === 'bca' ? setBcaEvent : setApaEvent;
-    const object = event === 'bca' ? bcaEvent : apaEvent;
+    const setter = event === "bca" ? setBcaEvent : setApaEvent;
+    const object = event === "bca" ? bcaEvent : apaEvent;
     const key = position.toLowerCase();
     const newObject = {
       ...object,
@@ -111,7 +111,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
 
   const handleStartDateChange = (newValue: Date) => {
     // update form
-    setValue('startDate', newValue);
+    setValue("startDate", newValue);
     // things to update
     const startDate = convertDateToTimestamp(newValue);
     const endDate = getSeasonEndDate(startDate, seasonData.seasonLength);
@@ -159,7 +159,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   };
 
   const handleStringChange = (
-    fieldName: 'poolHall' | 'game',
+    fieldName: "poolHall" | "game",
     newValue: string
   ) => {
     setValue(fieldName, newValue as PoolHall | Game);
@@ -167,8 +167,8 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
     // Create a new seasonData object with the updated field value
     const newSeasonName = buildSeasonName(
       seasonData.startDate,
-      fieldName === 'poolHall' ? (newValue as PoolHall) : seasonData.poolHall,
-      fieldName === 'game' ? (newValue as Game) : seasonData.game
+      fieldName === "poolHall" ? (newValue as PoolHall) : seasonData.poolHall,
+      fieldName === "game" ? (newValue as Game) : seasonData.game
     );
 
     const updatedData: Season = {
@@ -182,8 +182,8 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
   };
 
   const handleSeasonLengthChange = (newValue: number) => {
-    setValue('seasonLength', newValue);
-    const startDate = convertDateToTimestamp(watch('startDate'));
+    setValue("seasonLength", newValue);
+    const startDate = convertDateToTimestamp(watch("startDate"));
     const endDate = getSeasonEndDate(startDate, newValue);
     const updatedData: Season = {
       ...seasonData,
@@ -201,7 +201,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           <label htmlFor="startDate">Start Date: </label>
           <ReactDatePicker
             className="form-input"
-            selected={watch('startDate')}
+            selected={watch("startDate")}
             onChange={(date: Date) => handleStartDateChange(date)}
           />
           {errors.startDate && (
@@ -216,14 +216,14 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           choices={Array.from({ length: 21 }, (_, index) => index + 10)}
           onChange={(e) => handleSeasonLengthChange(Number(e.target.value))}
           errorMessage={errors.game && errors.game.message}
-          defaultValue={'16'}
+          defaultValue={"16"}
         />
         <FormSelect
           label="Game"
           fieldName="game"
           register={register}
           choices={games}
-          onChange={(e) => handleStringChange('game', e.target.value)}
+          onChange={(e) => handleStringChange("game", e.target.value)}
           errorMessage={errors.game && errors.game.message}
         />
         <FormSelect
@@ -231,7 +231,7 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
           fieldName="poolHall"
           register={register}
           choices={poolHalls}
-          onChange={(e) => handleStringChange('poolHall', e.target.value)}
+          onChange={(e) => handleStringChange("poolHall", e.target.value)}
           errorMessage={errors.poolHall && errors.poolHall.message}
         />
 
@@ -241,8 +241,8 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
             bcaEvent.start instanceof Date ? bcaEvent.start : new Date()
           }
           endDate={bcaEvent.end instanceof Date ? bcaEvent.end : new Date()}
-          onStartChange={(date: Date) => handleDateChange('bca', 'Start', date)}
-          onEndChange={(date: Date) => handleDateChange('bca', 'End', date)}
+          onStartChange={(date: Date) => handleDateChange("bca", "Start", date)}
+          onEndChange={(date: Date) => handleDateChange("bca", "End", date)}
           website={bcaWebsite}
           startError={errors.bcaStartDate?.message}
           endError={errors.bcaEndDate?.message}
@@ -254,8 +254,8 @@ export const SeasonEntryForm: React.FC<SeasonEntryFormProps> = ({
             apaEvent.start instanceof Date ? apaEvent.start : new Date()
           }
           endDate={apaEvent.end instanceof Date ? apaEvent.end : new Date()}
-          onStartChange={(date: Date) => handleDateChange('apa', 'Start', date)}
-          onEndChange={(date: Date) => handleDateChange('apa', 'End', date)}
+          onStartChange={(date: Date) => handleDateChange("apa", "Start", date)}
+          onEndChange={(date: Date) => handleDateChange("apa", "End", date)}
           website={apaWebsite}
           startError={errors.apaStartDate?.message}
           endError={errors.apaEndDate?.message}

@@ -9,7 +9,6 @@ import { SelectedItemProvider } from './context/SelectedItemProvider';
 
 // firebase
 import { ReactQueryDevtools } from 'react-query/devtools';
-import './firebaseConfig';
 import { AuthProvider } from './context/AuthContext';
 
 // css

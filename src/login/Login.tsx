@@ -1,56 +1,57 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import './login.css';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
+import "./login.css";
+import { TextInput } from "../components/TextInput";
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
   const auth = getAuth();
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/'); // Redirect to the dashboard after login
+      navigate("/"); // Redirect to the dashboard after login
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   };
 
   return (
-    <form onSubmit={handleLogin} className='login-form'>
-      <input
-        type='email'
+    <form onSubmit={handleLogin} className="login-form">
+      <h2>Login</h2>
+      <TextInput
+        type="email"
         value={email}
-        onChange={e => setEmail(e.target.value)}
-        placeholder='Email'
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+        required
+      />
+      <TextInput
+        type={"password"}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
         required
       />
 
-      <input
-        type={showPassword ? 'text' : 'password'}
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        placeholder='Password'
-        required
-      />
-      <button
-        type='button'
-        className='toggle-password'
-        onClick={togglePasswordVisibility}
+      <Link
+        to="/forgot-password"
+        style={{ fontSize: "12px", marginBottom: "15px" }}
       >
-        {showPassword ? 'Hide' : 'Show'}
+        Forgot Password
+      </Link>
+      <button className="mt-4 mb-12" type="submit">
+        Login
       </button>
 
-      <button type='submit'>Login</button>
+      <Link to="/register" style={{ marginTop: "45px" }}>
+        Register here
+      </Link>
     </form>
   );
 };

@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // components
-import { FieldEntryDialog } from '../components/FieldEntryDialog';
+import { FieldEntryDialog } from "../components/FieldEntryDialog";
 
 // utilities
-import { PastPlayerProfileFields, profileFields } from './buttonFields';
-import { formatName, formatPhoneNumber } from '../assets/globalFunctions';
-import { validatePastPlayerFields } from '../assets/validateFields';
-import { toast } from 'react-toastify';
-
-// types
-import { PastPlayer } from '../assets/typesFolder/userTypes';
+import { PastPlayerProfileFields, profileFields } from "./buttonFields";
+import { formatName, formatPhoneNumber } from "../assets/globalFunctions";
+import { validatePastPlayerFields } from "../assets/validateFields";
+import { toast } from "react-toastify";
 
 // firebase
-import { Reads, Updates } from '../assets/unused/firebaseFunctions';
+import { Email, fetchPastPlayerByIdRQ, PastPlayer } from "bca-firebase-queries";
 
 type Props = {
   pastPlayer: PastPlayer;
@@ -28,7 +25,7 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
 
   const handleDialogOpen = (
     fieldName: keyof PastPlayerProfileFields,
-    name: string,
+    name: string
   ) => {
     setTitle(`Enter a new ${name}`);
     setCurrentFieldName(fieldName);
@@ -39,38 +36,41 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
     setIsOpen(false);
     if (!currentFieldName) return;
     let processedValue = value;
-    if (!currentFieldName || value === null || value === '') return;
-    if (currentFieldName === 'city') {
+    if (!currentFieldName || value === null || value === "") return;
+    if (currentFieldName === "city") {
       processedValue = formatName(processedValue);
     }
-    if (currentFieldName === 'phone') {
+    if (currentFieldName === "phone") {
       processedValue = formatPhoneNumber(processedValue);
       const validPhone = validatePastPlayerFields(
-        'strictPhone',
-        processedValue,
+        "strictPhone",
+        processedValue
       );
       if (!validPhone) return;
     }
     const validated = validatePastPlayerFields(
       currentFieldName,
-      processedValue,
+      processedValue
     );
     if (!validated) {
-      toast.warn('Invalid value');
+      toast.warn("Invalid value");
       return;
     }
     try {
-      await updatePlayer(currentFieldName, processedValue);
-      const updatedPlayer = await Reads.fetchPastPlayerData(pastPlayer.email); //refetch pastPlayer
+      // await updatePlayer(currentFieldName, processedValue);
+      const updatedPlayer = await fetchPastPlayerByIdRQ(
+        pastPlayer.email as Email
+      ); //refetch pastPlayer
       if (updatedPlayer) {
         setChosenPastPlayer(updatedPlayer as PastPlayer);
       }
     } catch (error) {
-      console.log('Error updating pastPlayer', error);
+      console.log("Error updating pastPlayer", error);
     }
     setCurrentFieldName(null);
   };
 
+  /*
   const updatePlayer = async (
     fieldName: keyof PastPlayerProfileFields,
     value: string,
@@ -84,16 +84,17 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
       console.log('Error updating pastPlayer', error);
     }
   };
+   */
 
   return (
     <>
-      {profileFields.map(field => {
+      {profileFields.map((field) => {
         const fieldName = field.fieldName as keyof PastPlayerProfileFields;
         return (
           <React.Fragment key={field.fieldName}>
-            <div className='grid-label'>{field.name}:</div>
+            <div className="grid-label">{field.name}:</div>
             <button
-              className='grid-value text-button'
+              className="grid-value text-button"
               onClick={() => handleDialogOpen(fieldName, field.name)}
             >
               {pastPlayer[fieldName]}
@@ -102,10 +103,10 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
         );
       })}
       <FieldEntryDialog<string>
-        title={title ? title : ''}
+        title={title ? title : ""}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        setValue={value => handleDialogClose(value)}
+        setValue={(value) => handleDialogClose(value)}
       />
     </>
   );

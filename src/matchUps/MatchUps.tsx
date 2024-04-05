@@ -1,38 +1,38 @@
 // hooks
-import { useContext, useState } from 'react';
+import { useContext, useState } from "react";
 
 // components
-import { SeasonList } from '../seasons/SeasonList';
-import { TeamOrder } from './TeamOrder';
-import { CreateMatches } from './CreateMatches';
-import { FinishedMatches } from './FinishedMatches';
-import { SetTeamsInSchedule } from './SetTeamsInSchedule';
-import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+import { SeasonList } from "../seasons/SeasonList";
+import { TeamOrder } from "./TeamOrder";
+import { CreateMatches } from "./CreateMatches";
+// import { FinishedMatches } from './FinishedMatches';
+import { SetTeamsInSchedule } from "./SetTeamsInSchedule";
+// import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 // context
-import { SelectedItemContext } from '../context/SelectedItemProvider';
+import { SelectedItemContext } from "../context/SelectedItemProvider";
 
 // firebase
 import {
   useFetchTeamsFromSeason,
   useFetchFinishedRoundRobin,
   useFetchRoundRobin,
-} from '../firebase';
+} from "bca-firebase-queries";
 
 // types
-import { Team } from '../assets/typesFolder/teamTypes';
+import { Team } from "../assets/typesFolder/teamTypes";
 
 // styles
-import './matchups.css';
+import "./matchups.css";
 import {
   RoundRobinSchedule,
   RoundRobinScheduleFinished,
-} from '../assets/typesFolder/matchupTypes';
-import { useStateUpdater } from '../assets/useStateUpdater';
+} from "../assets/typesFolder/matchupTypes";
+//import { useStateUpdater } from '../assets/useStateUpdater';
 
 export const MatchUps = () => {
   // state
-  //const [teamOrder, setTeamOrder] = useState<Team[]>([]);
+  const [teamOrder, setTeamOrder] = useState<Team[]>([]);
   const [modifiedSchedule, setModifiedSchedule] = useState<
     RoundRobinSchedule | RoundRobinScheduleFinished | null
   >(null);
@@ -40,24 +40,24 @@ export const MatchUps = () => {
   const {
     data: teams,
     isLoading: isLoadingTeams,
-    state: teamOrder,
-    setState: setTeamOrder,
-    error: errorTeams,
-    refetch: fetchTeams,
+    //  state: teamOrder,
+    //  setState: setTeamOrder,
+    //  error: errorTeams,
+    //  refetch: fetchTeams,
   } = useFetchTeamsFromSeason(selectedSeason?.id);
 
   const {
     data: initialSchedule,
-    isLoading: isLoadingInitialSchedule,
-    error: errorInitialSchedule,
-    refetch: fetchRoundRobin,
+    // isLoading: isLoadingInitialSchedule,
+    // error: errorInitialSchedule,
+    // refetch: fetchRoundRobin,
   } = useFetchRoundRobin(teams?.length);
 
   const {
-    data: finishedSchedule,
+    // data: finishedSchedule,
     isLoading: isLoadingFinishedSchedule,
-    error: errorFinishedSchedule,
-    refetch: fetchFinishedRoundRobin,
+    // error: errorFinishedSchedule,
+    // refetch: fetchFinishedRoundRobin,
   } = useFetchFinishedRoundRobin(selectedSeason?.id);
 
   //useStateUpdater(teams, setTeamOrder);
@@ -83,8 +83,8 @@ export const MatchUps = () => {
   // }
 
   return (
-    <div className='container'>
-      <div className='match-lists'>
+    <div className="container">
+      <div className="match-lists">
         <SeasonList />
         <TeamOrder
           teams={teams as Team[]}
@@ -96,10 +96,10 @@ export const MatchUps = () => {
           schedule={initialSchedule}
           setModifiedSchedule={setModifiedSchedule}
           modifiedSchedule={modifiedSchedule}
-          seasonId={selectedSeason ? selectedSeason.id : ''}
+          seasonId={selectedSeason ? selectedSeason.id : ""}
         />
       </div>
-      <div className='match-working-area'>
+      <div className="match-working-area">
         {/* {<FinishedMatches
             finishedSchedule={finishedSchedule}
             selectedSeason={selectedSeason}
