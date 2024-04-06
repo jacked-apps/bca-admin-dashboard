@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import { sendEmailVerification } from "@firebase/auth";
+import { Link } from 'react-router-dom';
+import { sendEmailVerification } from 'firebase/auth';
 
-import "./login.css";
-import { useAuthContext } from "../context/useAuthContext";
+import './login.css';
+import { useAuthContext } from '../context/useAuthContext';
 
 export const VerifyEmail = () => {
   const { user } = useAuthContext();
@@ -13,9 +13,9 @@ export const VerifyEmail = () => {
 
     try {
       await sendEmailVerification(user);
-      alert("Verification email sent!");
+      alert('Verification email sent!');
     } catch (error) {
-      console.error("Error sending verification email", error);
+      console.error('Error sending verification email', error);
       throw error;
     }
   };
@@ -25,20 +25,20 @@ export const VerifyEmail = () => {
       <h2>Email Verification</h2>
       <div
         style={{
-          display: "flex",
-          fontSize: "15px",
-          maxWidth: "80%",
-          marginBottom: "25px",
+          display: 'flex',
+          fontSize: '15px',
+          maxWidth: '80%',
+          marginBottom: '25px',
         }}
       >
         Thank you for registering!
       </div>
-      <div style={{ fontSize: "12px", maxWidth: "70%", marginBottom: "10px" }}>
+      <div style={{ fontSize: '12px', maxWidth: '70%', marginBottom: '10px' }}>
         To log in, please check your inbox and follow the link to complete the
         verification process.
       </div>
 
-      <div style={{ fontSize: "12px", maxWidth: "70%", marginBottom: "15px" }}>
+      <div style={{ fontSize: '12px', maxWidth: '70%', marginBottom: '15px' }}>
         When finished proceed to Log In
       </div>
 
@@ -46,7 +46,7 @@ export const VerifyEmail = () => {
         Resend Email
       </button>
 
-      <Link to="/login" style={{ marginTop: "45px" }}>
+      <Link to="/login" style={{ marginTop: '45px' }}>
         Back to Login
       </Link>
     </form>

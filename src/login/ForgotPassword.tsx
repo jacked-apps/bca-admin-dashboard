@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { getAuth, sendPasswordResetEmail } from "@firebase/auth";
-import "./login.css";
-import { TextInput } from "../components/TextInput";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import './login.css';
+import { TextInput } from '../components/TextInput';
 
 export const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -14,10 +14,10 @@ export const ForgotPassword = () => {
     e.preventDefault();
     try {
       await sendPasswordResetEmail(auth, email);
-      alert("Reset Password email sent!");
-      navigate("/login");
+      alert('Reset Password email sent!');
+      navigate('/login');
     } catch (error) {
-      console.error("Error sending reset password email", error);
+      console.error('Error sending reset password email', error);
       throw error;
     }
   };
@@ -32,7 +32,7 @@ export const ForgotPassword = () => {
         placeholder="Email"
         required
       />
-      <div style={{ fontSize: "12px", maxWidth: "70%" }}>
+      <div style={{ fontSize: '12px', maxWidth: '70%' }}>
         Enter your email address. An Email will be sent with instructions to
         reset your password.
       </div>
@@ -40,7 +40,7 @@ export const ForgotPassword = () => {
         Reset Password
       </button>
 
-      <Link to="/login" style={{ marginTop: "45px" }}>
+      <Link to="/login" style={{ marginTop: '45px' }}>
         Back To Login
       </Link>
     </form>
