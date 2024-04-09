@@ -42,4 +42,5 @@
 .loading-text {
   font-size: 2.5vw;
   margin-left: 4vw;
+  min-width: 12vw;
 }

@@ -7,10 +7,10 @@ export const LoadingScreen: React.FC = () => {
   const [loadingText, setLoadingText] = useState('Loading ');
 
   useEffect(() => {
-    let dotsNumber = 3; // Track the number of dots
+    let dotsNumber = 0; // Track the number of dots
 
     const interval = setInterval(() => {
-      dotsNumber = dotsNumber <= 0 ? 3 : dotsNumber - 1; // Increment dotsNumber or reset
+      dotsNumber = dotsNumber >= 3 ? 0 : dotsNumber + 1; // Increment dotsNumber or reset
       setLoadingText(`Loading${' .'.repeat(dotsNumber)}`); // Set the text with appropriate dots
     }, 500);
 
