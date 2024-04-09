@@ -2,6 +2,7 @@ import * as Shared from './sharedTypes';
 
 export type Player = Shared.Names & {
   id: string;
+  isAdmin: boolean;
   leagues: PlayerLeague[];
   seasons: PlayerSeason[];
   teams: PlayerTeam[];

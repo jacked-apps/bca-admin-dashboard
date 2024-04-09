@@ -1,14 +1,16 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { User } from 'firebase/auth';
-import { CurrentUser } from '../assets/typesFolder/userTypes';
 import { useAuth } from '../hooks/useAuth';
-import { useFetchCurrentUserById } from '../hooks/playerFetchHooks';
+import { useFetchPlayerById } from '../hooks/newHooks';
+import { Player } from '../assets/typesFolder/newTypes';
 
 type AuthContextType = {
   user: User | null;
   isAdmin: boolean;
-  currentUser: CurrentUser | null | undefined;
+  player: Player | null | undefined;
   isLoggedIn: boolean;
+  isLoading: boolean;
+  isError: boolean;
 };
 type AuthProviderProps = {
   children: ReactNode;
@@ -16,8 +18,10 @@ type AuthProviderProps = {
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   isAdmin: false,
-  currentUser: null,
+  player: null,
   isLoggedIn: false,
+  isLoading: false,
+  isError: false,
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -25,17 +29,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const userId = (user && user.uid) || undefined;
-  const { data: currentUser } = useFetchCurrentUserById(userId);
+  const { data: player, isLoading, isError } = useFetchPlayerById(userId);
 
   useEffect(() => {
-    setIsAdmin(currentUser?.isAdmin === 'true');
-  }, [currentUser]);
+    if (player) setIsAdmin(player.isAdmin);
+  }, [player]);
 
   const value = {
     user,
     isAdmin,
-    currentUser,
+    player,
     isLoggedIn: !!user && user.emailVerified,
+    isLoading,
+    isError,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

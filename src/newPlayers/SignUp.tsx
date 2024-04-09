@@ -10,9 +10,11 @@ export const SignUp = ({ prop = 'hello' }: SignUpProps) => {
   const { user } = useAuth();
   //console.log('SignUp', user);
   const { data, isError, isLoading } = useFetchPlayerById(user?.uid);
-  return (
-    <div className="container">
-      <LoadingScreen />
-    </div>
-  );
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  console.log('SignUp', data, isError);
+  return <div className="container">{<LoadingScreen />}</div>;
 };
