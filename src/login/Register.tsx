@@ -4,7 +4,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
-} from "@firebase/auth";
+} from "firebase/auth";
 import "./login.css";
 import { TextInput } from "../components/TextInput";
 

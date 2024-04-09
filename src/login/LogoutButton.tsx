@@ -1,4 +1,4 @@
-import { getAuth, signOut } from "@firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 
 type LogOutProps = {

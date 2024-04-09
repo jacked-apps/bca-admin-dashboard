@@ -25,19 +25,19 @@
 // ------------------------------
 // IMPORTS and VARIABLES
 // ------------------------------
-import { Timestamp } from 'firebase/firestore';
-import { daysOfTheWeek, notDate } from './globalVariables';
-import { getTimeOfYear, readableDate, toJSDate } from './dateFunctions';
-import Holidays from 'date-holidays';
+import { Timestamp } from "firebase/firestore";
+import { daysOfTheWeek, notDate } from "./globalVariables";
+import { getTimeOfYear, readableDate, toJSDate } from "./dateFunctions";
+import Holidays from "date-holidays";
 import {
   DateOrStamp,
   Game,
   PoolHall,
   SeasonName,
-} from './typesFolder/sharedTypes';
-import { Holiday, Schedule } from './typesFolder/seasonTypes';
-import { PastPlayer } from './typesFolder/userTypes';
-import { TeamPlayer } from './typesFolder/teamTypes';
+} from "./typesFolder/sharedTypes";
+import { Holiday, Schedule } from "./typesFolder/seasonTypes";
+import { PastPlayer } from "./typesFolder/userTypes";
+import { TeamPlayer } from "./typesFolder/teamTypes";
 
 // ------------------------------
 // 1. SEASON-RELATED Functions
@@ -59,14 +59,14 @@ export const buildSeasonName = (
 ) => {
   const date = toJSDate(startDate);
   if (date === notDate) {
-    return 'No Season Name Yet';
+    return "No Season Name Yet";
   }
 
   const year = date.getFullYear();
   const season = getTimeOfYear(date);
   const night = daysOfTheWeek[date.getDay()];
-  return `${game ? game : 'X Ball'} ${night} ${season} ${year} ${
-    poolHall ? poolHall : 'No Pool Hall'
+  return `${game ? game : "X Ball"} ${night} ${season} ${year} ${
+    poolHall ? poolHall : "No Pool Hall"
   }`;
 };
 
@@ -89,7 +89,7 @@ export const fetchHolidays = (startDate: Date | Timestamp | string) => {
     return [];
   }
   const hd = new Holidays();
-  hd.init('US'); // adjust the country code as needed
+  hd.init("US"); // adjust the country code as needed
 
   const start = new Date(jsDate);
   start.setDate(start.getDate() - 7); // start a week earlier
@@ -122,7 +122,7 @@ export const fetchHolidays = (startDate: Date | Timestamp | string) => {
 export const createHolidayObject = (
   startDate: DateOrStamp,
   endDate: DateOrStamp,
-  type: 'bca' | 'apa'
+  type: "bca" | "apa"
 ): Holiday => {
   const name = `${type.toUpperCase()} National Championships`;
   const object = {
@@ -130,8 +130,8 @@ export const createHolidayObject = (
     name: name,
     start: startDate,
     end: endDate,
-    rule: 'Take these weeks off league to allow players to go to these events',
-    type: 'event',
+    rule: "Take these weeks off league to allow players to go to these events",
+    type: "event",
   };
   return object;
 };
@@ -152,14 +152,14 @@ export const convertPastPlayerToTeamPlayer = (
   const teamPlayerInfo: Partial<TeamPlayer> = {};
   const { totalWins, totalLosses } = getStatsTotals(pastPlayer.stats);
 
-  addFieldIfDefined(teamPlayerInfo, 'firstName', pastPlayer.firstName);
-  addFieldIfDefined(teamPlayerInfo, 'lastName', pastPlayer.lastName);
-  addFieldIfDefined(teamPlayerInfo, 'nickname', pastPlayer.nickname);
-  addFieldIfDefined(teamPlayerInfo, 'currentUserId', pastPlayer.currentUserId);
-  addFieldIfDefined(teamPlayerInfo, 'pastPlayerId', pastPlayer.id);
-  addFieldIfDefined(teamPlayerInfo, 'email', pastPlayer.email);
-  addFieldIfDefined(teamPlayerInfo, 'totalWins', totalWins);
-  addFieldIfDefined(teamPlayerInfo, 'totalLosses', totalLosses);
+  addFieldIfDefined(teamPlayerInfo, "firstName", pastPlayer.firstName);
+  addFieldIfDefined(teamPlayerInfo, "lastName", pastPlayer.lastName);
+  addFieldIfDefined(teamPlayerInfo, "nickname", pastPlayer.nickname);
+  addFieldIfDefined(teamPlayerInfo, "currentUserId", pastPlayer.currentUserId);
+  addFieldIfDefined(teamPlayerInfo, "pastPlayerId", pastPlayer.id);
+  addFieldIfDefined(teamPlayerInfo, "email", pastPlayer.email);
+  addFieldIfDefined(teamPlayerInfo, "totalWins", totalWins);
+  addFieldIfDefined(teamPlayerInfo, "totalLosses", totalLosses);
 
   return teamPlayerInfo as TeamPlayer;
 };
@@ -207,8 +207,8 @@ export const createNewTeamData = (teamName: string, seasonId: SeasonName) => ({
  */
 
 export const safeParseInt = (value: string | number | undefined): number => {
-  if (typeof value === 'number') return value;
-  return parseInt(value ?? '0', 10) || 0;
+  if (typeof value === "number") return value;
+  return parseInt(value ?? "0", 10) || 0;
 };
 
 /**
@@ -223,7 +223,7 @@ export const addFieldIfDefined = <T, K extends keyof T>(
   key: K,
   value: T[K] | undefined
 ) => {
-  if (value !== undefined && value !== null && value !== '') {
+  if (value !== undefined && value !== null && value !== "") {
     object[key] = value;
   }
 };
@@ -287,18 +287,18 @@ export const formatName = (name: string): string => {
 export const formatPhoneNumber = (phoneNumber: string): string => {
   let newPhoneNumber = phoneNumber;
   // take all non numbers out of the string
-  newPhoneNumber = phoneNumber.replace(/\D/g, '');
+  newPhoneNumber = phoneNumber.replace(/\D/g, "");
   // if the string is less than 10 digits return
   if (newPhoneNumber.length < 10) return phoneNumber;
   // add a dash - between the 6th and 7th digit
   newPhoneNumber =
-    newPhoneNumber.substring(0, 6) + '-' + newPhoneNumber.substring(6);
+    newPhoneNumber.substring(0, 6) + "-" + newPhoneNumber.substring(6);
   // put parentheses around first three digits
   newPhoneNumber = `(${newPhoneNumber.substring(
     0,
     3
   )}) ${newPhoneNumber.substring(3)}`;
-  console.log('parens : ', newPhoneNumber);
+  console.log("parens : ", newPhoneNumber);
 
   return newPhoneNumber;
 };
@@ -334,23 +334,23 @@ export const createBasicSchedule = (
     basicSchedule[dateKey] = {
       title: `Week ${week}`,
       leaguePlay: true,
-      matchUps: 'placeholder-matchupId',
+      matchUps: "placeholder-matchupId",
     };
 
     currentDate = nextWeek(currentDate);
   }
   // add season break
   basicSchedule[readableDate(currentDate)] = {
-    title: 'Season Break',
+    title: "Season Break",
     leaguePlay: false,
-    matchUps: 'none',
+    matchUps: "none",
   };
   // add money round
   currentDate = nextWeek(currentDate);
   basicSchedule[readableDate(currentDate)] = {
-    title: 'Money Round',
+    title: "Money Round",
     leaguePlay: true,
-    matchUps: 'placeholder-matchupId',
+    matchUps: "placeholder-matchupId",
   };
   // add next season start
   currentDate = nextWeek(currentDate);
@@ -358,7 +358,7 @@ export const createBasicSchedule = (
   basicSchedule[readableDate(currentDate)] = {
     title: `${SeasonName} Start`,
     leaguePlay: false,
-    matchUps: 'none',
+    matchUps: "none",
   };
   return basicSchedule;
 };
@@ -390,7 +390,7 @@ export const insertHolidayIntoSchedule = (
       ...newSchedule[dateKey],
       title: holidayName,
       leaguePlay: false,
-      matchUps: 'none',
+      matchUps: "none",
     };
 
     // move to the next week
@@ -418,13 +418,13 @@ export const insertHolidayIntoSchedule = (
     // get the "season" name for the next season start
     const jsDate = toJSDate(dateKey);
     const nextSeason =
-      jsDate === notDate ? 'Next Season' : getTimeOfYear(jsDate);
+      jsDate === notDate ? "Next Season" : getTimeOfYear(jsDate);
     // create the last entry in the schedule
     newSchedule[dateKey] = {
       ...newSchedule[dateKey],
       title: `${nextSeason} Start`,
       leaguePlay: false,
-      matchUps: 'none',
+      matchUps: "none",
     };
     return newSchedule;
   } else return schedule;

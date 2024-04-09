@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { publicRoutes, privateRoutes, adminRoutes } from './routes';
-import { useAuthContext } from '../context/useAuthContext';
-import { ProtectedRoute } from './ProtectedRoute';
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { publicRoutes, privateRoutes, adminRoutes } from "./routes";
+import { useAuthContext } from "../context/useAuthContext";
+import { ProtectedRoute } from "./ProtectedRoute";
 
-import './navigation.css';
+import "./navigation.css";
 
 export const Navigation = () => {
   const { isLoggedIn, isAdmin } = useAuthContext();

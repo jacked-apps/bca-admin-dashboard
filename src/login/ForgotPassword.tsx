@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, sendPasswordResetEmail } from "@firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import "./login.css";
 import { TextInput } from "../components/TextInput";
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { sendEmailVerification } from "@firebase/auth";
+import { sendEmailVerification } from "firebase/auth";
 
 import "./login.css";
 import { useAuthContext } from "../context/useAuthContext";

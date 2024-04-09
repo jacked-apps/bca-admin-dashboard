@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import "./login.css";
 import { TextInput } from "../components/TextInput";
+import { FirebaseContext } from "bca-firebase-queries";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const auth = getAuth();
+  const { auth } = useContext(FirebaseContext);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth!, email, password);
       navigate("/"); // Redirect to the dashboard after login
     } catch (error) {
       console.error("Login failed:", error);

@@ -21,6 +21,7 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { user } = useAuth();
+  console.log(user);
   const [isAdmin, setIsAdmin] = useState(false);
 
   const userId = (user && user.uid) || undefined;
