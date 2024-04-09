@@ -1,18 +1,19 @@
 // context
-import { useContext } from "react";
-import { SelectedItemContext } from "../context/SelectedItemProvider";
+import { useContext } from 'react';
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 // components
-import { ErrorAndRefetch } from "../components/ErrorAndRefetch";
+import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 // utilities
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 // firebase
-import { useFetchSeasons } from "bca-firebase-queries";
+// import { useFetchSeasons } from "bca--firebase-queries";
+import { useFetchSeasons } from '../hooks/seasonFetchHooks';
 
 // css
-import "./seasons.css";
+import './seasons.css';
 
 export const SeasonList = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export const SeasonList = () => {
   return (
     <div className="list-container">
       <div className="list-title">
-        {selectedSeason ? "Working Season:" : "Choose Season"}
+        {selectedSeason ? 'Working Season:' : 'Choose Season'}
       </div>
       {selectedSeason ? (
         <>
@@ -51,7 +52,7 @@ export const SeasonList = () => {
           ) : (
             <button
               className="small-button"
-              onClick={() => navigate("/seasons")}
+              onClick={() => navigate('/seasons')}
             >
               Create New Season
             </button>

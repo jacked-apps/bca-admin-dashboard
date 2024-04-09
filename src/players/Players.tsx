@@ -1,18 +1,25 @@
-import { useState } from "react";
+import { useState } from 'react';
 // components
-import { PastPlayersList } from "./PastPlayersList";
-import { CurrentPlayersList } from "./CurrentPlayersList";
-import { Info } from "./Info";
+import { PastPlayersList } from './PastPlayersList';
+import { CurrentPlayersList } from './CurrentPlayersList';
+import { Info } from './Info';
 
 // types
-import { PastPlayer, CurrentUser } from "../assets/typesFolder/userTypes";
+import { CurrentUser } from '../assets/typesFolder/userTypes';
 
 // firebase
+import { PastPlayer } from '../assets/typesFolder/userTypes';
+import { failedFetch } from '../constants/messages';
 import {
-  failedFetch,
-  useFetchPastPlayers,
   useFetchCurrentUsers,
-} from "bca-firebase-queries";
+  useFetchPastPlayers,
+} from '../hooks/playerFetchHooks';
+
+// import {
+//   failedFetch,
+//   useFetchPastPlayers,
+//   useFetchCurrentUsers,
+// } from "bca--firebase-queries";
 
 export const Players = () => {
   const {
@@ -38,14 +45,15 @@ export const Players = () => {
   if (errorPastPlayers) {
     return (
       <div>
-        {failedFetch} Past Players: {errorPastPlayers}
+        {failedFetch} Past Players:{' '}
+        {/** TODO fix this errorPastPlayers.message */}
       </div>
     );
   }
   if (errorCurrentUsers) {
     return (
       <div>
-        {failedFetch} Current Users: {errorCurrentUsers}
+        {failedFetch} Current Users: {/*errorCurrentUsers} TODO fix this */}
       </div>
     );
   }

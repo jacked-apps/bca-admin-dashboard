@@ -1,33 +1,38 @@
 // hooks
-import { useContext, useState } from "react";
+import { useContext, useState } from 'react';
 
 // components
-import { SeasonList } from "../seasons/SeasonList";
-import { TeamOrder } from "./TeamOrder";
-import { CreateMatches } from "./CreateMatches";
+import { SeasonList } from '../seasons/SeasonList';
+import { TeamOrder } from './TeamOrder';
+import { CreateMatches } from './CreateMatches';
 // import { FinishedMatches } from './FinishedMatches';
-import { SetTeamsInSchedule } from "./SetTeamsInSchedule";
+import { SetTeamsInSchedule } from './SetTeamsInSchedule';
 // import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 // context
-import { SelectedItemContext } from "../context/SelectedItemProvider";
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 // firebase
-import {
-  useFetchTeamsFromSeason,
-  useFetchFinishedRoundRobin,
-  useFetchRoundRobin,
-} from "bca-firebase-queries";
-
-// types
-import { Team } from "../assets/typesFolder/teamTypes";
-
-// styles
-import "./matchups.css";
+// import {
+//   useFetchTeamsFromSeason,
+//   useFetchFinishedRoundRobin,
+//   useFetchRoundRobin,
+// } from "bca--firebase-queries";
 import {
   RoundRobinSchedule,
   RoundRobinScheduleFinished,
-} from "../assets/typesFolder/matchupTypes";
+} from '../assets/typesFolder/matchupTypes';
+import { useFetchTeamsFromSeason } from '../hooks/teamFetchHooks';
+import {
+  useFetchFinishedRoundRobin,
+  useFetchRoundRobin,
+} from '../hooks/matchupFetchHooks';
+
+// types
+import { Team } from '../assets/typesFolder/teamTypes';
+
+// styles
+import './matchups.css';
 //import { useStateUpdater } from '../assets/useStateUpdater';
 
 export const MatchUps = () => {
@@ -96,7 +101,7 @@ export const MatchUps = () => {
           schedule={initialSchedule}
           setModifiedSchedule={setModifiedSchedule}
           modifiedSchedule={modifiedSchedule}
-          seasonId={selectedSeason ? selectedSeason.id : ""}
+          seasonId={selectedSeason ? selectedSeason.id : ''}
         />
       </div>
       <div className="match-working-area">

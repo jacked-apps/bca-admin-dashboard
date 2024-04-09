@@ -1,25 +1,26 @@
-import { useState, useContext } from "react";
+import { useState, useContext } from 'react';
 
 // components
-import { HolidayList } from "./HolidayList";
-import { HolidayDetails } from "./HolidayDetails";
-import { FinishSchedule } from "./FinishSchedule";
-import { AddHoliday } from "./AddHoliday";
+import { HolidayList } from './HolidayList';
+import { HolidayDetails } from './HolidayDetails';
+import { FinishSchedule } from './FinishSchedule';
+import { AddHoliday } from './AddHoliday';
 
 // context
-import { SelectedItemContext } from "../context/SelectedItemProvider";
+import { SelectedItemContext } from '../context/SelectedItemProvider';
 
 // utilities
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
 // firebase
+// import { useUpdateSeasonSchedule } from "bca--firebase-queries";
+import { useUpdateSeasonSchedule } from '../hooks/scheduleUpdateHooks';
 
-import { useUpdateSeasonSchedule } from "bca-firebase-queries";
 // types
-import { Schedule, Holiday } from "../assets/typesFolder/seasonTypes";
+import { Schedule, Holiday } from '../assets/typesFolder/seasonTypes';
 
 // css
-import "./schedule.css";
+import './schedule.css';
 
 type HolidayViewProps = {
   editedSchedule: Schedule;
@@ -33,17 +34,17 @@ export const HolidayView = ({
 }: HolidayViewProps) => {
   const { selectedSeason } = useContext(SelectedItemContext);
 
-  const mutateObject = {
-    useToast: true,
-    successMessage: `Your new schedule has been added to ${
-      selectedSeason ? selectedSeason.seasonName : "Season"
-    }.\nChoose a new season or move on to Match Ups.`,
-    failedMessage: "Failed to add schedule to season.",
-    successToastLength: 6000,
-  };
+  // const mutateObject = {
+  //   useToast: true,
+  //   successMessage: `Your new schedule has been added to ${
+  //     selectedSeason ? selectedSeason.seasonName : "Season"
+  //   }.\nChoose a new season or move on to Match Ups.`,
+  //   failedMessage: "Failed to add schedule to season.",
+  //   successToastLength: 6000,
+  // };
 
   const { mutate: updateSchedule, isLoading } =
-    useUpdateSeasonSchedule(mutateObject);
+    useUpdateSeasonSchedule(/*mutateObject*/);
   const holidays = selectedSeason?.holidays || [];
   const [editedHolidays, setEditedHolidays] = useState<Holiday[]>(holidays);
   const [activeHoliday, setActiveHoliday] = useState<Holiday | null>(null);
@@ -62,7 +63,7 @@ export const HolidayView = ({
   };
   const handleSaveSchedule = async () => {
     if (!selectedSeason) {
-      toast.error("No season selected to save schedule.");
+      toast.error('No season selected to save schedule.');
       return;
     }
     updateSchedule({
