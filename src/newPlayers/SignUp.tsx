@@ -1,7 +1,18 @@
+import { LoadingScreen } from '../components/LoadingScreen';
+import { useFetchPlayerById } from '../hooks/newHooks';
+import { useAuth } from '../hooks/useAuth';
+import './newPlayers.css';
 type SignUpProps = {
   prop?: string;
 };
 
 export const SignUp = ({ prop = 'hello' }: SignUpProps) => {
-  return <div>{prop}, SignUp</div>;
+  const { user } = useAuth();
+  //console.log('SignUp', user);
+  const { data, isError, isLoading } = useFetchPlayerById(user?.uid);
+  return (
+    <div className="container">
+      <LoadingScreen />
+    </div>
+  );
 };

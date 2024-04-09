@@ -1,6 +1,7 @@
 import * as Shared from './sharedTypes';
 
 export type Player = Shared.Names & {
+  id: string;
   leagues: PlayerLeague[];
   seasons: PlayerSeason[];
   teams: PlayerTeam[];
