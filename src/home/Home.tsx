@@ -1,43 +1,46 @@
-import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged, User } from "@firebase/auth";
-import { Login } from "../login/Login";
-//import { ConfirmContext } from '../context/ConfirmContext';
-//import { useContext } from 'react';
-//import { useFetchSeasons } from '../firebase';
-import { LogoutButton } from "../login/LogoutButton";
-import { useAuthContext } from "../context/useAuthContext";
-import { toast } from "react-toastify";
+import { Login } from '../login/Login';
+import { LogoutButton } from '../login/LogoutButton';
+import { useAuthContext } from '../context/useAuthContext';
+import { toast } from 'react-toastify';
+import { LoadingScreen } from '../components/LoadingScreen';
+import { useNavigate } from 'react-router';
+import { useEffect } from 'react';
+import { useFetchPlayerById } from 'bca-firebase-queries';
 
 export const Home = () => {
-  const { isAdmin, currentUser } = useAuthContext();
-  const [user, setUser] = useState<User | null>(null);
-  //const [welcomeName, setUser] = useState<User | null>(null);
-  //const [user, setUser] = useState<User | null>(null);
-  const auth = getAuth();
-  //const { confirmMe } = useContext(ConfirmContext);
+  const navigate = useNavigate();
+  const {
+    isAdmin,
+    user,
+    player,
+    isError: isPlayerError,
+    isLoading: isLoadingPlayer,
+  } = useAuthContext();
+  // const {
+  //   data: player,
+  //   isLoading: isLoadingPlayer,
+  //   isError: isPlayerError,
+  // } = useFetchPlayerById(user?.uid);
 
-  //const { data: seasons } = useFetchSeasons();
-  //console.log('HOME', isAdmin, currentUser);
-  const welcomeName = currentUser?.firstName || currentUser?.email;
+  useEffect(() => {
+    if (isPlayerError) {
+      navigate('/signUp');
+    }
+  }, [isPlayerError, navigate]);
+
+  if (isLoadingPlayer) {
+    return <LoadingScreen />;
+  }
+
+  const welcomeName = player?.firstName || '';
   const adminMessage = isAdmin
     ? 'Please navigate to "seasons" to create a new season'
-    : "If you wish to be a League Operator, please press the Apply button";
+    : 'If you wish to be a League Operator, please press the Apply button';
+
   const testConfirm = async () => {
-    toast.info("Coming Soon");
+    toast.info('Coming Soon');
     //TODO make an application form
   };
-  console.log("HOME PAGE", currentUser, isAdmin);
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
 
   if (user) {
     return (

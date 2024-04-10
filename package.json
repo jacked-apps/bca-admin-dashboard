@@ -11,11 +11,9 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
-    "date-holidays": "^3.23.1",
-    "@firebase/app": "^0.9.29",
-    "@firebase/auth": "^1.6.2",
-    "@firebase/firestore": "^4.5.0",
     "bca-firebase-queries": "file:../bca-firebase-queries",
+    "date-holidays": "^3.23.1",
+    "firebase": "^10.10.0",
     "react": "^18.2.0",
     "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
