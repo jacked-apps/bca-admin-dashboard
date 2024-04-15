@@ -3,15 +3,23 @@ import React, { useState, useEffect } from 'react';
 import billiard from '../assets/images/billiard.jpeg';
 import './components.css';
 
-export const LoadingScreen: React.FC = () => {
-  const [loadingText, setLoadingText] = useState('Loading ');
+type LoadingScreenProps = {
+  message?: string;
+};
+
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({ message }) => {
+  const [loadingText, setLoadingText] = useState(
+    message ? message : 'Loading '
+  );
 
   useEffect(() => {
     let dotsNumber = 0; // Track the number of dots
 
     const interval = setInterval(() => {
       dotsNumber = dotsNumber >= 3 ? 0 : dotsNumber + 1; // Increment dotsNumber or reset
-      setLoadingText(`Loading${' .'.repeat(dotsNumber)}`); // Set the text with appropriate dots
+      setLoadingText(
+        `${message ? message : 'Loading'}${' .'.repeat(dotsNumber)}`
+      ); // Set the text with appropriate dots
     }, 500);
 
     return () => clearInterval(interval); // Clean up

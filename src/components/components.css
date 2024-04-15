@@ -60,9 +60,14 @@
   width: 50%;
   margin-bottom: 20px;
 }
-.input-error{
-  border: 2px solid red
+.input-error {
+  border: 2px solid red;
   min-width: 25%;
   height: 80%;
   font-size: 2vw;
+}
+.confirm-button-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
 }

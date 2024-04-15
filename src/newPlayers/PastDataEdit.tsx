@@ -1,10 +1,14 @@
-import { PastPlayer } from 'bca-firebase-queries';
-import React, { useState } from 'react';
-import { EditDataInput } from '../components/EditDataInput';
+// react
+import React from 'react';
+
+// form
 import { FormValues, profileSchema, formFieldNames } from './profileSchema';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { error } from 'console';
+
+// firebase
+import { PastPlayer } from 'bca-firebase-queries';
+import { LogoutButton } from '../login/LogoutButton';
 
 type PastDataEditProps = {
   pastPlayer: PastPlayer;
@@ -14,7 +18,6 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
   const {
     register,
     handleSubmit,
-
     formState: { errors },
   } = useForm<FormValues>({
     resolver: yupResolver(profileSchema),
@@ -36,7 +39,7 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
 
   return (
     <div className="confirm-container">
-      <div className="confirm-title">PastDataEdit</div>
+      <div className="confirm-title">Review Past Data</div>
       <div className="confirm-body">
         <form className="confirm-body-title" onSubmit={handleSubmit(onSubmit)}>
           Please update any old or incorrect information
@@ -64,7 +67,10 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
               </React.Fragment>
             ))}
           </div>
-          <button type="submit">Submit</button>
+          <div className="confirm-button-wrapper">
+            <button type="submit">Submit</button>
+            <LogoutButton />
+          </div>
         </form>
       </div>
     </div>

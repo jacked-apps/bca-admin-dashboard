@@ -29,7 +29,7 @@ export const Home = () => {
   }, [isPlayerError, navigate]);
 
   if (isLoadingPlayer) {
-    return <LoadingScreen />;
+    return <LoadingScreen message="Grabbing user data" />;
   }
 
   const welcomeName = player?.firstName || '';
