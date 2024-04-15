@@ -1,23 +1,30 @@
-import { useFetchPastPlayerById } from 'bca-firebase-queries';
+import { Email, useFetchPastPlayerById } from 'bca-firebase-queries';
 import { LoadingScreen } from '../components/LoadingScreen';
-
-import { useAuth } from '../hooks/useAuth';
-import './newPlayers.css';
 import { useAuthContext } from '../context/useAuthContext';
-type SignUpProps = {
-  prop?: string;
-};
 
-export const SignUp = ({ prop = 'hello' }: SignUpProps) => {
+import './newPlayers.css';
+import { PastPlayer } from './PastPlayer';
+
+export const SignUp = () => {
   const { user } = useAuthContext();
-  console.log('SignUp', user?.email);
-  //console.log('SignUp', user);
-  //useFetchPastPlayerById(user?.uid);
+  const {
+    data: pastPlayer,
+    isLoading: isLoadingPastPlayer,
+    isError: isPastPlayerError,
+  } = useFetchPastPlayerById(user?.email as Email);
 
-  // if (isLoading) {
-  //   return <LoadingScreen />;
-  // }
+  if (isLoadingPastPlayer) {
+    return <LoadingScreen />;
+  }
 
   //console.log('SignUp', data, isError);
-  return <div className="container">Sign Up</div>;
+  return (
+    <div className="sign-container">
+      <div className="sign-title">Sign Up</div>
+      {isPastPlayerError && (
+        <p>There was an error signing you up. Please try again later.</p>
+      )}
+      {pastPlayer && <PastPlayer pastPlayer={pastPlayer} />}
+    </div>
+  );
 };

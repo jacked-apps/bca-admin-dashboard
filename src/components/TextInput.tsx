@@ -14,7 +14,6 @@ export const TextInput: React.FC<TextInputProps> = (props) => {
     <div style={{ position: 'relative' }}>
       <input
         {...rest}
-        style={{ paddingRight: '30px' }}
         type={showPassword ? 'text' : type}
         placeholder={placeholder}
         value={value}

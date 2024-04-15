@@ -5,12 +5,12 @@ type ProtectedRouteProp = {
   children: React.ReactNode;
 };
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProp) => {
+export const PublicRoute = ({ children }: ProtectedRouteProp) => {
   const { isLoggedIn } = useAuthContext();
   console.log('Protected Route check', isLoggedIn);
 
-  if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
   }
 
   return children;

@@ -4,6 +4,7 @@ import { useAuthContext } from '../context/useAuthContext';
 import { ProtectedRoute } from './ProtectedRoute';
 
 import './navigation.css';
+import { PublicRoute } from './PublicRoute';
 
 export const Navigation = () => {
   const { isLoggedIn, isAdmin } = useAuthContext();
@@ -34,7 +35,15 @@ export const Navigation = () => {
       )}
       <Routes>
         {publicRoutes.map(({ name, path, Component }) => (
-          <Route key={name} path={path} element={<Component />} />
+          <Route
+            key={name}
+            path={path}
+            element={
+              <PublicRoute>
+                <Component />
+              </PublicRoute>
+            }
+          />
         ))}
         {privateRoutes.map(({ name, path, Component }) => (
           <Route

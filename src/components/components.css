@@ -44,3 +44,25 @@
   margin-left: 4vw;
   min-width: 12vw;
 }
+.edit-input-container {
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+  margin-top: 15px;
+}
+.edit-input {
+  min-width: 25%;
+  height: 80%;
+  font-size: 2vw;
+}
+.confirm-inputs-wrapper {
+  width: 50%;
+  margin-bottom: 20px;
+}
+.input-error{
+  border: 2px solid red
+  min-width: 25%;
+  height: 80%;
+  font-size: 2vw;
+}
