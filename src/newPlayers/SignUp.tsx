@@ -29,7 +29,10 @@ export const SignUp = () => {
 
       {isPastPlayerError && (
         <>
-          <RetryFindPast refetchPastPlayer={refetchPastPlayer} />
+          <RetryFindPast
+            refetchPastPlayer={refetchPastPlayer}
+            isError={isPastPlayerError}
+          />
           <NewPlayerForm />
         </>
       )}

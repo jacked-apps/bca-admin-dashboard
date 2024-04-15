@@ -4,21 +4,44 @@ import { useState } from 'react';
 
 type InfoButtonProps = {
   infoBlurbKey?: keyof typeof infoBlurbs;
+  size?: number;
 };
 
-export const InfoButton = ({ infoBlurbKey = 'sample' }: InfoButtonProps) => {
+export const InfoButton = ({
+  infoBlurbKey = 'sample',
+  size = 20,
+}: InfoButtonProps) => {
+  // state
   const [showDialog, setShowDialog] = useState(false);
   const blurb = infoBlurbs[infoBlurbKey];
+
+  // functions
   const openDialog = () => setShowDialog(true);
   const closeDialog = () => setShowDialog(false);
+  const absolute = 'absolute';
+  const centered = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+    position: absolute as 'absolute',
+    top: 0,
+    left: 0,
+  };
+
   return (
     <div>
-      <FaQuestionCircle onClick={openDialog} />
+      <FaQuestionCircle
+        style={{ color: 'blue', background: 'white', borderRadius: '50%' }}
+        size={size}
+        onClick={openDialog}
+      />
+
       <dialog
         style={{
           border: '3px solid blue',
           color: 'lightblue',
-          marginTop: '25px',
         }}
         open={showDialog}
         onClick={closeDialog}
@@ -34,6 +57,7 @@ export const InfoButton = ({ infoBlurbKey = 'sample' }: InfoButtonProps) => {
             display: 'flex',
             justifyContent: 'end',
             marginTop: '25px',
+            color: 'blue',
           }}
         >
           Click inside box to close

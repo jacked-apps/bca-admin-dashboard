@@ -2,6 +2,10 @@ import * as Yup from 'yup';
 
 const minimumAge = new Date();
 minimumAge.setFullYear(minimumAge.getFullYear() - 10);
+
+const phoneRegExp = /^\d{3}[-\s]?\d{3}[-\s]?\d{4}$/;
+const notPOBox = /^\s*(p\.?\s*o\.?\s*box\b)/i;
+
 export type FormValues = {
   firstName: string;
   lastName: string;
@@ -15,7 +19,7 @@ export type FormValues = {
   dob: string;
 };
 
-export const profileSchema = Yup.object().shape({
+export const newPlayerSchema = Yup.object().shape({
   firstName: Yup.string()
     .max(20, 'Name must be less than 20 characters')
     .required('First Name is required'),
@@ -25,19 +29,38 @@ export const profileSchema = Yup.object().shape({
   nickname: Yup.string()
     .max(12, 'Nickname must be less than 12 characters')
     .required('Nickname is required'),
-  address: Yup.string().required('Address is required'),
+  address: Yup.string()
+    .required('Address is required')
+    .test('not-PO-box', 'Address cannot be a PO Box', (value) => {
+      console.log('value', value, 'test:', notPOBox.test(value));
+      return !notPOBox.test(value);
+    }),
   city: Yup.string().required('City is required'),
   state: Yup.string().required('State is required'),
   zip: Yup.string().required('Zip is required'),
-  phone: Yup.string().required('Phone is required'),
+  phone: Yup.string()
+    .required('Phone is required')
+    .test(
+      'isPhone',
+      'Accepts only numbers with or without dashes or spaces',
+      (value) => phoneRegExp.test(value)
+    ),
   email: Yup.string()
     .email('Please enter a valid email address')
     .required('Email is required'),
   dob: Yup.string()
     .required('Date of birth is required')
     .test('isOfAge', 'You must be at least 10 years old', (value) => {
-      const dob = new Date(value);
-      return dob >= minimumAge;
+      const enteredDob = new Date(value);
+
+      console.log(
+        'schema',
+        enteredDob.getFullYear(),
+        minimumAge.getFullYear(),
+        enteredDob.getTime() >= minimumAge.getTime()
+      );
+
+      return enteredDob <= minimumAge;
     }),
 });
 

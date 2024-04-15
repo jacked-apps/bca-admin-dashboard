@@ -1,5 +1,4 @@
 .sign-container {
-  margin-top:;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,4 +54,12 @@
 }
 .confirm-body-title {
   font-size: 2vw;
+}
+.form-title {
+  font-size: 3vh;
+}
+.form-button-wrapper {
+  display: flex;
+  justify-content: end;
+  margin-top: 5vh;
 }
