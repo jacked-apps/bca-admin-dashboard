@@ -7,7 +7,9 @@ import {
   capitalizeField,
   formatPhoneNumber,
 } from '../assets/formatEntryFunctions';
+import { useAuthContext } from '../context/useAuthContext';
 export const NewPlayerForm = () => {
+  const { user } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -15,6 +17,9 @@ export const NewPlayerForm = () => {
     formState: { errors },
   } = useForm<FormValues>({
     resolver: yupResolver(newPlayerSchema),
+    defaultValues: {
+      email: user?.email as string,
+    },
   });
   const dob = watch('dob');
   const onSubmit = (data: FormValues) => {
@@ -40,6 +45,7 @@ export const NewPlayerForm = () => {
               <div className="edit-input-container">
                 <div>{label}:</div>
                 <input
+                  disabled={name === 'email' ? true : false}
                   id={name}
                   {...register(name as keyof FormValues)}
                   type={name === 'dob' ? 'date' : 'text'}
