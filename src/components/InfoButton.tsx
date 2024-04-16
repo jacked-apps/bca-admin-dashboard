@@ -18,17 +18,6 @@ export const InfoButton = ({
   // functions
   const openDialog = () => setShowDialog(true);
   const closeDialog = () => setShowDialog(false);
-  const absolute = 'absolute';
-  const centered = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    width: '100%',
-    position: absolute as 'absolute',
-    top: 0,
-    left: 0,
-  };
 
   return (
     <div>
