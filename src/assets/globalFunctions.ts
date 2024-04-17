@@ -38,6 +38,7 @@ import {
 import { Holiday, Schedule } from './typesFolder/seasonTypes';
 import { PastPlayer } from './typesFolder/userTypes';
 import { TeamPlayer } from './typesFolder/teamTypes';
+export { formatPhoneNumber } from './formatEntryFunctions';
 
 // ------------------------------
 // 1. SEASON-RELATED Functions
@@ -284,24 +285,24 @@ export const formatName = (name: string): string => {
  * const phoneRegEx = /^\(\d{3}\) \d{3}-\d{4}$/;
  * */
 
-export const formatPhoneNumber = (phoneNumber: string): string => {
-  let newPhoneNumber = phoneNumber;
-  // take all non numbers out of the string
-  newPhoneNumber = phoneNumber.replace(/\D/g, '');
-  // if the string is less than 10 digits return
-  if (newPhoneNumber.length < 10) return phoneNumber;
-  // add a dash - between the 6th and 7th digit
-  newPhoneNumber =
-    newPhoneNumber.substring(0, 6) + '-' + newPhoneNumber.substring(6);
-  // put parentheses around first three digits
-  newPhoneNumber = `(${newPhoneNumber.substring(
-    0,
-    3
-  )}) ${newPhoneNumber.substring(3)}`;
-  console.log('parens : ', newPhoneNumber);
+// export const formatPhoneNumber = (phoneNumber: string): string => {
+//   let newPhoneNumber = phoneNumber;
+//   // take all non numbers out of the string
+//   newPhoneNumber = phoneNumber.replace(/\D/g, '');
+//   // if the string is less than 10 digits return
+//   if (newPhoneNumber.length < 10) return phoneNumber;
+//   // add a dash - between the 6th and 7th digit
+//   newPhoneNumber =
+//     newPhoneNumber.substring(0, 6) + '-' + newPhoneNumber.substring(6);
+//   // put parentheses around first three digits
+//   newPhoneNumber = `(${newPhoneNumber.substring(
+//     0,
+//     3
+//   )}) ${newPhoneNumber.substring(3)}`;
+//   console.log('parens : ', newPhoneNumber);
 
-  return newPhoneNumber;
-};
+//   return newPhoneNumber;
+// };
 
 // ------------------------------
 // 5. Schedule-Related Functions

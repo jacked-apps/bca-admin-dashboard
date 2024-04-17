@@ -1,0 +1,65 @@
+.sign-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.sign-title {
+  font-size: 4vw;
+}
+
+.confirm-container {
+  margin-top: 3vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+.confirm-title {
+  font-size: 3vw;
+  margin-bottom: 5vw;
+}
+.confirm-info-container {
+  margin-top: 1vh;
+}
+.confirm-info {
+  font-size: 2.5vw;
+}
+.confirm-info-question {
+  font-size: 2.5vw;
+  margin-top: 5vh;
+}
+.confirm-input {
+  margin-top: 1vh;
+  margin-bottom: 5vh;
+  height: 5vh;
+  max-width: 80vw;
+  font-size: 3vw;
+}
+.confirm-error-container {
+  max-width: 50vw;
+  font-size: 2vw;
+  color: red;
+  margin-bottom: 5vh;
+}
+.confirm-body {
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  border: 2px solid white;
+  padding: 15px;
+}
+.confirm-body-title {
+  font-size: 2vw;
+}
+.form-title {
+  font-size: 3vh;
+}
+.form-button-wrapper {
+  display: flex;
+  justify-content: end;
+  margin-top: 5vh;
+}

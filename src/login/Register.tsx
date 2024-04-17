@@ -1,27 +1,34 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// react
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
+// firebase
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
-} from "@firebase/auth";
-import "./login.css";
-import { TextInput } from "../components/TextInput";
+} from 'firebase/auth';
+import { FirebaseContext } from 'bca-firebase-queries';
+
+// components
+import { TextInput } from '../components/TextInput';
+
+// css
+import './login.css';
 
 export const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  const auth = getAuth();
+  const { auth } = useContext(FirebaseContext);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    setError('');
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       return;
     }
     try {
@@ -33,15 +40,15 @@ export const Register = () => {
       // If registration is successful, shows success message, sends verification email, and goes to VerifyEmail page
       if (userResponse) {
         alert(
-          "Registration successful! Please check your email for a verification link."
+          'Registration successful! Please check your email for a verification link.'
         );
         await sendEmailVerification(userResponse.user);
-        navigate("/verify-email");
+        navigate('/verify-email');
       }
     } catch (error) {
       const firebaseError = error as { message: string };
-      console.error("Login failed:", error);
-      setError(firebaseError.message ?? "Unknown error");
+      console.error('Login failed:', error);
+      setError(firebaseError.message ?? 'Unknown error');
     }
   };
 
@@ -56,14 +63,14 @@ export const Register = () => {
         required
       />
       <TextInput
-        type={"password"}
+        type={'password'}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
         required
       />
       <TextInput
-        type={"password"}
+        type={'password'}
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         placeholder="Confirm Password"
@@ -74,7 +81,7 @@ export const Register = () => {
         Register
       </button>
 
-      <Link to="/login" style={{ marginTop: "45px" }}>
+      <Link to="/login" style={{ marginTop: '45px' }}>
         Back to Login
       </Link>
     </form>

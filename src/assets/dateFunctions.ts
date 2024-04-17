@@ -11,7 +11,9 @@
 // IMPORTS and VARIABLES
 // ------------------------------
 //import { daysOfTheWeek } from './globalVariables';
-import { Timestamp } from '@firebase/firestore';
+
+import { Timestamp } from 'firebase/firestore';
+
 import { notDate } from './globalVariables';
 import {
   DateFormat,
