@@ -32,7 +32,6 @@ export const newPlayerSchema = Yup.object().shape({
   address: Yup.string()
     .required('Address is required')
     .test('not-PO-box', 'Address cannot be a PO Box', (value) => {
-      console.log('value', value, 'test:', notPOBox.test(value));
       return !notPOBox.test(value);
     }),
   city: Yup.string().required('City is required'),
@@ -52,13 +51,6 @@ export const newPlayerSchema = Yup.object().shape({
     .required('Date of birth is required')
     .test('isOfAge', 'You must be at least 10 years old', (value) => {
       const enteredDob = new Date(value);
-
-      console.log(
-        'schema',
-        enteredDob.getFullYear(),
-        minimumAge.getFullYear(),
-        enteredDob.getTime() >= minimumAge.getTime()
-      );
 
       return enteredDob <= minimumAge;
     }),

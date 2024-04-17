@@ -1,13 +1,23 @@
+// react
 import React from 'react';
+import { useAuthContext } from '../context/useAuthContext';
+
+// form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormValues, newPlayerSchema, formFieldNames } from './newPlayerSchema';
-import './newPlayers.css';
+
+// functions
 import {
   capitalizeField,
   formatPhoneNumber,
 } from '../assets/formatEntryFunctions';
-import { useAuthContext } from '../context/useAuthContext';
+//css
+import './newPlayers.css';
+
+import { useCreatePlayer, BarePlayer, Email } from 'bca-firebase-queries';
+import { LogoutButton } from '../login/LogoutButton';
+
 export const NewPlayerForm = () => {
   const { user } = useAuthContext();
   const {
@@ -21,18 +31,32 @@ export const NewPlayerForm = () => {
       email: user?.email as string,
     },
   });
+
+  const { createPlayer } = useCreatePlayer();
   const dob = watch('dob');
+
   const onSubmit = (data: FormValues) => {
-    console.log(data);
-    console.log(
-      'formatter:',
-      capitalizeField(data.address),
-      formatPhoneNumber(data.phone)
-    );
+    console.log('form data right away', data);
+    const playerData: BarePlayer = {
+      firstName: capitalizeField(data.firstName),
+      lastName: capitalizeField(data.lastName),
+      nickname: data.nickname,
+      phone: formatPhoneNumber(data.phone),
+      address: capitalizeField(data.address),
+      dob: dob,
+      city: capitalizeField(data.city),
+      state: capitalizeField(data.state),
+      zip: data.zip,
+      email: user?.email as Email,
+    };
+    console.log('player data to save', playerData);
+
+    if (user) {
+      console.log('inside If user', playerData);
+      createPlayer(user.uid, playerData);
+    }
   };
-  const testSubmit = () => {
-    console.log('dob:', dob, typeof dob);
-  };
+
   return (
     <div>
       <div className="form-title">
@@ -66,7 +90,7 @@ export const NewPlayerForm = () => {
         </div>
         <div className="form-button-wrapper">
           <button type="submit">Submit</button>
-          <button onClick={testSubmit}>test</button>
+          <LogoutButton />
         </div>
       </form>
     </div>
