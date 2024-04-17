@@ -19,14 +19,14 @@ import 'react-toastify/dist/ReactToastify.css';
 const queryClient = new QueryClient();
 
 const firebaseCredentials = {
-  apiKey: 'AIzaSyC5MvMfEeebh3XxyzYSD3qWpFR0aAAXSHM',
-  authDomain: 'expo-bca-app.firebaseapp.com',
-  databaseURL: 'https://expo-bca-app-default-rtdb.firebaseio.com',
-  projectId: 'expo-bca-app',
-  storageBucket: 'expo-bca-app.appspot.com',
-  messagingSenderId: '248104656807',
-  appId: '1:248104656807:web:853cad16b8fa38dbee2082',
-  measurementId: 'G-EL12CDVSCR',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 function App() {
