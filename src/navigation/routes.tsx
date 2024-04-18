@@ -24,6 +24,7 @@ import { VerifyEmail } from '../login/VerifyEmail';
 type Route = {
   name: string;
   path: string;
+  link?: boolean;
   protect?: boolean;
   Component: ElementType;
 };
@@ -43,14 +44,38 @@ export const publicRoutes: Route[] = [
 ];
 
 export const privateRoutes: Route[] = [
-  { name: 'Home', path: '/', Component: Home },
+  { name: 'Home', path: '/', Component: Home, link: true },
   { name: 'Sign Up', path: '/signUp', Component: SignUp, ...protect },
 ];
 
 export const adminRoutes: Route[] = [
-  { name: 'Seasons', path: '/seasons', Component: Seasons, ...protect },
-  { name: 'Teams', path: '/teams', Component: Teams, ...protect },
-  { name: 'Schedule', path: '/schedule', Component: Scheduler, ...protect },
-  { name: 'Match Ups', path: '/MatchUps', Component: MatchUps, ...protect },
-  { name: 'Players', path: '/Players', Component: Players, ...protect },
+  {
+    name: 'Seasons',
+    path: '/seasons',
+    Component: Seasons,
+    link: true,
+    ...protect,
+  },
+  { name: 'Teams', path: '/teams', Component: Teams, link: true, ...protect },
+  {
+    name: 'Schedule',
+    path: '/schedule',
+    Component: Scheduler,
+    link: true,
+    ...protect,
+  },
+  {
+    name: 'Match Ups',
+    path: '/MatchUps',
+    Component: MatchUps,
+    link: true,
+    ...protect,
+  },
+  {
+    name: 'Players',
+    path: '/Players',
+    Component: Players,
+    link: true,
+    ...protect,
+  },
 ];

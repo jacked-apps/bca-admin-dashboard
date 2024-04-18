@@ -5,11 +5,19 @@ import { ProtectedRoute } from './ProtectedRoute';
 
 import './navigation.css';
 import { PublicRoute } from './PublicRoute';
+import { AdminNav, PrivateNav } from './NavBars';
+import { useState } from 'react';
 
 export const Navigation = () => {
+  const [showAdmin, setShowAdmin] = useState(false);
   const { isLoggedIn, isAdmin } = useAuthContext();
+
   const location = useLocation();
   const hideNavOnPaths = ['/signUp'];
+
+  const toggleAdmin = () => {
+    setShowAdmin((prev) => !prev);
+  };
 
   return (
     <>
@@ -17,22 +25,19 @@ export const Navigation = () => {
         <nav>
           <ul>
             {/* Private Routes for logged-in users */}
-            {isLoggedIn &&
-              privateRoutes.map((route, index) => (
-                <li key={index}>
-                  <Link to={route.path}>{route.name}</Link>
-                </li>
-              ))}
+            {isLoggedIn && !showAdmin && <PrivateNav />}
+            {/* Admin Routes, for administrators */}
+            {isAdmin && showAdmin && <AdminNav />}
             {/* Admin Routes, additionally for administrators */}
-            {isAdmin &&
-              adminRoutes.map((route, index) => (
-                <li key={index}>
-                  <Link to={route.path}>{route.name}</Link>
-                </li>
-              ))}
+            {isAdmin && (
+              <Link to="#" onClick={toggleAdmin}>
+                {showAdmin ? 'Exit Admin' : 'Administration'}
+              </Link>
+            )}
           </ul>
         </nav>
       )}
+
       <Routes>
         {publicRoutes.map(({ name, path, Component }) => (
           <Route

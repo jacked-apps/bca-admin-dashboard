@@ -1,6 +1,7 @@
 // react
 import React from 'react';
 import { useAuthContext } from '../context/useAuthContext';
+import { useNavigate } from 'react-router';
 
 // form
 import { useForm } from 'react-hook-form';
@@ -12,18 +13,24 @@ import {
   capitalizeField,
   formatPhoneNumber,
 } from '../assets/formatEntryFunctions';
-//css
+
+// firebase
+import { useCreatePlayer, BarePlayer, Email } from 'bca-firebase-queries';
+
+// components
+import { LogoutButton } from '../login/LogoutButton';
 import './newPlayers.css';
 
-import { useCreatePlayer, BarePlayer, Email } from 'bca-firebase-queries';
-import { LogoutButton } from '../login/LogoutButton';
+//css
+import { toast } from 'react-toastify';
+import { InfoButton } from '../components/InfoButton';
 
 export const NewPlayerForm = () => {
+  const navigate = useNavigate();
   const { user } = useAuthContext();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: yupResolver(newPlayerSchema),
@@ -32,28 +39,28 @@ export const NewPlayerForm = () => {
     },
   });
 
-  const { createPlayer } = useCreatePlayer();
-  const dob = watch('dob');
+  const { createPlayer, isLoading, isError, error } = useCreatePlayer();
 
   const onSubmit = (data: FormValues) => {
-    console.log('form data right away', data);
     const playerData: BarePlayer = {
       firstName: capitalizeField(data.firstName),
       lastName: capitalizeField(data.lastName),
       nickname: data.nickname,
       phone: formatPhoneNumber(data.phone),
       address: capitalizeField(data.address),
-      dob: dob,
+      dob: data.dob,
       city: capitalizeField(data.city),
       state: capitalizeField(data.state),
       zip: data.zip,
       email: user?.email as Email,
     };
-    console.log('player data to save', playerData);
 
     if (user) {
-      console.log('inside If user', playerData);
-      createPlayer(user.uid, playerData);
+      const onSuccess = () => {
+        toast.success('Player created successfully!');
+        navigate('/');
+      };
+      createPlayer(user.uid, playerData, onSuccess);
     }
   };
 
@@ -67,7 +74,13 @@ export const NewPlayerForm = () => {
           {formFieldNames.map(({ name, label }) => (
             <React.Fragment key={name}>
               <div className="edit-input-container">
-                <div>{label}:</div>
+                <div className="input-label">
+                  {name === 'email' && (
+                    <InfoButton infoBlurbKey="emailChangeProhibited" />
+                  )}
+                  {label}:
+                </div>
+
                 <input
                   disabled={name === 'email' ? true : false}
                   id={name}
@@ -87,11 +100,19 @@ export const NewPlayerForm = () => {
               )}
             </React.Fragment>
           ))}
+          {isError && (
+            <div>
+              Something went wrong...{' '}
+              {error instanceof Error ? error.message : 'Unknown error'}
+            </div>
+          )}
         </div>
-        <div className="form-button-wrapper">
-          <button type="submit">Submit</button>
-          <LogoutButton />
-        </div>
+        {!isLoading && (
+          <div className="form-button-wrapper">
+            <button type="submit">Submit</button>
+            <LogoutButton />
+          </div>
+        )}
       </form>
     </div>
   );

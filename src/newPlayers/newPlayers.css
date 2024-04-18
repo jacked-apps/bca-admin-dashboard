@@ -63,3 +63,7 @@
   justify-content: end;
   margin-top: 5vh;
 }
+.input-label {
+  display: flex;
+  gap: 1vw;
+}
