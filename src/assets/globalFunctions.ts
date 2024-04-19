@@ -478,6 +478,10 @@ export const generateNickname = (
   firstName: string,
   lastName: string
 ): string => {
+  const firstNames = firstName.split(' ');
+  const lastNames = lastName.split(' ');
+  firstName = firstNames[0];
+  lastName = lastNames[0];
   // create the full name
   let fullName = `${firstName} ${lastName}`;
 

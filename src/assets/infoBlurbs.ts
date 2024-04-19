@@ -16,4 +16,8 @@ export const infoBlurbs = {
     'If you search again and it still does not find you',
     'Contact your league operator for assistance.',
   ],
+  emailChangeProhibited: [
+    'You cannot change your email from the one you have verified here',
+    'To change your email go to your user profile settings.',
+  ],
 };

@@ -23,10 +23,10 @@ export const Home = () => {
   // } = useFetchPlayerById(user?.uid);
 
   useEffect(() => {
-    if (isPlayerError) {
+    if (isPlayerError && !isLoadingPlayer) {
       navigate('/signUp');
     }
-  }, [isPlayerError, navigate]);
+  }, [isPlayerError, navigate, isLoadingPlayer]);
 
   if (isLoadingPlayer) {
     return <LoadingScreen message="Grabbing user data" />;
