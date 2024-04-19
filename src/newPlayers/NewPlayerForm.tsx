@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '../context/useAuthContext';
 import { useNavigate } from 'react-router';
 
@@ -26,8 +26,13 @@ import { toast } from 'react-toastify';
 import { InfoButton } from '../components/InfoButton';
 
 export const NewPlayerForm = () => {
+  // constants
   const navigate = useNavigate();
-  const { user } = useAuthContext();
+  const { user, refetchPlayer, isLoading: isLoadingRefetch } = useAuthContext();
+  const { createPlayer, isLoading, isError, error } = useCreatePlayer();
+  const [createdPlayer, setCreatedPlayer] = useState(false);
+
+  // form create
   const {
     register,
     handleSubmit,
@@ -39,8 +44,14 @@ export const NewPlayerForm = () => {
     },
   });
 
-  const { createPlayer, isLoading, isError, error } = useCreatePlayer();
+  // navigation effect
+  useEffect(() => {
+    if (createdPlayer && !isLoadingRefetch && !isLoading) {
+      navigate('/');
+    }
+  }, [createdPlayer, navigate, isLoadingRefetch, isLoading]);
 
+  // submit handler
   const onSubmit = (data: FormValues) => {
     const playerData: BarePlayer = {
       firstName: capitalizeField(data.firstName),
@@ -56,9 +67,10 @@ export const NewPlayerForm = () => {
     };
 
     if (user) {
-      const onSuccess = () => {
+      const onSuccess = async () => {
         toast.success('Player created successfully!');
-        navigate('/');
+        refetchPlayer();
+        setCreatedPlayer(true);
       };
       createPlayer(user.uid, playerData, onSuccess);
     }
