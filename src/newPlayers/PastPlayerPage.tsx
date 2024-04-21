@@ -7,7 +7,7 @@ type PastPlayerProps = {
   pastPlayer: Player;
 };
 
-export const PastPlayer = ({ pastPlayer }: PastPlayerProps) => {
+export const PastPlayerPage = ({ pastPlayer }: PastPlayerProps) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {

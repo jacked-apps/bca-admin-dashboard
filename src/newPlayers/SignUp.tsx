@@ -3,7 +3,7 @@ import { LoadingScreen } from '../components/LoadingScreen';
 import { useAuthContext } from '../context/useAuthContext';
 
 import './newPlayers.css';
-import { PastPlayer } from './PastPlayer';
+import { PastPlayerPage } from './PastPlayerPage';
 import { NewPlayerForm } from './NewPlayerForm';
 import { RetryFindPast } from './RetryFindPast';
 
@@ -36,7 +36,7 @@ export const SignUp = () => {
           <NewPlayerForm />
         </>
       )}
-      {pastPlayer && <PastPlayer pastPlayer={pastPlayer} />}
+      {pastPlayer && <PastPlayerPage pastPlayer={pastPlayer} />}
     </div>
   );
 };
