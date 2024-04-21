@@ -98,18 +98,19 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
         //setCreatedPlayer(true);
       };
       await createPlayer(user.uid, playerData, onSuccess);
-      await addASetOfGames();
-      // const seasonKeys = Object.keys(pastPlayer.stats);
-      // const gamePromises = seasonKeys.map((seasonKey) => {
-      //   const games = extractGamesFromPastPlayerSeason(
-      //     seasonKey,
-      //     pastPlayer.stats[seasonKey]
-      //   );
-      //   if (games) {
-      //     return addGamesToPlayer(user.uid, games);
-      //   }
-      // });
-      // (await Promise.allSettled(gamePromises)).filter(Boolean);
+
+      const seasonKeys = Object.keys(pastPlayer.stats);
+      const gamePromises = seasonKeys.map((seasonKey) => {
+        console.log('Adding season...', seasonKey);
+        const games = extractGamesFromPastPlayerSeason(
+          seasonKey,
+          pastPlayer.stats[seasonKey]
+        );
+        if (games) {
+          return addGamesToPlayer(user.uid, games);
+        }
+      });
+      (await Promise.allSettled(gamePromises)).filter(Boolean);
     }
   };
 
