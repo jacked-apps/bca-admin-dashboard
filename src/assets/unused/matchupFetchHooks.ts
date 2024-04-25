@@ -16,7 +16,7 @@
 import { useQuery } from 'react-query';
 
 // firebase
-import { db } from '../../firebaseConfig';
+import { db } from '../../../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 
 // types
@@ -26,7 +26,7 @@ import {
   RoundRobinSchedule,
   RoundRobinScheduleFinished,
 } from '../types/matchupTypes';
-import { notFound } from '../constants/messages';
+import { notFound } from '../../constants/messages';
 
 // ------------------------------
 // 1. HOOKS

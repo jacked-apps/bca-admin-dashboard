@@ -1,6 +1,7 @@
 // react
 import React from 'react';
 import { useAuthContext } from '../context/useAuthContext';
+import { useCreatedEntityNavigation } from '../hooks/useCreatedEntityNavigation';
 
 // form
 import { FormValues, profileSchema, formFieldNames } from './profileSchema';
@@ -33,20 +34,23 @@ type PastDataEditProps = {
 };
 
 export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
-  const { user, refetchPlayer, isLoading: isLoadingRefetch } = useAuthContext();
+  // constants
+  const { user } = useAuthContext();
+  const { playerCreated } = useCreatedEntityNavigation();
+
+  // firebase
   const {
     createPlayer,
     isLoading: isCreatingPlayer,
-    isError: isCreatePlayerError,
-    error: createPlayerError,
+    isError: isCreationError,
   } = useCreatePlayer();
   const {
     addGamesToPlayer,
     isLoading: isAddingGames,
-    isError: isAddGameError,
-    error: addGameError,
+    isError: isGamesError,
   } = useAddGamesToPlayer();
 
+  // form
   const {
     register,
     handleSubmit,
@@ -65,17 +69,7 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
     },
   });
 
-  const addASetOfGames = async () => {
-    const statKeys = Object.keys(pastPlayer.stats);
-    const games = extractGamesFromPastPlayerSeason(
-      statKeys[1],
-      pastPlayer.stats[statKeys[1]]
-    );
-    if (!user || !games) return;
-    console.log('Adding games...', games);
-    await addGamesToPlayer(user?.uid, games);
-  };
-
+  // handlers
   const onSubmit = async (data: FormValues) => {
     // create BarePlayer shape
     const playerData: BarePlayer = {
@@ -90,18 +84,17 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
       nickname: data.nickname,
       phone: formatPhoneNumber(data.phone),
     };
+
     //create player document
     if (user) {
       const onSuccess = async () => {
         toast.success('Player created successfully!');
-        //refetchPlayer();
-        //setCreatedPlayer(true);
       };
       await createPlayer(user.uid, playerData, onSuccess);
 
+      // add games to player
       const seasonKeys = Object.keys(pastPlayer.stats);
       const gamePromises = seasonKeys.map((seasonKey) => {
-        console.log('Adding season...', seasonKey);
         const games = extractGamesFromPastPlayerSeason(
           seasonKey,
           pastPlayer.stats[seasonKey]
@@ -110,7 +103,17 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
           return addGamesToPlayer(user.uid, games);
         }
       });
-      (await Promise.allSettled(gamePromises)).filter(Boolean);
+      if (gamePromises.length > 0) {
+        (await Promise.allSettled(gamePromises)).filter(Boolean);
+      }
+      // navigate on success
+      if (isCreationError) {
+        toast.error('Error creating player');
+      } else if (isGamesError) {
+        toast.error('Error adding games to player');
+      } else {
+        playerCreated();
+      }
     }
   };
 
@@ -150,8 +153,10 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
             ))}
           </div>
           <div className="confirm-button-wrapper">
-            <button type="submit">Submit</button>
-            <LogoutButton />
+            <button type="submit" disabled={isCreatingPlayer || isAddingGames}>
+              Submit
+            </button>
+            <LogoutButton disabled={isCreatingPlayer || isAddingGames} />
           </div>
         </form>
       </div>

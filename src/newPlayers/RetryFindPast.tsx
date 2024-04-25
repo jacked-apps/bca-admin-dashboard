@@ -1,63 +1,55 @@
 import { useEffect, useState } from 'react';
 import { InfoButton } from '../components/InfoButton';
+import { CheckCity } from './CheckCity';
+import { SearchForPast } from './SearchForPast';
 
 type RetryFindPastProps = {
-  refetchPastPlayer: () => void;
-  isError: boolean;
+  setFetchId: React.Dispatch<React.SetStateAction<string | null | undefined>>;
+  setFindPast: React.Dispatch<React.SetStateAction<boolean>>;
+  findPast: boolean;
 };
 
 export const RetryFindPast = ({
-  refetchPastPlayer,
-  isError,
+  setFetchId,
+  setFindPast,
+  findPast,
 }: RetryFindPastProps) => {
-  const [triedBefore, setTriedBefore] = useState(false);
-  useEffect(() => {
-    const storedTriedBefore = localStorage.getItem('triedBefore');
-    if (storedTriedBefore === 'true') {
-      setTriedBefore(true);
-    }
-  }, []);
+  const [checkedCity, setCheckedCity] = useState<'' | 'failed' | 'passed'>('');
 
   const handleClick = () => {
-    localStorage.setItem('triedBefore', 'true');
-    setTriedBefore(true);
-    refetchPastPlayer();
-  };
-
-  const errorStyle = {
-    display: 'flex',
-    justifyContent: 'end',
+    setFindPast(true);
+    //setFetchId('');
+    //setTriedBefore(true);
+    //refetchPastPlayer();
   };
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          width: '90%',
-          gap: '10px',
-          justifyContent: 'end',
-        }}
-      >
-        <InfoButton infoBlurbKey={'pastPlayer'} />
-        <button onClick={handleClick}>I have played before</button>
-      </div>
-      {triedBefore && isError && (
+      {!findPast && (
         <div
           style={{
-            color: 'red',
-
+            display: 'flex',
             width: '90%',
+            gap: '10px',
+            justifyContent: 'end',
           }}
         >
-          <div style={errorStyle}>
-            Cannot find any past date for your email.
-          </div>
-          <div style={errorStyle}>If you are sure you have played before,</div>
-          <div style={errorStyle}>Please enter your information.</div>
-          <div style={errorStyle}>Then contact your League operator.</div>
+          <InfoButton infoBlurbKey={'pastPlayer'} />
+          <button onClick={handleClick}>I have played before</button>
         </div>
       )}
+      {findPast && checkedCity === '' && (
+        <div>
+          <div className="confirm-title">
+            We did not find any past data for your email.
+          </div>
+          <CheckCity
+            setCheckedCity={setCheckedCity}
+            setFindPast={setFindPast}
+          />
+        </div>
+      )}
+      {checkedCity === 'passed' && <SearchForPast setFindPast={setFindPast} />}
     </>
   );
 };

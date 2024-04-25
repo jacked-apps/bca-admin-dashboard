@@ -6,15 +6,20 @@ import './newPlayers.css';
 import { PastPlayerPage } from './PastPlayerPage';
 import { NewPlayerForm } from './NewPlayerForm';
 import { RetryFindPast } from './RetryFindPast';
+import { useState } from 'react';
 
 export const SignUp = () => {
   const { user } = useAuthContext();
+  const [findPast, setFindPast] = useState(false);
+  const [fetchId, setFetchId] = useState<string | undefined | null>(
+    user?.email
+  );
   const {
     data: pastPlayer,
     isLoading: isLoadingPastPlayer,
     isError: isPastPlayerError,
     refetch: refetchPastPlayer,
-  } = useFetchPastPlayerById(user?.email as Email);
+  } = useFetchPastPlayerById(fetchId);
 
   if (isLoadingPastPlayer) {
     return (
@@ -30,10 +35,11 @@ export const SignUp = () => {
       {isPastPlayerError && (
         <>
           <RetryFindPast
-            refetchPastPlayer={refetchPastPlayer}
-            isError={isPastPlayerError}
+            findPast={findPast}
+            setFindPast={setFindPast}
+            setFetchId={setFetchId}
           />
-          <NewPlayerForm />
+          {!findPast && <NewPlayerForm />}
         </>
       )}
       {pastPlayer && <PastPlayerPage pastPlayer={pastPlayer} />}

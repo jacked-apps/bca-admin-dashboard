@@ -9,11 +9,16 @@ import { FirebaseContext } from 'bca-firebase-queries';
 import { toast } from 'react-toastify';
 
 type LogOutProps = {
-  type?: 'small' | 'text' | 'default';
+  buttonClass?: 'small' | 'text' | 'default';
+  disabled?: boolean;
 };
 
-export const LogoutButton = ({ type = 'default' }: LogOutProps) => {
-  const classString = type && type !== 'default' ? `${type}-button` : '';
+export const LogoutButton = ({
+  buttonClass = 'default',
+  disabled = false,
+}: LogOutProps) => {
+  const classString =
+    buttonClass && buttonClass !== 'default' ? `${buttonClass}-button` : '';
   const { auth } = useContext(FirebaseContext);
 
   const handleLogOut = async () => {
@@ -26,7 +31,7 @@ export const LogoutButton = ({ type = 'default' }: LogOutProps) => {
   };
 
   return (
-    <button className={classString} onClick={handleLogOut}>
+    <button className={classString} onClick={handleLogOut} disabled={disabled}>
       Log Out
     </button>
   );

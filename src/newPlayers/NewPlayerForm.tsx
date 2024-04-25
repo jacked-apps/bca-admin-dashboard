@@ -1,7 +1,6 @@
 // react
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useAuthContext } from '../context/useAuthContext';
-import { useNavigate } from 'react-router';
 
 // form
 import { useForm } from 'react-hook-form';
@@ -24,13 +23,13 @@ import './newPlayers.css';
 //css
 import { toast } from 'react-toastify';
 import { InfoButton } from '../components/InfoButton';
+import { useCreatedEntityNavigation } from '../hooks/useCreatedEntityNavigation';
 
 export const NewPlayerForm = () => {
   // constants
-  const navigate = useNavigate();
-  const { user, refetchPlayer, isLoading: isLoadingRefetch } = useAuthContext();
+  const { user } = useAuthContext();
   const { createPlayer, isLoading, isError, error } = useCreatePlayer();
-  const [createdPlayer, setCreatedPlayer] = useState(false);
+  const { playerCreated } = useCreatedEntityNavigation();
 
   // form create
   const {
@@ -43,13 +42,6 @@ export const NewPlayerForm = () => {
       email: user?.email as string,
     },
   });
-
-  // navigation effect
-  useEffect(() => {
-    if (createdPlayer && !isLoadingRefetch && !isLoading) {
-      navigate('/');
-    }
-  }, [createdPlayer, navigate, isLoadingRefetch, isLoading]);
 
   // submit handler
   const onSubmit = (data: FormValues) => {
@@ -69,8 +61,7 @@ export const NewPlayerForm = () => {
     if (user) {
       const onSuccess = async () => {
         toast.success('Player created successfully!');
-        refetchPlayer();
-        setCreatedPlayer(true);
+        playerCreated();
       };
       createPlayer(user.uid, playerData, onSuccess);
     }
@@ -121,8 +112,10 @@ export const NewPlayerForm = () => {
         </div>
         {!isLoading && (
           <div className="form-button-wrapper">
-            <button type="submit">Submit</button>
-            <LogoutButton />
+            <button type="submit" disabled={isLoading}>
+              Submit
+            </button>
+            <LogoutButton disabled={isLoading} />
           </div>
         )}
       </form>

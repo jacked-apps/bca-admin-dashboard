@@ -26,7 +26,7 @@ import { useFetchTeamsFromSeason } from '../hooks/teamFetchHooks';
 import {
   useFetchFinishedRoundRobin,
   useFetchRoundRobin,
-} from '../hooks/matchupFetchHooks';
+} from '../assets/unused/matchupFetchHooks';
 
 // types
 import { Team } from '../assets/typesFolder/teamTypes';
