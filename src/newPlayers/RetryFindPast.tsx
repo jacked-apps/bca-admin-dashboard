@@ -49,7 +49,12 @@ export const RetryFindPast = ({
           />
         </div>
       )}
-      {checkedCity === 'passed' && <SearchForPast setFindPast={setFindPast} />}
+      {checkedCity === 'passed' && (
+        <SearchForPast
+          setFindPast={setFindPast}
+          setCheckedCity={setCheckedCity}
+        />
+      )}
     </>
   );
 };

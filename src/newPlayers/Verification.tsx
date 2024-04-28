@@ -1,35 +1,55 @@
 import { PastPlayer } from 'bca-firebase-queries';
 import { useState, useEffect } from 'react';
+import { Verify } from './Verify';
+import { PastDataEdit } from './PastDataEdit';
+
+export type Checks = 'dob' | 'phone' | undefined;
 
 type VerificationProps = {
   setFindPast: React.Dispatch<React.SetStateAction<boolean>>;
   matches: PastPlayer[];
+  setMatches: React.Dispatch<React.SetStateAction<PastPlayer[]>>;
+  setCheckedCity: React.Dispatch<
+    React.SetStateAction<'' | 'failed' | 'passed'>
+  >;
 };
 
-export const Verification = ({ setFindPast, matches }: VerificationProps) => {
-  const [useCheck, setUseCheck] = useState('');
+export const Verification = ({
+  setFindPast,
+  matches,
+  setMatches,
+  setCheckedCity,
+}: VerificationProps) => {
+  const [useCheck, setUseCheck] = useState<Checks>(undefined);
+  const [availableChecks, setAvailableChecks] = useState<Checks[]>([]);
+  const [pastPlayer, setPastPlayer] = useState<PastPlayer | null>(null);
 
   useEffect(() => {
-    const availableChecks = matches
-      .map((player) => {
-        if (player.dob) {
-          return 'dob';
-        } else if (player.phone) {
-          return 'phone';
-        }
-        return undefined; // handle the case where neither is defined
-      })
-      .filter(Boolean); // Remove any undefined values
+    const checksForPlayers: ('dob' | 'phone')[] = [];
+    matches.forEach((player) => {
+      console.log('player', player.dob, player.phone.trim());
+      if (player.dob || player.dob !== '') {
+        checksForPlayers.push('dob');
+      }
+      if (player.phone.trim()) {
+        console.log(player.phone.trim());
+        checksForPlayers.push('phone');
+      }
+      return undefined; // handle the case where neither is defined
+    });
+    const uniqueChecks = [...new Set(checksForPlayers)];
+    console.log('available checks', uniqueChecks);
+    setAvailableChecks(uniqueChecks);
 
     const setCheck = () => {
-      if (availableChecks.length === 0) {
-        setUseCheck('none');
+      if (uniqueChecks.length === 0) {
+        setUseCheck(undefined);
         return; // Return early to avoid further execution
       }
       let phoneCount = 0;
       let dobCount = 0;
 
-      availableChecks.forEach((check) => {
+      uniqueChecks.forEach((check) => {
         if (check === 'dob') dobCount++;
         if (check === 'phone') phoneCount++;
       });
@@ -40,17 +60,32 @@ export const Verification = ({ setFindPast, matches }: VerificationProps) => {
     setCheck();
   }, [matches]);
 
+  const handleReset = () => {
+    //here
+    setPastPlayer(null);
+    setUseCheck(undefined);
+    setAvailableChecks([]);
+    // up
+    setMatches([]);
+    setCheckedCity('');
+    setFindPast(false);
+  };
+
   return (
-    <div>
-      <div>Verification</div>
-      {useCheck === 'none' && (
-        <div>
-          We have a possible profile however no way to verify you. Please
-          contact your League operator.
-        </div>
+    <>
+      {!pastPlayer && (
+        <Verify
+          useCheck={useCheck}
+          setUseCheck={setUseCheck}
+          matches={matches}
+          setPastPlayer={setPastPlayer}
+          availableChecks={availableChecks}
+          setFindPast={setFindPast}
+          setMatches={setMatches}
+          handleReset={handleReset}
+        />
       )}
-      {useCheck === 'dob' && <div>By Date Of Birth</div>}
-      {useCheck === 'phone' && <div>By Phone</div>}
-    </div>
+      {pastPlayer && <PastDataEdit pastPlayer={pastPlayer} />}
+    </>
   );
 };

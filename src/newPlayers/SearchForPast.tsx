@@ -4,9 +4,15 @@ import { Verification } from './Verification';
 
 type SearchForPastProps = {
   setFindPast: React.Dispatch<React.SetStateAction<boolean>>;
+  setCheckedCity: React.Dispatch<
+    React.SetStateAction<'failed' | 'passed' | ''>
+  >;
 };
 
-export const SearchForPast = ({ setFindPast }: SearchForPastProps) => {
+export const SearchForPast = ({
+  setFindPast,
+  setCheckedCity,
+}: SearchForPastProps) => {
   const { data, isLoading, isError } = useFetchAllPastPlayers();
   const [option, setOption] = useState<'' | 'name' | 'email'>('');
   const [firstName, setFirstName] = useState<string>('');
@@ -134,7 +140,12 @@ export const SearchForPast = ({ setFindPast }: SearchForPastProps) => {
         </div>
       )}
       {hasMatches && (
-        <Verification setFindPast={setFindPast} matches={matches} />
+        <Verification
+          setFindPast={setFindPast}
+          matches={matches}
+          setMatches={setMatches}
+          setCheckedCity={setCheckedCity}
+        />
       )}
     </div>
   );
