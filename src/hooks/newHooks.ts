@@ -15,16 +15,16 @@
 //------------------------
 // IMPORTS
 //------------------------
-import { useQuery } from 'react-query';
-import { db } from '../../firebaseConfig';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { Player } from '../assets/typesFolder/newTypes';
+import { useQuery } from "react-query";
+import { db } from "../../firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { Player } from "../assets/typesFolder/newTypes";
 
 // ------------------------------
 // 1. HOOKS
 // ------------------------------
 export const useFetchPlayerById = (id: string | undefined) => {
-  return useQuery(['player', id], () => fetchCurrentUserById(id), {
+  return useQuery(["player", id], () => fetchCurrentUserById(id), {
     enabled: !!id,
   });
 };
@@ -40,17 +40,17 @@ export const fetchCurrentUserById = async (
   id: string | undefined
 ): Promise<Player | null> => {
   if (id === undefined) {
-    throw new Error('Player ID not provided');
+    throw new Error("Player ID not provided");
   }
-  const userDoc = doc(db, 'players', id as string);
+  const userDoc = doc(db, "players", id as string);
   const userDocSnapshot = await getDoc(userDoc);
 
   if (userDocSnapshot.exists()) {
     return {
       id: userDocSnapshot.id,
-      ...(userDocSnapshot.data() as Omit<Player, 'id'>),
+      ...(userDocSnapshot.data() as Omit<Player, "id">),
     };
   } else {
-    throw new Error('Player not found');
+    throw new Error("Player not found");
   }
 };

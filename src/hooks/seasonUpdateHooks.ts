@@ -11,16 +11,15 @@
 //------------------------
 
 // react query
-import { useMutation } from 'react-query';
-import { fetchSeasonRQ } from './seasonFetchHooks';
+import { useMutation } from "react-query";
+// import { fetchSeasonRQ } from "./seasonFetchHooks";
 
 // firebase
-import { db } from '../../firebaseConfig';
-import { updateDoc, doc, setDoc } from 'firebase/firestore';
+import { db } from "../../firebaseConfig";
+import { updateDoc, doc, setDoc } from "firebase/firestore";
 
 // types
-import { Season } from '../types/seasonTypes';
-import { SeasonName } from '../types/sharedTypes';
+import { Season, SeasonName } from "bca-firebase-queries";
 
 // ------------------------------
 // 1. HOOKS
@@ -57,7 +56,7 @@ export const addSeasonRQ = async ({
   seasonName: SeasonName;
   seasonData: Season;
 }) => {
-  const seasonRef = doc(db, 'seasons', seasonName);
+  const seasonRef = doc(db, "seasons", seasonName);
   await setDoc(seasonRef, { ...seasonData, seasonCompleted: false });
 };
 
@@ -74,10 +73,11 @@ export const updateSeasonRQ = async ({
   seasonName: SeasonName;
   seasonData: Partial<Season>;
 }) => {
-  const seasonRef = doc(db, 'seasons', seasonName);
+  const seasonRef = doc(db, "seasons", seasonName);
   await updateDoc(seasonRef, seasonData);
 };
 
+/*
 const checkSeasonExists = async (seasonName: SeasonName): Promise<boolean> => {
   try {
     const season = await fetchSeasonRQ(seasonName);
@@ -86,3 +86,4 @@ const checkSeasonExists = async (seasonName: SeasonName): Promise<boolean> => {
     return false;
   }
 };
+*/

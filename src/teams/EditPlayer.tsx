@@ -1,16 +1,14 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 // components
-import { PastPlayerSearch } from '../components/PastPlayerSearch';
-import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
+import { PastPlayerSearch } from "../components/PastPlayerSearch";
+import { ErrorAndRefetch } from "../components/ErrorAndRefetch";
 
 // types
-import { TeamPlayerRole, TeamPlayer } from '../assets/typesFolder/teamTypes';
-import { PastPlayer } from '../assets/typesFolder/userTypes';
+import { TeamPlayerRole, TeamPlayer, PastPlayer } from "bca-firebase-queries";
 
 // firebase
-// import { useFetchPastPlayers } from "bca--firebase-queries";
-import { useFetchPastPlayers } from '../hooks/playerFetchHooks';
+import { useFetchPastPlayers } from "../hooks/playerFetchHooks";
 
 type EditPlayerProps = {
   role: TeamPlayerRole;
@@ -45,10 +43,10 @@ export const EditPlayer: React.FC<EditPlayerProps> = ({
   const handleCancelClick = () => {
     setIsEditing(false);
   };
-  if (isEditing || playerInfo.firstName === '') {
+  if (isEditing || playerInfo.firstName === "") {
     return (
-      <div style={{ display: 'flex' }}>
-        <div style={{ marginRight: '15px' }}>{role}:</div>
+      <div style={{ display: "flex" }}>
+        <div style={{ marginRight: "15px" }}>{role}:</div>
         <PastPlayerSearch
           list={pastPlayers ? pastPlayers : []}
           onSelect={(player) => {
@@ -57,7 +55,7 @@ export const EditPlayer: React.FC<EditPlayerProps> = ({
           }}
         />
 
-        {playerInfo.firstName !== '' && (
+        {playerInfo.firstName !== "" && (
           <button className="small-button" onClick={handleCancelClick}>
             Cancel
           </button>

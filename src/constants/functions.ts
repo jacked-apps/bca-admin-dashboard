@@ -1,4 +1,4 @@
-import { SeasonName } from '../types/sharedTypes';
+import { SeasonName } from "bca-firebase-queries";
 
 export const createNewTeamData = (teamName: string, seasonId: SeasonName) => ({
   teamName,

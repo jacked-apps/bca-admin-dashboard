@@ -13,10 +13,10 @@
 //------------------------
 
 // react query
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from "react-query";
 
 // firebase
-import { db } from '../../firebaseConfig';
+import { db } from "../../firebaseConfig";
 import {
   collection,
   query,
@@ -24,11 +24,10 @@ import {
   getDocs,
   doc,
   getDoc,
-} from 'firebase/firestore';
+} from "firebase/firestore";
 
 // types
-import { Season } from '../types/seasonTypes';
-import { SeasonName } from '../types/sharedTypes';
+import { Season, SeasonName } from "bca-firebase-queries";
 
 // ------------------------------
 // 1. HOOKS
@@ -38,13 +37,13 @@ export const useFetchSeasons = () => {
   const queryClient = useQueryClient();
 
   const refetchSeasons = () => {
-    queryClient.invalidateQueries('seasons');
+    queryClient.invalidateQueries("seasons");
   };
-  return { ...useQuery('currentSeasons', fetchSeasonsRQ), refetchSeasons };
+  return { ...useQuery("currentSeasons", fetchSeasonsRQ), refetchSeasons };
 };
 
 export const useFetchSeason = (seasonName: string) => {
-  return useQuery(['season', seasonName], () => fetchSeasonRQ(seasonName));
+  return useQuery(["season", seasonName], () => fetchSeasonRQ(seasonName));
 };
 
 // ------------------------------
@@ -62,8 +61,8 @@ export const useFetchSeason = (seasonName: string) => {
 
 const fetchSeasonsRQ = async (): Promise<Season[]> => {
   const seasonQuery = query(
-    collection(db, 'seasons'),
-    where('seasonCompleted', '==', false)
+    collection(db, "seasons"),
+    where("seasonCompleted", "==", false)
   );
   const querySnapshot = await getDocs(seasonQuery);
 
@@ -90,15 +89,15 @@ export const fetchSeasonRQ = async (
   seasonName: SeasonName | undefined
 ): Promise<Season> => {
   if (seasonName === undefined) {
-    throw new Error('Season name/id not provided');
+    throw new Error("Season name/id not provided");
   }
-  const seasonDoc = doc(db, 'seasons', seasonName);
+  const seasonDoc = doc(db, "seasons", seasonName);
   const seasonDocSnapshot = await getDoc(seasonDoc);
   if (seasonDocSnapshot.exists()) {
     const season = seasonDocSnapshot.data();
     season.id = seasonDocSnapshot.id;
     return season as Season;
   } else {
-    throw new Error('Season not found');
+    throw new Error("Season not found");
   }
 };

@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { PastPlayer } from 'bca-firebase-queries';
-import { Checks } from './Verification';
-import { set } from 'date-fns';
+import { useState } from "react";
+import { PastPlayer } from "bca-firebase-queries";
+import { Checks } from "./Verification";
 
 type VerifyProps = {
   useCheck: Checks;
@@ -20,28 +19,27 @@ export const Verify = ({
   matches,
   setPastPlayer,
   availableChecks,
-  setFindPast,
   handleReset,
 }: VerifyProps) => {
   // state
-  const [enteredString, setEnteredString] = useState('');
+  const [enteredString, setEnteredString] = useState("");
   const [failedVerify, setFailedVerify] = useState(false);
 
   // handlers
-  const handleVerify = (type: 'dob' | 'phone') => {
+  const handleVerify = (type: "dob" | "phone") => {
     matches.forEach((player) => {
       if (enteredString === player[type]) {
         setPastPlayer(player);
         setFailedVerify(false);
       }
-      console.log('available,', availableChecks);
+      console.log("available,", availableChecks);
     });
     setFailedVerify(true);
   };
 
-  const handleRetry = (type: 'dob' | 'phone') => {
+  const handleRetry = (type: "dob" | "phone") => {
     setFailedVerify(false);
-    setEnteredString('');
+    setEnteredString("");
     setUseCheck(type);
   };
 
@@ -61,7 +59,7 @@ export const Verify = ({
           <button onClick={handleReset}>Application</button>
         </div>
       )}
-      {useCheck === 'dob' && (
+      {useCheck === "dob" && (
         <div>
           <div className="search-input-wrapper">
             <div>Enter Your Date of Birth</div>
@@ -73,12 +71,12 @@ export const Verify = ({
               />
             </div>
             <div>
-              <button onClick={() => handleVerify('dob')}>Verify</button>
+              <button onClick={() => handleVerify("dob")}>Verify</button>
             </div>
           </div>
         </div>
       )}
-      {useCheck === 'phone' && (
+      {useCheck === "phone" && (
         <div>
           <div className="search-input-wrapper">
             <div>Enter Phone number</div>
@@ -90,7 +88,7 @@ export const Verify = ({
               />
             </div>
             <div>
-              <button onClick={() => handleVerify('phone')}>Verify</button>
+              <button onClick={() => handleVerify("phone")}>Verify</button>
             </div>
           </div>
         </div>
@@ -102,11 +100,11 @@ export const Verify = ({
             again.
           </div>
           <div>
-            {availableChecks.includes('dob') && (
-              <button onClick={() => handleRetry('dob')}>Retry DoB</button>
+            {availableChecks.includes("dob") && (
+              <button onClick={() => handleRetry("dob")}>Retry DoB</button>
             )}
-            {availableChecks.includes('phone') && (
-              <button onClick={() => handleRetry('phone')}>Retry Phone</button>
+            {availableChecks.includes("phone") && (
+              <button onClick={() => handleRetry("phone")}>Retry Phone</button>
             )}
           </div>
         </div>

@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect } from 'react';
-import { Season } from '../assets/typesFolder/seasonTypes';
-import { Team } from '../assets/typesFolder/teamTypes';
+import { createContext, useState, useEffect } from "react";
+import { Season } from "../assets/typesFolder/seasonTypes";
+import { Team } from "bca-firebase-queries";
 
 type SelectedItemContextType = {
   selectedSeason: Season | null;
@@ -23,14 +23,14 @@ export const SelectedItemProvider = ({
 }) => {
   // state
   const [selectedSeason, setSelectedSeason] = useState<Season | null>(() => {
-    const savedSeason = localStorage.getItem('selectedSeason');
+    const savedSeason = localStorage.getItem("selectedSeason");
     return savedSeason ? JSON.parse(savedSeason) : null;
   });
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
 
   // useEffect
   useEffect(() => {
-    localStorage.setItem('selectedSeason', JSON.stringify(selectedSeason));
+    localStorage.setItem("selectedSeason", JSON.stringify(selectedSeason));
   }, [selectedSeason]);
 
   useEffect(() => {

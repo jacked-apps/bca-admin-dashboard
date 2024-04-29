@@ -15,24 +15,23 @@
 //------------------------
 
 // react-query
-import { useMutation } from 'react-query';
-import { updateSeasonRQ } from './seasonUpdateHooks';
-import { fetchSeasonRQ } from './seasonFetchHooks';
-import { removeAllPlayersFromTeamRQ } from './teamToPlayerOperations';
+import { useMutation } from "react-query";
+import { updateSeasonRQ } from "./seasonUpdateHooks";
+import { fetchSeasonRQ } from "./seasonFetchHooks";
+import { removeAllPlayersFromTeamRQ } from "./teamToPlayerOperations";
 
 //firebase
-import { db } from '../../firebaseConfig';
+import { db } from "../../firebaseConfig";
 import {
   collection,
   updateDoc,
   deleteDoc,
   doc,
   runTransaction,
-} from 'firebase/firestore';
+} from "firebase/firestore";
 
 // types
-import { SeasonName, TeamId } from '../types/sharedTypes';
-import { Team } from '../types/teamTypes';
+import { SeasonName, TeamId, Team } from "bca-firebase-queries";
 
 export const createNewTeamData = (teamName: string, seasonId: SeasonName) => ({
   teamName,
@@ -73,7 +72,7 @@ export const useRemoveTeamFromSeason = () => {
         await removeAllPlayersFromTeamRQ(teamId);
       }
     } catch (error) {
-      console.error('Error removing Team from Season', error);
+      console.error("Error removing Team from Season", error);
     }
   };
   return { removeTeam, ...mutation };
@@ -129,13 +128,13 @@ const updateTeamDataRQ = async ({
   data: Team;
 }) => {
   // Reference to the team document
-  const teamRef = doc(db, 'teams', teamId);
+  const teamRef = doc(db, "teams", teamId);
   // Update team data
   await updateDoc(teamRef, data);
 };
 
 const deleteTeamRQ = async (teamId: TeamId) => {
-  const teamRef = doc(db, 'teams', teamId);
+  const teamRef = doc(db, "teams", teamId);
   await deleteDoc(teamRef);
 };
 
@@ -156,7 +155,7 @@ const addNewTeamToSeasonRQ = async ({
 }) => {
   await runTransaction(db, async (transaction) => {
     // Reference to the season
-    const seasonRef = doc(db, 'seasons', seasonName);
+    const seasonRef = doc(db, "seasons", seasonName);
     const seasonDoc = await transaction.get(seasonRef);
 
     // Ensure the season exists
@@ -165,7 +164,7 @@ const addNewTeamToSeasonRQ = async ({
     }
 
     // Create a new team document reference with an ID
-    const teamRef = doc(collection(db, 'teams'));
+    const teamRef = doc(collection(db, "teams"));
     const newTeamData = createNewTeamData(teamName, seasonName);
     transaction.set(teamRef, newTeamData);
 

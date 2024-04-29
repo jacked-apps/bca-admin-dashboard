@@ -1,11 +1,11 @@
-import { PastPlayer, useFetchAllPastPlayers } from 'bca-firebase-queries';
-import { useState } from 'react';
-import { Verification } from './Verification';
+import { PastPlayer, useFetchAllPastPlayers } from "bca-firebase-queries";
+import { useState } from "react";
+import { Verification } from "./Verification";
 
 type SearchForPastProps = {
   setFindPast: React.Dispatch<React.SetStateAction<boolean>>;
   setCheckedCity: React.Dispatch<
-    React.SetStateAction<'failed' | 'passed' | ''>
+    React.SetStateAction<"failed" | "passed" | "">
   >;
 };
 
@@ -14,14 +14,12 @@ export const SearchForPast = ({
   setCheckedCity,
 }: SearchForPastProps) => {
   const { data, isLoading, isError } = useFetchAllPastPlayers();
-  const [option, setOption] = useState<'' | 'name' | 'email'>('');
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [emailEntry, setEmailEntry] = useState<string>('');
+  const [option, setOption] = useState<"" | "name" | "email">("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [emailEntry, setEmailEntry] = useState<string>("");
   const [matches, setMatches] = useState<PastPlayer[]>([]);
   const [matchChecked, setMatchChecked] = useState(false);
-
-  const [verified, setVerified] = useState<PastPlayer>();
 
   if (isLoading) return <div>Loading Search Options...</div>;
   if (isError)
@@ -29,7 +27,7 @@ export const SearchForPast = ({
 
   const handleSearch = () => {
     const matches: PastPlayer[] = [];
-    if (option === 'name') {
+    if (option === "name") {
       // search thru data for a player that matches the last name and push to matches array
       data?.forEach((player) => {
         if (
@@ -40,8 +38,8 @@ export const SearchForPast = ({
         }
       });
     }
-    if (option === 'email') {
-      console.log('searching by email', emailEntry);
+    if (option === "email") {
+      console.log("searching by email", emailEntry);
       // search thru data for a player that matches the email and push to matches array
       data?.forEach((player) => {
         //console.log( 'checks',player.email);
@@ -55,13 +53,13 @@ export const SearchForPast = ({
   };
 
   const handleReset = () => {
-    console.log('Resetting search...');
+    console.log("Resetting search...");
     setMatches([]);
     setMatchChecked(false);
-    setOption('');
-    setFirstName('');
-    setLastName('');
-    setEmailEntry('');
+    setOption("");
+    setFirstName("");
+    setLastName("");
+    setEmailEntry("");
   };
   const hasMatches = matches.length > 0;
 
@@ -73,9 +71,9 @@ export const SearchForPast = ({
       <div className="check-button-row">
         <div className="search-option">
           {!hasMatches && (
-            <button onClick={() => setOption('name')}>Name</button>
+            <button onClick={() => setOption("name")}>Name</button>
           )}
-          {option === 'name' && !matchChecked && (
+          {option === "name" && !matchChecked && (
             <>
               <div className="search-input-wrapper">
                 <div>Enter names as they appeared on your score sheets</div>
@@ -101,9 +99,9 @@ export const SearchForPast = ({
         </div>
         <div className="search-option">
           {!hasMatches && (
-            <button onClick={() => setOption('email')}>Alt Email</button>
+            <button onClick={() => setOption("email")}>Alt Email</button>
           )}
-          {option === 'email' && !matchChecked && (
+          {option === "email" && !matchChecked && (
             <>
               <div className="search-input-wrapper">
                 <div>Enter a previous email we might have</div>
@@ -120,21 +118,21 @@ export const SearchForPast = ({
           )}
         </div>
       </div>
-      {!hasMatches && matchChecked && option !== '' && (
+      {!hasMatches && matchChecked && option !== "" && (
         <div
           className="confirm-body-title"
-          style={{ color: 'red', marginTop: '1em' }}
+          style={{ color: "red", marginTop: "1em" }}
         >
           <div>We did not find any profiles with this {option}</div>
           <div>Please contact your League Operator or try again</div>
         </div>
       )}
-      {option !== '' && !matchChecked && (
+      {option !== "" && !matchChecked && (
         <div className="form-button-wrapper">
           <button onClick={handleSearch}>Search</button>
         </div>
       )}
-      {option !== '' && matchChecked && !hasMatches && (
+      {option !== "" && matchChecked && !hasMatches && (
         <div className="form-button-wrapper">
           <button onClick={handleReset}>Try Again</button>
         </div>

@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
 // types
 // components
-import { NameFields } from './NameFields';
-import { ProfileFields } from './ProfileFields';
+import { NameFields } from "./NameFields";
+import { ProfileFields } from "./ProfileFields";
 // styles
-import './players.css';
-import { EmailField } from './EmailField';
-import { Stats } from './Stats';
-import { PastPlayer, CurrentUser } from '../assets/typesFolder/userTypes';
+import "./players.css";
+import { EmailField } from "./EmailField";
+import { Stats } from "./Stats";
+import { CurrentUser } from "../assets/typesFolder/userTypes";
+import { PastPlayer } from "bca-firebase-queries";
 
 type InfoProps = {
   pastPlayer: PastPlayer | null;
@@ -20,11 +21,11 @@ export const Info = ({
   setChosenPastPlayer,
 }: InfoProps) => {
   return (
-    <div className='info-container'>
+    <div className="info-container">
       {pastPlayer && (
         <>
-          <div className='title'>Information</div>
-          <div className='info-grid'>
+          <div className="title">Information</div>
+          <div className="info-grid">
             <NameFields
               pastPlayer={pastPlayer}
               setChosenPastPlayer={setChosenPastPlayer}
@@ -39,8 +40,8 @@ export const Info = ({
               setChosenPastPlayer={setChosenPastPlayer}
             />
           </div>
-          <div className='title'>Statistics</div>
-          <div className='info-grid'>
+          <div className="title">Statistics</div>
+          <div className="info-grid">
             <Stats
               pastPlayer={pastPlayer}
               setChosenPastPlayer={setChosenPastPlayer}

@@ -8,12 +8,13 @@
 //  - formatPhoneNumber
 // 3. Games
 
-import { shuffleArray } from './globalFunctions';
+// import { shuffleArray } from './globalFunctions';
 
 // ------------------------------
 // IMPORTS and VARIABLES
 // ------------------------------
 import { SeasonName } from 'bca-firebase-queries';
+import {createSimpleGameArray} from './gameFunctions';
 
 // ------------------------------
 // 1. Capitalization

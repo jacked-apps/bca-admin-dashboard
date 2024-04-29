@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // utilities
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
-import { validatePastPlayerFields } from '../assets/validateFields';
+import { validatePastPlayerFields } from "../assets/validateFields";
 
 // components
-import { FieldEntryDialog } from '../components/FieldEntryDialog';
+import { FieldEntryDialog } from "../components/FieldEntryDialog";
 
 // firebase
-import { failedUpdate } from '../constants/messages';
-import { fetchPastPlayerByIdRQ } from '../hooks/playerFetchHooks';
+import { failedUpdate } from "../constants/messages";
+import { fetchPastPlayerByIdRQ } from "../hooks/playerFetchHooks";
 // import {
 //   Email,
 //   PastPlayer,
@@ -20,8 +20,7 @@ import { fetchPastPlayerByIdRQ } from '../hooks/playerFetchHooks';
 //} from "bca--firebase-queries";
 
 // types
-import { PastPlayer } from '../assets/typesFolder/userTypes';
-import { Email } from '../assets/typesFolder';
+import { PastPlayer, Email } from "bca-firebase-queries";
 
 type StatsProps = {
   pastPlayer: PastPlayer;
@@ -53,9 +52,9 @@ export const Stats = ({ pastPlayer, setChosenPastPlayer }: StatsProps) => {
   const handleDialogClose = async (value: string) => {
     setIsOpen(false);
 
-    const validated = validatePastPlayerFields('email', value);
+    const validated = validatePastPlayerFields("email", value);
     if (!validated) {
-      toast.warn('Not a valid email');
+      toast.warn("Not a valid email");
     }
 
     try {
@@ -91,7 +90,7 @@ export const Stats = ({ pastPlayer, setChosenPastPlayer }: StatsProps) => {
       // delete the old document
       // await deletePastPlayer(oldEmail);
     } catch (error) {
-      console.log(failedUpdate, 'Player profile', error);
+      console.log(failedUpdate, "Player profile", error);
     }
   };
 
@@ -119,7 +118,7 @@ export const Stats = ({ pastPlayer, setChosenPastPlayer }: StatsProps) => {
         ))}
 
       <FieldEntryDialog<string>
-        title={title ? title : ''}
+        title={title ? title : ""}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         setValue={(value) => handleDialogClose(value)}

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './components.css';
-import { FaRegSave, FaRegEdit } from 'react-icons/fa';
-import { TextInput } from './TextInput';
-import { FieldError, FieldValues, UseFormRegister } from 'react-hook-form';
-import { FormValues } from '../newPlayers/profileSchema';
+import { useState } from "react";
+import "./components.css";
+import { FaRegSave, FaRegEdit } from "react-icons/fa";
+// import { TextInput } from './TextInput';
+import { UseFormRegister } from "react-hook-form";
+import { FormValues } from "../newPlayers/profileSchema";
 
 interface EditDataInputProps {
   fieldName: keyof FormValues;

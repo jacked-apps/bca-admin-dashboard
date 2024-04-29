@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // components
-import { FieldEntryDialog } from '../components/FieldEntryDialog';
+import { FieldEntryDialog } from "../components/FieldEntryDialog";
 
 // utilities
-import { PastPlayerProfileFields, profileFields } from './buttonFields';
-import { formatName, formatPhoneNumber } from '../assets/globalFunctions';
-import { validatePastPlayerFields } from '../assets/validateFields';
-import { toast } from 'react-toastify';
+import { PastPlayerProfileFields, profileFields } from "./buttonFields";
+import { formatName, formatPhoneNumber } from "../assets/globalFunctions";
+import { validatePastPlayerFields } from "../assets/validateFields";
+import { toast } from "react-toastify";
 
 // firebase
 //import { Email, fetchPastPlayerByIdRQ, PastPlayer } from "bca--firebase-queries";
-import { fetchPastPlayerByIdRQ } from '../hooks/playerFetchHooks';
-import { Email, PastPlayer } from '../assets/typesFolder';
+import { fetchPastPlayerByIdRQ } from "../hooks/playerFetchHooks";
+import { Email, PastPlayer } from "bca-firebase-queries";
 
 type Props = {
   pastPlayer: PastPlayer;
@@ -38,14 +38,14 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
     setIsOpen(false);
     if (!currentFieldName) return;
     let processedValue = value;
-    if (!currentFieldName || value === null || value === '') return;
-    if (currentFieldName === 'city') {
+    if (!currentFieldName || value === null || value === "") return;
+    if (currentFieldName === "city") {
       processedValue = formatName(processedValue);
     }
-    if (currentFieldName === 'phone') {
+    if (currentFieldName === "phone") {
       processedValue = formatPhoneNumber(processedValue);
       const validPhone = validatePastPlayerFields(
-        'strictPhone',
+        "strictPhone",
         processedValue
       );
       if (!validPhone) return;
@@ -55,7 +55,7 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
       processedValue
     );
     if (!validated) {
-      toast.warn('Invalid value');
+      toast.warn("Invalid value");
       return;
     }
     try {
@@ -67,7 +67,7 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
         setChosenPastPlayer(updatedPlayer as PastPlayer);
       }
     } catch (error) {
-      console.log('Error updating pastPlayer', error);
+      console.log("Error updating pastPlayer", error);
     }
     setCurrentFieldName(null);
   };
@@ -105,7 +105,7 @@ export const ProfileFields = ({ pastPlayer, setChosenPastPlayer }: Props) => {
         );
       })}
       <FieldEntryDialog<string>
-        title={title ? title : ''}
+        title={title ? title : ""}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         setValue={(value) => handleDialogClose(value)}

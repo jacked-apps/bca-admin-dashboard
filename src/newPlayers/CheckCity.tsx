@@ -1,34 +1,33 @@
-import { set } from 'date-fns';
-import { useState } from 'react';
+import { useState } from "react";
 
 type CheckCityProps = {
   setCheckedCity: React.Dispatch<
-    React.SetStateAction<'failed' | 'passed' | ''>
+    React.SetStateAction<"failed" | "passed" | "">
   >;
   setFindPast: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const CheckCity = ({ setCheckedCity, setFindPast }: CheckCityProps) => {
   // state
-  const [enteredCity, setEnteredCity] = useState('');
+  const [enteredCity, setEnteredCity] = useState("");
   const [failedCityCheck, setFailedCityCheck] = useState(false);
 
   // handlers
   const handleClick = () => {
     const formatCity = enteredCity.trim().toLowerCase();
     if (
-      formatCity === 'moorpark' ||
-      formatCity === 'simi valley' ||
-      formatCity === 'simi'
+      formatCity === "moorpark" ||
+      formatCity === "simi valley" ||
+      formatCity === "simi"
     ) {
-      setCheckedCity('passed');
+      setCheckedCity("passed");
     } else {
       setFailedCityCheck(true);
     }
   };
 
   const onFailed = () => {
-    setCheckedCity('failed');
+    setCheckedCity("failed");
     setFindPast(false);
   };
 
@@ -37,7 +36,7 @@ export const CheckCity = ({ setCheckedCity, setFindPast }: CheckCityProps) => {
     <>
       {!failedCityCheck && (
         <div>
-          <div style={{ marginBottom: '15px' }}>
+          <div style={{ marginBottom: "15px" }}>
             What city was your Home team's pool hall located in?
           </div>
           <input
@@ -46,7 +45,7 @@ export const CheckCity = ({ setCheckedCity, setFindPast }: CheckCityProps) => {
             value={enteredCity}
             onChange={(e) => setEnteredCity(e.target.value)}
           />
-          <div style={{ marginTop: '25px' }}>
+          <div style={{ marginTop: "25px" }}>
             <button onClick={handleClick}>Check City</button>
           </div>
         </div>

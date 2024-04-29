@@ -1,5 +1,6 @@
-import { GameOnPlayer, PastPlayerSeasonStat } from 'bca-firebase-queries';
-import { shuffleArray } from './globalFunctions';
+import { GameOnPlayer, PastPlayerSeasonStat } from "bca-firebase-queries";
+import { shuffleArray } from "./globalFunctions";
+import { Timestamp } from "firebase/firestore";
 
 export const extractGamesFromPastPlayerSeason = (
   date: string,
@@ -11,7 +12,8 @@ export const extractGamesFromPastPlayerSeason = (
   // create constants
   const gameArray = createSimpleGameArray(wins, losses);
   const shapedGames: GameOnPlayer[] = [];
-  const createdAt = new Date(date);
+
+  const createdAt = Timestamp.fromDate(new Date(date));
 
   if (gameArray.length === 0) return null;
   const pluckAndCreate = () => {
@@ -22,7 +24,7 @@ export const extractGamesFromPastPlayerSeason = (
     const shapedGame = {
       break: randomIndex % 2 === 0 ? true : false,
       value: element,
-      opponentId: '',
+      opponentId: "",
       seasonId: seasonName,
       game,
       week: Math.ceil(length / 6),

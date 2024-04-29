@@ -11,15 +11,14 @@
 //------------------------
 
 // react-query
-import { useMutation } from 'react-query';
+import { useMutation } from "react-query";
 
 // firebase
-import { db } from '../../firebaseConfig';
-import { updateDoc, doc } from 'firebase/firestore';
+import { db } from "../../firebaseConfig";
+import { updateDoc, doc } from "firebase/firestore";
 
 //types
-import { Schedule } from '../types/seasonTypes';
-import { SeasonName } from '../types/sharedTypes';
+import { Schedule, SeasonName } from "bca-firebase-queries";
 
 // ------------------------------
 // 1. HOOKS
@@ -47,7 +46,7 @@ export const updateSeasonScheduleRQ = async ({
   schedule: Schedule;
 }) => {
   //reference to the season document
-  const seasonRef = doc(db, 'seasons', seasonName);
+  const seasonRef = doc(db, "seasons", seasonName);
   await updateDoc(seasonRef, {
     schedule: schedule,
   });

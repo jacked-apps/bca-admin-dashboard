@@ -1,12 +1,12 @@
-import { Email, useFetchPastPlayerById } from 'bca-firebase-queries';
-import { LoadingScreen } from '../components/LoadingScreen';
-import { useAuthContext } from '../context/useAuthContext';
+import { Email, useFetchPastPlayerById } from "bca-firebase-queries";
+import { LoadingScreen } from "../components/LoadingScreen";
+import { useAuthContext } from "../context/useAuthContext";
 
-import './newPlayers.css';
-import { PastPlayerPage } from './PastPlayerPage';
-import { NewPlayerForm } from './NewPlayerForm';
-import { RetryFindPast } from './RetryFindPast';
-import { useState } from 'react';
+import "./newPlayers.css";
+import { PastPlayerPage } from "./PastPlayerPage";
+import { NewPlayerForm } from "./NewPlayerForm";
+import { RetryFindPast } from "./RetryFindPast";
+import { useState } from "react";
 
 export const SignUp = () => {
   const { user } = useAuthContext();
@@ -18,8 +18,7 @@ export const SignUp = () => {
     data: pastPlayer,
     isLoading: isLoadingPastPlayer,
     isError: isPastPlayerError,
-    refetch: refetchPastPlayer,
-  } = useFetchPastPlayerById(fetchId);
+  } = useFetchPastPlayerById(fetchId as Email);
 
   if (isLoadingPastPlayer) {
     return (

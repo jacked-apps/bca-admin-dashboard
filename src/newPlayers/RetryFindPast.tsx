@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { InfoButton } from '../components/InfoButton';
-import { CheckCity } from './CheckCity';
-import { SearchForPast } from './SearchForPast';
+import { useState } from "react";
+import { InfoButton } from "../components/InfoButton";
+import { CheckCity } from "./CheckCity";
+import { SearchForPast } from "./SearchForPast";
 
 type RetryFindPastProps = {
   setFetchId: React.Dispatch<React.SetStateAction<string | null | undefined>>;
@@ -10,11 +10,10 @@ type RetryFindPastProps = {
 };
 
 export const RetryFindPast = ({
-  setFetchId,
   setFindPast,
   findPast,
 }: RetryFindPastProps) => {
-  const [checkedCity, setCheckedCity] = useState<'' | 'failed' | 'passed'>('');
+  const [checkedCity, setCheckedCity] = useState<"" | "failed" | "passed">("");
 
   const handleClick = () => {
     setFindPast(true);
@@ -28,17 +27,17 @@ export const RetryFindPast = ({
       {!findPast && (
         <div
           style={{
-            display: 'flex',
-            width: '90%',
-            gap: '10px',
-            justifyContent: 'end',
+            display: "flex",
+            width: "90%",
+            gap: "10px",
+            justifyContent: "end",
           }}
         >
-          <InfoButton infoBlurbKey={'pastPlayer'} />
+          <InfoButton infoBlurbKey={"pastPlayer"} />
           <button onClick={handleClick}>I have played before</button>
         </div>
       )}
-      {findPast && checkedCity === '' && (
+      {findPast && checkedCity === "" && (
         <div>
           <div className="confirm-title">
             We did not find any past data for your email.
@@ -49,7 +48,7 @@ export const RetryFindPast = ({
           />
         </div>
       )}
-      {checkedCity === 'passed' && (
+      {checkedCity === "passed" && (
         <SearchForPast
           setFindPast={setFindPast}
           setCheckedCity={setCheckedCity}
