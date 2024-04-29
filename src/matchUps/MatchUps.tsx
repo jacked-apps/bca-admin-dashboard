@@ -1,41 +1,44 @@
+/*
 // hooks
-import { useContext, useState } from 'react';
+import { useContext, useState } from "react";
 
 // components
-import { SeasonList } from '../seasons/SeasonList';
-import { TeamOrder } from './TeamOrder';
-import { CreateMatches } from './CreateMatches';
+import { SeasonList } from "../seasons/SeasonList";
+import { TeamOrder } from "./TeamOrder";
+import { CreateMatches } from "./CreateMatches";
 // import { FinishedMatches } from './FinishedMatches';
-import { SetTeamsInSchedule } from './SetTeamsInSchedule';
+import { SetTeamsInSchedule } from "./SetTeamsInSchedule";
 // import { ErrorAndRefetch } from '../components/ErrorAndRefetch';
 
 // context
-import { SelectedItemContext } from '../context/SelectedItemProvider';
+import { SelectedItemContext } from "../context/SelectedItemProvider";
 
 // firebase
-// import {
-//   useFetchTeamsFromSeason,
-//   useFetchFinishedRoundRobin,
-//   useFetchRoundRobin,
-// } from "bca--firebase-queries";
+import {
+  useFetchTeamsFromSeason,
+  useFetchFinishedRoundRobin,
+  useFetchRoundRobin,
+} from "bca-firebase-queries";
 import {
   RoundRobinSchedule,
   RoundRobinScheduleFinished,
-} from '../assets/typesFolder/matchupTypes';
-import { useFetchTeamsFromSeason } from '../hooks/teamFetchHooks';
-import {
-  useFetchFinishedRoundRobin,
-  useFetchRoundRobin,
-} from '../hooks/matchupFetchHooks';
+} from "../assets/typesFolder/matchupTypes";
+// import { useFetchTeamsFromSeason } from '../hooks/teamFetchHooks';
+// import {
+//   useFetchFinishedRoundRobin,
+//   useFetchRoundRobin,
+// } from '../assets/unused/matchupFetchHooks';
 
 // types
-import { Team } from '../assets/typesFolder/teamTypes';
+import { Team } from "../assets/typesFolder/teamTypes";
 
 // styles
-import './matchups.css';
+import "./matchups.css";
 //import { useStateUpdater } from '../assets/useStateUpdater';
+ */
 
-export const MatchUps = () => {
+export const MatchUps = () => {};
+/*
   // state
   const [teamOrder, setTeamOrder] = useState<Team[]>([]);
   const [modifiedSchedule, setModifiedSchedule] = useState<
@@ -101,17 +104,18 @@ export const MatchUps = () => {
           schedule={initialSchedule}
           setModifiedSchedule={setModifiedSchedule}
           modifiedSchedule={modifiedSchedule}
-          seasonId={selectedSeason ? selectedSeason.id : ''}
+          seasonId={selectedSeason ? selectedSeason.id : ""}
         />
       </div>
       <div className="match-working-area">
-        {/* {<FinishedMatches
-            finishedSchedule={finishedSchedule}
-            selectedSeason={selectedSeason}
-          />} */}
+        <FinishedMatches
+              finishedSchedule={finishedSchedule}
+              selectedSeason={selectedSeason}
+         />
 
         <CreateMatches schedule={initialSchedule} />
       </div>
     </div>
   );
 };
+  */

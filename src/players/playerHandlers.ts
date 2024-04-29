@@ -1,14 +1,14 @@
 // utilities
-import { formatName } from '../assets/globalFunctions';
-import { toast } from 'react-toastify';
+// import { formatName } from "../assets/globalFunctions";
+// import { toast } from 'react-toastify';
 
 // types
-import { Email, Names } from '../assets/typesFolder/sharedTypes';
-import { PastPlayer, CurrentUser } from '../assets/typesFolder/userTypes';
+// import { Email, Names } from "../assets/typesFolder/sharedTypes";
+// import { PastPlayer, CurrentUser } from '../assets/typesFolder/userTypes';
 
 // firebase
-import { Updates } from '../assets/unused/firebaseFunctions';
 
+/*
 export const handleUpdatePastPlayer = async (
   email: Email | null,
   fieldName: keyof PastPlayer,
@@ -40,15 +40,18 @@ export const handleUpdateCurrentUser = async (
     console.log('Error updating currentUser', error);
   }
 };
+
 export const handleUpdateNames = async (
   email: Email | null,
   currentUserId: string | null,
   fieldName: keyof Names,
-  value: string,
+  value: string
 ) => {
-  if (fieldName !== 'nickname') {
+  if (fieldName !== "nickname") {
     value = formatName(value);
   }
   handleUpdateCurrentUser(email, fieldName, value);
   handleUpdatePastPlayer(currentUserId, fieldName, value);
 };
+
+*/

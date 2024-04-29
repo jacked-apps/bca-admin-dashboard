@@ -1,5 +1,5 @@
-import React from 'react';
-import { PastPlayer, CurrentUser } from '../assets/typesFolder/userTypes';
+import React from "react";
+import { PastPlayer, CurrentUser } from "../assets/typesFolder/userTypes";
 
 type PastPlayerTitleProps = {
   pastPlayer: PastPlayer;
@@ -10,32 +10,27 @@ type PastPlayerTitleProps = {
   >;
 };
 
-export const PastPlayerTitle = ({
-  pastPlayer,
-  currentUser,
-  setChosenCurrentUser,
-  setChosenPastPlayer,
-}: PastPlayerTitleProps) => {
-  const buttonText = pastPlayer.currentUserId ? 'Get' : 'Attach';
+export const PastPlayerTitle = ({ pastPlayer }: PastPlayerTitleProps) => {
+  const buttonText = pastPlayer.currentUserId ? "Get" : "Attach";
   let tipText;
   switch (buttonText) {
-    case 'Get':
-      tipText = 'Get Current user for this player';
+    case "Get":
+      tipText = "Get Current user for this player";
       break;
-    case 'Attach':
-      tipText = 'Attach this past Player to this Current User';
+    case "Attach":
+      tipText = "Attach this past Player to this Current User";
       break;
     default:
-      tipText = '';
+      tipText = "";
       break;
   }
   return (
     <>
-      <div className='title'>
-        PastPlayerTitle{' '}
-        <button className='small-button tooltip'>
+      <div className="title">
+        PastPlayerTitle{" "}
+        <button className="small-button tooltip">
           {buttonText}
-          <span className='tooltip-text'>{tipText}</span>
+          <span className="tooltip-text">{tipText}</span>
         </button>
       </div>
     </>

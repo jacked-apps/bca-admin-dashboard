@@ -15,10 +15,11 @@
 //------------------------
 // IMPORTS
 //------------------------
-import { useQuery } from 'react-query';
-import { db } from '../../firebaseConfig';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { CurrentUser, Email, PastPlayer } from '../assets/typesFolder';
+import { useQuery } from "react-query";
+import { db } from "../../firebaseConfig";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { CurrentUser } from "../assets/typesFolder";
+import { Email, PastPlayer } from "bca-firebase-queries";
 
 // ------------------------------
 // 1. HOOKS
@@ -26,7 +27,7 @@ import { CurrentUser, Email, PastPlayer } from '../assets/typesFolder';
 
 export const useFetchPastPlayerById = (playerId: Email | undefined) => {
   return useQuery(
-    ['pastPlayer', playerId],
+    ["pastPlayer", playerId],
     () => fetchPastPlayerByIdRQ(playerId),
     {
       enabled: !!playerId,
@@ -34,17 +35,17 @@ export const useFetchPastPlayerById = (playerId: Email | undefined) => {
   );
 };
 export const useFetchCurrentUserById = (id: string | undefined) => {
-  return useQuery(['currentUser', id], () => fetchCurrentUserById(id), {
+  return useQuery(["currentUser", id], () => fetchCurrentUserById(id), {
     enabled: !!id,
   });
 };
 
 export const useFetchPastPlayers = () => {
-  return useQuery('pastPlayers', fetchAllPastPlayersRQ);
+  return useQuery("pastPlayers", fetchAllPastPlayersRQ);
 };
 
 export const useFetchCurrentUsers = () => {
-  return useQuery('currentUsers', fetchAllCurrentUsersRQ);
+  return useQuery("currentUsers", fetchAllCurrentUsersRQ);
 };
 
 // ------------------------------
@@ -62,17 +63,17 @@ export const fetchPastPlayerByIdRQ = async (
   playerId: Email | undefined
 ): Promise<PastPlayer | null> => {
   if (playerId === undefined) {
-    throw new Error('Player ID not provided');
+    throw new Error("Player ID not provided");
   }
-  const playerDoc = doc(db, 'pastPlayers', playerId);
+  const playerDoc = doc(db, "pastPlayers", playerId);
   const playerDocSnapshot = await getDoc(playerDoc);
   if (playerDocSnapshot.exists()) {
     return {
       id: playerDocSnapshot.id as Email,
-      ...(playerDocSnapshot.data() as Omit<PastPlayer, 'id'>),
+      ...(playerDocSnapshot.data() as Omit<PastPlayer, "id">),
     };
   } else {
-    throw new Error('Player not found');
+    throw new Error("Player not found");
   }
 };
 
@@ -87,18 +88,18 @@ export const fetchCurrentUserById = async (
   id: string | undefined
 ): Promise<CurrentUser | null> => {
   if (id === undefined) {
-    throw new Error('User ID not provided');
+    throw new Error("User ID not provided");
   }
-  const userDoc = doc(db, 'currentUsers', id as string);
+  const userDoc = doc(db, "currentUsers", id as string);
   const userDocSnapshot = await getDoc(userDoc);
 
   if (userDocSnapshot.exists()) {
     return {
       id: userDocSnapshot.id,
-      ...(userDocSnapshot.data() as Omit<CurrentUser, 'id'>),
+      ...(userDocSnapshot.data() as Omit<CurrentUser, "id">),
     };
   } else {
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 };
 
@@ -108,7 +109,7 @@ export const fetchCurrentUserById = async (
  * @returns Promise resolving to an array of all PastPlayer objects.
  */
 const fetchAllPastPlayersRQ = async (): Promise<PastPlayer[]> => {
-  const querySnapshot = await getDocs(collection(db, 'pastPlayers'));
+  const querySnapshot = await getDocs(collection(db, "pastPlayers"));
   const playersData: PastPlayer[] = [];
 
   querySnapshot.forEach((doc) => {
@@ -128,7 +129,7 @@ const fetchAllPastPlayersRQ = async (): Promise<PastPlayer[]> => {
  * @returns Promise resolving to an array of all CurrentUser objects.
  */
 const fetchAllCurrentUsersRQ = async (): Promise<CurrentUser[]> => {
-  const querySnapshot = await getDocs(collection(db, 'currentUsers'));
+  const querySnapshot = await getDocs(collection(db, "currentUsers"));
   const usersData: CurrentUser[] = [];
 
   querySnapshot.forEach((doc) => {

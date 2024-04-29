@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
-    "bca-firebase-queries": "file:../bca-firebase-queries",
+    "bca-firebase-queries": "jacked-apps/bca-firebase-queries#v1.6.0",
     "date-holidays": "^3.23.1",
     "firebase": "^10.10.0",
     "react": "^18.2.0",

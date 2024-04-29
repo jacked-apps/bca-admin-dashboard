@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { v4 as uuidV4 } from 'uuid';
-import { PastPlayer } from '../assets/typesFolder/userTypes';
+import React, { useState, useEffect } from "react";
+import { v4 as uuidV4 } from "uuid";
+import { PastPlayer } from "bca-firebase-queries";
 
 type PastPlayerSearchProps = {
   list: PastPlayer[];
@@ -8,7 +8,7 @@ type PastPlayerSearchProps = {
 };
 
 export const PastPlayerSearch = ({ list, onSelect }: PastPlayerSearchProps) => {
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>("");
   const [filteredItems, setFilteredItems] = useState<PastPlayer[]>(list);
 
   const listId = `dropdown-${uuidV4()}`;
@@ -20,14 +20,14 @@ export const PastPlayerSearch = ({ list, onSelect }: PastPlayerSearchProps) => {
     const value = e.target.value;
     setInputValue(value);
 
-    const filtered = list.filter(player =>
-      getPlayerName(player).toLowerCase().includes(value.toLowerCase()),
+    const filtered = list.filter((player) =>
+      getPlayerName(player).toLowerCase().includes(value.toLowerCase())
     );
 
     setFilteredItems(filtered);
 
     const selectedFullName = filtered.find(
-      player => getPlayerName(player) === value,
+      (player) => getPlayerName(player) === value
     );
     if (selectedFullName) {
       onSelect(selectedFullName);
@@ -35,7 +35,9 @@ export const PastPlayerSearch = ({ list, onSelect }: PastPlayerSearchProps) => {
   };
 
   const handleSelect = (value: string) => {
-    const selectedPlayer = list.find(player => getPlayerName(player) === value);
+    const selectedPlayer = list.find(
+      (player) => getPlayerName(player) === value
+    );
     if (selectedPlayer) onSelect(selectedPlayer);
   };
 
@@ -44,22 +46,22 @@ export const PastPlayerSearch = ({ list, onSelect }: PastPlayerSearchProps) => {
   }, [inputValue, list]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <input
         list={listId}
         value={inputValue}
         onChange={handleInputChange}
-        placeholder='Start Typing Name...'
+        placeholder="Start Typing Name..."
       />
       <button
-        className='small-button'
-        onClick={() => setInputValue('')}
-        style={{ marginLeft: '5px' }}
+        className="small-button"
+        onClick={() => setInputValue("")}
+        style={{ marginLeft: "5px" }}
       >
         Clear
       </button>
       <datalist id={listId}>
-        {filteredItems.map(player => (
+        {filteredItems.map((player) => (
           <option
             key={uuidV4()}
             value={getPlayerName(player)}

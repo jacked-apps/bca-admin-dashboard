@@ -1,31 +1,33 @@
 // react
-import { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 // firebase
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { FirebaseContext } from 'bca-firebase-queries';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseContext } from "bca-firebase-queries";
 
 // components
-import { TextInput } from '../components/TextInput';
+import { TextInput } from "../components/TextInput";
 
 // css
-import './login.css';
+import "./login.css";
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
   const { auth } = useContext(FirebaseContext);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/'); // Redirect to the dashboard after login
-    } catch (error) {
-      console.error('Login failed:', error);
+    if (auth) {
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate("/"); // Redirect to the dashboard after login
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
     }
   };
 
@@ -40,7 +42,7 @@ export const Login = () => {
         required
       />
       <TextInput
-        type={'password'}
+        type={"password"}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
@@ -49,7 +51,7 @@ export const Login = () => {
 
       <Link
         to="/forgot-password"
-        style={{ fontSize: '12px', marginBottom: '15px' }}
+        style={{ fontSize: "12px", marginBottom: "15px" }}
       >
         Forgot Password
       </Link>
@@ -57,7 +59,7 @@ export const Login = () => {
         Login
       </button>
 
-      <Link to="/register" style={{ marginTop: '45px' }}>
+      <Link to="/register" style={{ marginTop: "45px" }}>
         Register here
       </Link>
     </form>

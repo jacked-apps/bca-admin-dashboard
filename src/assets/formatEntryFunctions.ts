@@ -8,12 +8,13 @@
 //  - formatPhoneNumber
 // 3. Games
 
-import { shuffleArray, shuffleArray } from './globalFunctions';
+// import { shuffleArray } from './globalFunctions';
 
 // ------------------------------
 // IMPORTS and VARIABLES
 // ------------------------------
 import { SeasonName } from 'bca-firebase-queries';
+import {createSimpleGameArray} from './gameFunctions';
 
 // ------------------------------
 // 1. Capitalization
@@ -35,8 +36,9 @@ export const capitalizeString = (str: string): string => {
  * @param address - The address string to capitalize.
  * @returns The capitalized address string.
  */
-export const capitalizeField = (address: string): string => {
-  return address.split(' ').map(capitalizeString).join(' ');
+export const capitalizeField = (entry: string): string => {
+  const formatted = entry.trim().toLowerCase();
+  return formatted.split(' ').map(capitalizeString).join(' ');
 };
 
 // ------------------------------
@@ -52,7 +54,7 @@ export const capitalizeField = (address: string): string => {
  */
 export const formatPhoneNumber = (phoneNumber: string): string => {
   //remove spaces or dashes from the phone number
-  const formattedPhoneNumber = phoneNumber.replace(/[-\s]/g, '');
+  const formattedPhoneNumber = phoneNumber.replace(/[D\s]/g, '');
   // get first 3 digits
   const firstThreeDigits = formattedPhoneNumber.slice(0, 3);
   const secondThreeDigits = formattedPhoneNumber.slice(3, 6);
@@ -64,25 +66,6 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
 // ------------------------------
 // 3. Games
 // ------------------------------
-
-/**
- * Creates a simple game array with the given number of wins and losses.
- *
- * @param wins - The number of wins to include in the game array.
- * @param losses - The number of losses to include in the game array.
- * @returns The shuffled game array, where 1 represents a win and -1 represents a loss.
- */
-export const createSimpleGameArray = (wins: number, losses: number) => {
-  const gameArray = [];
-
-  for (let i = 0; i < wins; i++) {
-    gameArray.push(1);
-  }
-  for (let i = 0; i < losses; i++) {
-    gameArray.push(-1);
-  }
-  return shuffleArray(gameArray);
-};
 
 export type PlayerGame = {
   value: number;

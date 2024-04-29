@@ -6,6 +6,7 @@
 //  - dateToTimestamp
 //  - toJSDate
 //  - readableDate
+//  - toSaveDateFormat
 
 // ------------------------------
 // IMPORTS and VARIABLES
@@ -24,6 +25,37 @@ import {
 // ------------------------------
 // 1. Date Conversion Functions
 // ------------------------------
+
+export const formatDateToYYYYMMDD = (
+  dateInput: Date | Timestamp | string
+): string => {
+  let dateObj: Date;
+
+  // Check if the input is a Date object
+  if (dateInput instanceof Date) {
+    dateObj = dateInput;
+    // Check if the input is a Firebase Timestamp
+  } else if (dateInput instanceof Timestamp) {
+    dateObj = dateInput.toDate();
+    // Check if the input is a string and convert it to a Date object
+  } else if (typeof dateInput === 'string') {
+    dateObj = new Date(dateInput);
+  } else {
+    throw new Error('Invalid date input');
+  }
+
+  // Extract the year, month, and day from the Date object
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth() + 1; // getMonth() is zero-based
+  const day = dateObj.getDate();
+
+  // Format the month and day with leading zeros if needed
+  const formattedMonth = month < 10 ? `0${month}` : month.toString();
+  const formattedDay = day < 10 ? `0${day}` : day.toString();
+
+  // Return the formatted date string
+  return `${year}-${formattedMonth}-${formattedDay}`;
+};
 
 /**
  * converts a JS date to a Firebase Timestamp

@@ -67,3 +67,23 @@
   display: flex;
   gap: 1vw;
 }
+.check-button-row {
+  margin-top: 5vh;
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+}
+.check-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 80%;
+}
+.search-option {
+  width: 100%;
+}
+.search-input-wrapper {
+  margin-top: 4vh;
+  margin-bottom: 2vh;
+}

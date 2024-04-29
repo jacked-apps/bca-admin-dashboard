@@ -1,21 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 // components
-import { EditPlayer } from './EditPlayer';
+import { EditPlayer } from "./EditPlayer";
 
 // utilities
-import { convertPastPlayerToTeamPlayer } from '../assets/globalFunctions';
-import { blankPlayerInfoObject, playerOrder } from '../assets/globalVariables';
+import { convertPastPlayerToTeamPlayer } from "../assets/globalFunctions";
+import { blankPlayerInfoObject, playerOrder } from "../assets/globalVariables";
 
 // css
-import './teams.css';
+import "./teams.css";
 
 // types
-import { Team, TeamPlayerRole } from '../assets/typesFolder/teamTypes';
-import { PastPlayer } from '../assets/typesFolder/userTypes';
+import { Team, TeamPlayerRole, PastPlayer } from "bca-firebase-queries";
 
 // firebase
 // import { useAddPlayerToTeam } from "bca--firebase-queries";
-import { useAddPlayerToTeam } from '../hooks/teamToPlayerOperations';
+import { useAddPlayerToTeam } from "../hooks/teamToPlayerOperations";
 
 type TeamDetailsProps = {
   team: Team;
@@ -67,6 +66,7 @@ export const TeamDetails = ({
       },
     }));
   };
+
   if (isLoading) {
     return <div>Adding player...</div>;
   }
@@ -89,7 +89,7 @@ export const TeamDetails = ({
               editedTeam.players[role as keyof typeof team.players];
 
             return (
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: "flex" }}>
                 <EditPlayer
                   key={role}
                   playerInfo={playerInfo}
@@ -107,7 +107,7 @@ export const TeamDetails = ({
           })}
       </div>
       <div className="details-button-group">
-        {' '}
+        {" "}
         <button onClick={() => onSave(editedTeam)}>Save</button>
         <button onClick={() => onDelete(team)}>Delete</button>
         <button onClick={onCancel}>Cancel</button>

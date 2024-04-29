@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { LoadingScreen } from '../components/LoadingScreen';
 import { useNavigate } from 'react-router';
 import { useEffect } from 'react';
-import { useFetchPlayerById } from 'bca-firebase-queries';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -16,11 +15,6 @@ export const Home = () => {
     isError: isPlayerError,
     isLoading: isLoadingPlayer,
   } = useAuthContext();
-  // const {
-  //   data: player,
-  //   isLoading: isLoadingPlayer,
-  //   isError: isPlayerError,
-  // } = useFetchPlayerById(user?.uid);
 
   useEffect(() => {
     if (isPlayerError && !isLoadingPlayer) {

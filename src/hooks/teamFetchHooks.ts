@@ -13,30 +13,29 @@
 //------------------------
 
 // react query
-import { useQuery, UseQueryOptions } from 'react-query';
-import { fetchSeasonRQ } from './seasonFetchHooks';
+import { useQuery } from "react-query";
+import { fetchSeasonRQ } from "./seasonFetchHooks";
 
 // firebase
-import { db } from '../../firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { db } from "../../firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
 
 // types
-import { SeasonName } from '../types/sharedTypes';
-import { Team } from '../types/teamTypes';
+import { SeasonName, Team } from "bca-firebase-queries";
 
 // ------------------------------
 // 1. HOOKS
 // ------------------------------
 
 export const useFetchTeamById = (teamId: string | undefined) => {
-  return useQuery(['team', teamId], () => fetchTeamByIdRQ(teamId), {
+  return useQuery(["team", teamId], () => fetchTeamByIdRQ(teamId), {
     enabled: teamId !== undefined,
   });
 };
 
 export const useFetchTeamsFromSeason = (seasonName: SeasonName | undefined) => {
   const query = useQuery<Team[], unknown>(
-    ['teamsFromSeason', seasonName],
+    ["teamsFromSeason", seasonName],
     () => fetchTeamsFromSeasonRQ(seasonName),
     {
       enabled: !!seasonName,
@@ -63,16 +62,16 @@ export const fetchTeamByIdRQ = async (
   teamId: string | undefined
 ): Promise<Team | null> => {
   if (teamId === undefined) {
-    throw new Error('Team ID not provided');
+    throw new Error("Team ID not provided");
   }
-  const teamDoc = doc(db, 'teams', teamId);
+  const teamDoc = doc(db, "teams", teamId);
   const teamDocSnapshot = await getDoc(teamDoc);
   if (teamDocSnapshot.exists()) {
     const teamData = teamDocSnapshot.data() as Team;
     teamData.id = teamDocSnapshot.id;
     return teamData;
   } else {
-    throw new Error('Team not found');
+    throw new Error("Team not found");
   }
 };
 

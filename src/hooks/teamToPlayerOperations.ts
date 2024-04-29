@@ -25,15 +25,15 @@
 //------------------------
 
 // react query
-import { useMutation } from 'react-query';
-import { fetchTeamByIdRQ } from './teamFetchHooks';
+import { useMutation } from "react-query";
+import { fetchTeamByIdRQ } from "./teamFetchHooks";
 import {
   fetchCurrentUserById,
   fetchPastPlayerByIdRQ,
-} from './playerFetchHooks';
+} from "./playerFetchHooks";
 
 // firebase
-import { db } from '../../firebaseConfig';
+import { db } from "../../firebaseConfig";
 import {
   doc,
   updateDoc,
@@ -41,11 +41,17 @@ import {
   arrayUnion,
   arrayRemove,
   runTransaction,
-} from 'firebase/firestore'; // Import getFirestore from Firebase
+} from "firebase/firestore"; // Import getFirestore from Firebase
 
 // types
-import { TeamId, Email, PlayerId } from '../types/sharedTypes';
-import { TeamPlayerRole, TeamPlayer, Team } from '../types/teamTypes';
+import {
+  TeamId,
+  Email,
+  PlayerId,
+  TeamPlayerRole,
+  TeamPlayer,
+  Team,
+} from "bca-firebase-queries";
 
 /**
  * Hook to add a player to a team.
@@ -56,10 +62,10 @@ import { TeamPlayerRole, TeamPlayer, Team } from '../types/teamTypes';
 export const useAddPlayerToTeam = () => {
   return useMutation(addPlayerToTeamRQ, {
     onSuccess: () => {
-      console.log('success');
+      console.log("success");
     },
     onError: () => {
-      console.log('error');
+      console.log("error");
     },
     retry: false,
   });
@@ -74,10 +80,10 @@ export const useAddPlayerToTeam = () => {
 export const useAddTeamToBothViaPlayer = () => {
   return useMutation(addTeamToBothWithPlayer, {
     onSuccess: () => {
-      console.log('success');
+      console.log("success");
     },
     onError: () => {
-      console.log('error');
+      console.log("error");
     },
     retry: false,
   });
@@ -92,10 +98,10 @@ export const useAddTeamToBothViaPlayer = () => {
 export const useAddTeamToBothViaUser = () => {
   return useMutation(addTeamToBothWithUser, {
     onSuccess: () => {
-      console.log('success');
+      console.log("success");
     },
     onError: () => {
-      console.log('error');
+      console.log("error");
     },
     retry: false,
   });
@@ -110,10 +116,10 @@ export const useAddTeamToBothViaUser = () => {
 export const useRemoveTeamFromBothViaPlayer = () => {
   return useMutation(removeTeamFromBothWithPlayer, {
     onSuccess: () => {
-      console.log('success');
+      console.log("success");
     },
     onError: () => {
-      console.log('error');
+      console.log("error");
     },
     retry: false,
   });
@@ -128,10 +134,10 @@ export const useRemoveTeamFromBothViaPlayer = () => {
 export const useRemoveTeamFromBothViaUser = () => {
   return useMutation(removeTeamFromBothWithUser, {
     onSuccess: () => {
-      console.log('success');
+      console.log("success");
     },
     onError: () => {
-      console.log('error');
+      console.log("error");
     },
     retry: false,
   });
@@ -143,7 +149,7 @@ export const useRemoveTeamFromBothViaUser = () => {
  * @param pastPlayerId - The ID (email address) of the past player document to update.
  */
 const addTeamToPastPlayer = async (teamId: TeamId, pastPlayerId: Email) => {
-  const playerRef = doc(db, 'pastPlayers', pastPlayerId as Email);
+  const playerRef = doc(db, "pastPlayers", pastPlayerId as Email);
   await updateDoc(playerRef, {
     teams: arrayUnion(teamId as TeamId),
   });
@@ -160,8 +166,8 @@ const addTeamToCurrentUser = async (
   currentUserId?: PlayerId
 ) => {
   if (!teamId || !currentUserId)
-    throw new Error('Missing teamId or currentUserId');
-  const userRef = doc(db, 'currentUsers', currentUserId as PlayerId);
+    throw new Error("Missing teamId or currentUserId");
+  const userRef = doc(db, "currentUsers", currentUserId as PlayerId);
   await updateDoc(userRef, {
     teams: arrayUnion(teamId as TeamId),
   });
@@ -179,7 +185,7 @@ const addTeamToBothWithPlayer = async (
   pastPlayerId?: Email
 ) => {
   if (!teamId || !pastPlayerId)
-    throw new Error('Missing teamId or pastPlayerId');
+    throw new Error("Missing teamId or pastPlayerId");
   await addTeamToPastPlayer(teamId, pastPlayerId);
   const pastPlayer = await fetchPastPlayerByIdRQ(pastPlayerId as Email);
   if (pastPlayer && pastPlayer.currentUserId) {
@@ -199,11 +205,11 @@ const addTeamToBothWithUser = async (
   currentUserId?: PlayerId
 ) => {
   if (!teamId || !currentUserId)
-    throw new Error('Missing teamId or currentUserId');
+    throw new Error("Missing teamId or currentUserId");
   await addTeamToCurrentUser(teamId, currentUserId);
   const user = await fetchCurrentUserById(currentUserId as PlayerId);
   if (user && user.pastPlayerId) {
-    await addTeamToPastPlayer(teamId, user.pastPlayerId);
+    await addTeamToPastPlayer(teamId, user.pastPlayerId as Email);
   }
 };
 
@@ -218,8 +224,8 @@ const removeTeamFromPastPlayer = async (
   pastPlayerId?: Email
 ) => {
   if (!teamId || !pastPlayerId)
-    throw new Error('Missing teamId or pastPlayerId');
-  const playerRef = doc(db, 'pastPlayers', pastPlayerId as Email);
+    throw new Error("Missing teamId or pastPlayerId");
+  const playerRef = doc(db, "pastPlayers", pastPlayerId as Email);
   await updateDoc(playerRef, {
     teams: arrayRemove(teamId as TeamId),
   });
@@ -236,8 +242,8 @@ const removeTeamFromCurrentUser = async (
   currentUserId?: PlayerId
 ) => {
   if (!teamId || !currentUserId)
-    throw new Error('Missing teamId or currentUserId');
-  const userRef = doc(db, 'currentUsers', currentUserId as PlayerId);
+    throw new Error("Missing teamId or currentUserId");
+  const userRef = doc(db, "currentUsers", currentUserId as PlayerId);
   await updateDoc(userRef, {
     teams: arrayRemove(teamId as TeamId),
   });
@@ -254,7 +260,7 @@ const removeTeamFromBothWithPlayer = async (
   pastPlayerId?: Email
 ) => {
   if (!teamId || !pastPlayerId)
-    throw new Error('Missing teamId or pastPlayerId');
+    throw new Error("Missing teamId or pastPlayerId");
   await removeTeamFromPastPlayer(teamId, pastPlayerId);
   const pastPlayer = await fetchPastPlayerByIdRQ(pastPlayerId as Email);
   if (pastPlayer && pastPlayer.currentUserId) {
@@ -273,11 +279,11 @@ const removeTeamFromBothWithUser = async (
   currentUserId?: PlayerId
 ) => {
   if (!teamId || !currentUserId)
-    throw new Error('Missing teamId or currentUserId');
+    throw new Error("Missing teamId or currentUserId");
   await removeTeamFromCurrentUser(teamId, currentUserId);
   const user = await fetchCurrentUserById(currentUserId as PlayerId);
   if (user && user.pastPlayerId) {
-    await removeTeamFromPastPlayer(teamId, user.pastPlayerId);
+    await removeTeamFromPastPlayer(teamId, user.pastPlayerId as Email);
   }
 };
 
@@ -302,7 +308,7 @@ const addPlayerToTeamRQ = async ({
 
   const teamData = await fetchTeamByIdRQ(teamId);
   if (!teamData) {
-    throw new Error('Team not found');
+    throw new Error("Team not found");
   }
   // get the player currently in the role on that team
   const oldPlayer = teamData?.players[role];
@@ -322,7 +328,7 @@ const addPlayerToTeamRQ = async ({
     if (error instanceof Error) {
       throw new Error(error.message);
     } else {
-      throw new Error('Unknown error');
+      throw new Error("Unknown error");
     }
   }
 };
@@ -339,7 +345,7 @@ const insertPlayerOntoTeam = async (
   role: TeamPlayerRole,
   playerData: TeamPlayer
 ) => {
-  const teamRef = doc(db, 'teams', teamId);
+  const teamRef = doc(db, "teams", teamId);
   const teamDoc = await getDoc(teamRef);
   if (teamDoc.exists()) {
     const teamData = teamDoc.data() as Team;
@@ -369,10 +375,10 @@ const insertPlayerOntoTeam = async (
 
 export const removeAllPlayersFromTeamRQ = async (teamId: TeamId) => {
   await runTransaction(db, async (transaction) => {
-    const teamRef = doc(db, 'teams', teamId);
+    const teamRef = doc(db, "teams", teamId);
     const teamDoc = await transaction.get(teamRef);
     if (!teamDoc.exists()) {
-      throw new Error('Team not found');
+      throw new Error("Team not found");
     }
 
     const teamData = teamDoc.data() as Team;
@@ -381,7 +387,7 @@ export const removeAllPlayersFromTeamRQ = async (teamId: TeamId) => {
       .filter((pastPlayerId) => pastPlayerId);
 
     for (const pastPlayerId of playerIds) {
-      const pastPlayerRef = doc(db, 'pastPlayers', pastPlayerId);
+      const pastPlayerRef = doc(db, "pastPlayers", pastPlayerId);
       const pastPlayerDoc = await transaction.get(pastPlayerRef);
       const pastPlayerData = pastPlayerDoc.data();
 
@@ -394,7 +400,7 @@ export const removeAllPlayersFromTeamRQ = async (teamId: TeamId) => {
       if (pastPlayerData?.currentUserId) {
         const currentUserRef = doc(
           db,
-          'currentUsers',
+          "currentUsers",
           pastPlayerData.currentUserId
         );
         transaction.update(currentUserRef, {

@@ -1,5 +1,7 @@
 // react
 import React from 'react';
+import { useAuthContext } from '../context/useAuthContext';
+import { useCreatedEntityNavigation } from '../hooks/useCreatedEntityNavigation';
 
 // form
 import { FormValues, profileSchema, formFieldNames } from './profileSchema';
@@ -7,14 +9,48 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // firebase
-import { PastPlayer } from 'bca-firebase-queries';
 import { LogoutButton } from '../login/LogoutButton';
+import {
+  useCreatePlayer,
+  BarePlayer,
+  PastPlayer,
+  useAddGamesToPlayer,
+} from 'bca-firebase-queries';
+import {
+  capitalizeField,
+  formatPhoneNumber,
+} from '../assets/formatEntryFunctions';
+
+// components
+import { toast } from 'react-toastify';
+import { InfoButton } from '../components/InfoButton';
+
+// functions
+import { formatDateToYYYYMMDD } from '../assets/dateFunctions';
+import { extractGamesFromPastPlayerSeason } from '../assets/gameFunctions';
 
 type PastDataEditProps = {
   pastPlayer: PastPlayer;
 };
 
 export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
+  // constants
+  const { user } = useAuthContext();
+  const { playerCreated } = useCreatedEntityNavigation();
+
+  // firebase
+  const {
+    createPlayer,
+    isLoading: isCreatingPlayer,
+    isError: isCreationError,
+  } = useCreatePlayer();
+  const {
+    addGamesToPlayer,
+    isLoading: isAddingGames,
+    isError: isGamesError,
+  } = useAddGamesToPlayer();
+
+  // form
   const {
     register,
     handleSubmit,
@@ -33,8 +69,52 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  // handlers
+  const onSubmit = async (data: FormValues) => {
+    // create BarePlayer shape
+    const playerData: BarePlayer = {
+      address: capitalizeField(data.address),
+      city: capitalizeField(data.city),
+      state: capitalizeField(data.state),
+      zip: data.zip,
+      dob: formatDateToYYYYMMDD(pastPlayer.dob),
+      email: pastPlayer.email,
+      firstName: capitalizeField(data.firstName),
+      lastName: capitalizeField(data.lastName),
+      nickname: data.nickname,
+      phone: formatPhoneNumber(data.phone),
+    };
+
+    //create player document
+    if (user) {
+      const onSuccess = async () => {
+        toast.success('Player created successfully!');
+      };
+      await createPlayer(user.uid, playerData, onSuccess);
+
+      // add games to player
+      const seasonKeys = Object.keys(pastPlayer.stats);
+      const gamePromises = seasonKeys.map((seasonKey) => {
+        const games = extractGamesFromPastPlayerSeason(
+          seasonKey,
+          pastPlayer.stats[seasonKey]
+        );
+        if (games) {
+          return addGamesToPlayer(user.uid, games);
+        }
+      });
+      if (gamePromises.length > 0) {
+        (await Promise.allSettled(gamePromises)).filter(Boolean);
+      }
+      // navigate on success
+      if (isCreationError) {
+        toast.error('Error creating player');
+      } else if (isGamesError) {
+        toast.error('Error adding games to player');
+      } else {
+        playerCreated();
+      }
+    }
   };
 
   return (
@@ -47,7 +127,12 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
             {formFieldNames.map(({ name, label }) => (
               <React.Fragment key={name}>
                 <div className="edit-input-container">
-                  <div>{label}:</div>
+                  <div className="input-label">
+                    {label}:
+                    {name === 'nickname' && (
+                      <InfoButton infoBlurbKey="nickname" />
+                    )}
+                  </div>
                   <input
                     id={name}
                     {...register(name as keyof FormValues)}
@@ -68,8 +153,10 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
             ))}
           </div>
           <div className="confirm-button-wrapper">
-            <button type="submit">Submit</button>
-            <LogoutButton />
+            <button type="submit" disabled={isCreatingPlayer || isAddingGames}>
+              Submit
+            </button>
+            <LogoutButton disabled={isCreatingPlayer || isAddingGames} />
           </div>
         </form>
       </div>

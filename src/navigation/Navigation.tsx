@@ -1,19 +1,19 @@
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { publicRoutes, privateRoutes, adminRoutes } from './routes';
-import { useAuthContext } from '../context/useAuthContext';
-import { ProtectedRoute } from './ProtectedRoute';
+import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { publicRoutes, privateRoutes } from "./routes";
+import { useAuthContext } from "../context/useAuthContext";
+import { ProtectedRoute } from "./ProtectedRoute";
 
-import './navigation.css';
-import { PublicRoute } from './PublicRoute';
-import { AdminNav, PrivateNav } from './NavBars';
-import { useState } from 'react';
+import "./navigation.css";
+import { PublicRoute } from "./PublicRoute";
+import { AdminNav, PrivateNav } from "./NavBars";
+import { useState } from "react";
 
 export const Navigation = () => {
   const [showAdmin, setShowAdmin] = useState(false);
   const { isLoggedIn, isAdmin } = useAuthContext();
 
   const location = useLocation();
-  const hideNavOnPaths = ['/signUp'];
+  const hideNavOnPaths = ["/signUp"];
 
   const toggleAdmin = () => {
     setShowAdmin((prev) => !prev);
@@ -31,7 +31,7 @@ export const Navigation = () => {
             {/* Admin Routes, additionally for administrators */}
             {isAdmin && (
               <Link to="#" onClick={toggleAdmin}>
-                {showAdmin ? 'Exit Admin' : 'Administration'}
+                {showAdmin ? "Exit Admin" : "Administration"}
               </Link>
             )}
           </ul>

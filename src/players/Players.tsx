@@ -1,19 +1,19 @@
-import { useState } from 'react';
+import { useState } from "react";
 // components
-import { PastPlayersList } from './PastPlayersList';
-import { CurrentPlayersList } from './CurrentPlayersList';
-import { Info } from './Info';
+import { PastPlayersList } from "./PastPlayersList";
+import { CurrentPlayersList } from "./CurrentPlayersList";
+import { Info } from "./Info";
 
 // types
-import { CurrentUser } from '../assets/typesFolder/userTypes';
+import { CurrentUser } from "../assets/typesFolder/userTypes";
 
 // firebase
-import { PastPlayer } from '../assets/typesFolder/userTypes';
-import { failedFetch } from '../constants/messages';
+import { PastPlayer } from "bca-firebase-queries";
+import { failedFetch } from "../constants/messages";
 import {
   useFetchCurrentUsers,
   useFetchPastPlayers,
-} from '../hooks/playerFetchHooks';
+} from "../hooks/playerFetchHooks";
 
 // import {
 //   failedFetch,
@@ -45,7 +45,7 @@ export const Players = () => {
   if (errorPastPlayers) {
     return (
       <div>
-        {failedFetch} Past Players:{' '}
+        {failedFetch} Past Players:{" "}
         {/** TODO fix this errorPastPlayers.message */}
       </div>
     );

@@ -1,6 +1,6 @@
 import { Schedule } from './typesFolder/seasonTypes';
 import { DayOfWeek, Game, PoolHall } from './typesFolder/sharedTypes';
-import { TeamPlayer, TeamPlayerRole } from './typesFolder/teamTypes';
+import { TeamPlayer, TeamPlayerRole } from 'bca-firebase-queries';
 
 export const notDate = 'Invalid Date';
 export const daysOfTheWeek: DayOfWeek[] = [
@@ -31,8 +31,8 @@ export const blankPlayerInfoObject: TeamPlayer = {
   firstName: '',
   lastName: '',
   nickname: '',
-  email: '',
-  pastPlayerId: '',
+  email: 'a@b.c',
+  pastPlayerId: 'a@b.c',
   currentUserId: '',
   totalWins: 0,
   totalLosses: 0,
