@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { LoadingScreen } from '../components/LoadingScreen';
 import { useNavigate } from 'react-router';
 import { useEffect } from 'react';
+import './home.css';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -38,14 +39,16 @@ export const Home = () => {
 
   if (user) {
     return (
-      <div>
+      <div className="home-container">
         <h2>
           Welcome to the Pool League Management System{` ${welcomeName}`}!
         </h2>
         <h4>{adminMessage}</h4>
         {/* Additional content or navigation options */}
-        <button onClick={testConfirm}>Apply</button>
-        <LogoutButton />
+        <div className="home-buttons">
+          <button onClick={testConfirm}>Apply</button>
+          <LogoutButton />
+        </div>
       </div>
     );
   } else {
