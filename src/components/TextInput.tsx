@@ -23,8 +23,8 @@ export const TextInput: React.FC<TextInputProps> = (props) => {
         onClick={togglePassword}
         style={{
           position: 'absolute',
-          right: '10px',
-          top: '50%',
+          right: '20px',
+          top: '55%',
           transform: 'translateY(-50%',
           cursor: 'pointer',
         }}
