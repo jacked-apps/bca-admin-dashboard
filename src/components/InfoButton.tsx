@@ -1,19 +1,25 @@
 import { FaQuestionCircle } from 'react-icons/fa';
 import { infoBlurbs } from '../assets/infoBlurbs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type InfoButtonProps = {
   infoBlurbKey?: keyof typeof infoBlurbs;
   size?: number;
 };
 
-export const InfoButton = ({
-  infoBlurbKey = 'sample',
-  size = 20,
-}: InfoButtonProps) => {
+export const InfoButton = ({ infoBlurbKey = 'sample' }: InfoButtonProps) => {
   // state
   const [showDialog, setShowDialog] = useState(false);
+  const [size, setSize] = useState(window.innerWidth > 600 ? 20 : 10);
   const blurb = infoBlurbs[infoBlurbKey];
+
+  useEffect(() => {
+    const handleResize = () => {
+      setSize(window.innerWidth > 600 ? 20 : 10);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // functions
   const openDialog = () => setShowDialog(true);
