@@ -15,7 +15,7 @@ export const StateSelect = <T extends Record<string, unknown>>({
     <div className="edit-input-container">
       <div className="input-label">State:</div>
 
-      <select {...register('state' as Path<T>)} className="select-input">
+      <select {...register('state' as Path<T>)} className="edit-input">
         {usStates.map((state) => (
           <option key={state.abbreviation} value={state.abbreviation}>
             {state.name}

@@ -119,7 +119,7 @@ export const NewPlayerForm = () => {
           )}
         </div>
         {!isLoading && (
-          <div className="form-button-wrapper">
+          <div className="new-player-button-wrapper">
             <button type="submit" disabled={isLoading}>
               Submit
             </button>

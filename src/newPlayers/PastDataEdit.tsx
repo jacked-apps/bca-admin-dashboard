@@ -24,12 +24,11 @@ import {
 // components
 import { toast } from 'react-toastify';
 import { InfoButton } from '../components/InfoButton';
-import { StatePicker } from '../components/StatePicker';
+import { StateSelect } from '../components/StateSelect';
 
 // functions
 import { formatDateToYYYYMMDD } from '../assets/dateFunctions';
 import { extractGamesFromPastPlayerSeason } from '../assets/gameFunctions';
-import { StateSelect } from '../components/StateSelect';
 
 type PastDataEditProps = {
   pastPlayer: PastPlayer;
@@ -68,23 +67,6 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
   });
 
   const errors = methods.formState.errors;
-  // const  {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<FormValues>({
-  //   resolver: yupResolver(profileSchema),
-  //   defaultValues: {
-  //     firstName: pastPlayer.firstName,
-  //     lastName: pastPlayer.lastName,
-  //     nickname: pastPlayer.nickname,
-  //     phone: pastPlayer.phone,
-  //     address: pastPlayer.address,
-  //     city: pastPlayer.city,
-  //     state: pastPlayer.state,
-  //     zip: pastPlayer.zip,
-  //   },
-  // });
 
   // handlers
   const onSubmit = async (data: FormValues) => {
