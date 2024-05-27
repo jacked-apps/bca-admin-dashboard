@@ -56,6 +56,11 @@
   height: 80%;
   font-size: 2vw;
 }
+.select-input {
+  min-width: 55%;
+  height: 100%;
+  font-size: 2vw;
+}
 .confirm-inputs-wrapper {
   width: 50%;
   margin-bottom: 20px;

@@ -1,6 +1,7 @@
 // react
 import React from 'react';
 import { useAuthContext } from '../context/useAuthContext';
+import { useCreatedEntityNavigation } from '../hooks/useCreatedEntityNavigation';
 
 // form
 import { useForm } from 'react-hook-form';
@@ -18,12 +19,12 @@ import { useCreatePlayer, BarePlayer, Email } from 'bca-firebase-queries';
 
 // components
 import { LogoutButton } from '../login/LogoutButton';
-import './newPlayers.css';
-
-//css
 import { toast } from 'react-toastify';
 import { InfoButton } from '../components/InfoButton';
-import { useCreatedEntityNavigation } from '../hooks/useCreatedEntityNavigation';
+import { StateSelect } from '../components/StateSelect';
+
+//css
+import './newPlayers.css';
 
 export const NewPlayerForm = () => {
   // constants
@@ -40,6 +41,7 @@ export const NewPlayerForm = () => {
     resolver: yupResolver(newPlayerSchema),
     defaultValues: {
       email: user?.email as string,
+      state: 'CA',
     },
   });
 
@@ -76,29 +78,35 @@ export const NewPlayerForm = () => {
         <div>
           {formFieldNames.map(({ name, label }) => (
             <React.Fragment key={name}>
-              <div className="edit-input-container">
-                <div className="input-label">
-                  {name === 'email' && (
-                    <InfoButton infoBlurbKey="emailChangeProhibited" />
-                  )}
-                  {label}:
-                </div>
-
-                <input
-                  disabled={name === 'email' ? true : false}
-                  id={name}
-                  {...register(name as keyof FormValues)}
-                  type={name === 'dob' ? 'date' : 'text'}
-                  className={
-                    errors[name as keyof FormValues]
-                      ? 'input-error'
-                      : 'edit-input'
-                  }
+              {name === 'state' ? (
+                <StateSelect
+                  register={register}
+                  error={errors.state?.message}
                 />
-              </div>
-              {errors[name as keyof FormValues] && (
-                <div className="error-message">
-                  {errors[name as keyof FormValues]?.message}
+              ) : (
+                <div className="edit-input-container">
+                  <div className="input-label">
+                    {name === 'email' && (
+                      <InfoButton infoBlurbKey="emailChangeProhibited" />
+                    )}
+                    {label}:
+                  </div>
+                  <input
+                    disabled={name === 'email'}
+                    id={name}
+                    {...register(name as keyof FormValues)}
+                    type={name === 'dob' ? 'date' : 'text'}
+                    className={
+                      errors[name as keyof FormValues]
+                        ? 'input-error'
+                        : 'edit-input'
+                    }
+                  />
+                  {errors[name as keyof FormValues] && (
+                    <div className="error-message">
+                      {errors[name as keyof FormValues]?.message}
+                    </div>
+                  )}
                 </div>
               )}
             </React.Fragment>
