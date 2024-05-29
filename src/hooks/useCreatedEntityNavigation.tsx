@@ -14,7 +14,7 @@ export const useCreatedEntityNavigation = () => {
 
   useEffect(() => {
     if (createdPlayer && !isLoading) {
-      navigate('/');
+      navigate('/welcome');
     }
   }, [createdPlayer, navigate, isLoading]);
 

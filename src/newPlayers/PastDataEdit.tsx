@@ -5,7 +5,7 @@ import { useCreatedEntityNavigation } from '../hooks/useCreatedEntityNavigation'
 
 // form
 import { FormValues, profileSchema, formFieldNames } from './profileSchema';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // firebase
@@ -24,6 +24,7 @@ import {
 // components
 import { toast } from 'react-toastify';
 import { InfoButton } from '../components/InfoButton';
+import { StateSelect } from '../components/StateSelect';
 
 // functions
 import { formatDateToYYYYMMDD } from '../assets/dateFunctions';
@@ -51,11 +52,7 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
   } = useAddGamesToPlayer();
 
   // form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const methods = useForm<FormValues>({
     resolver: yupResolver(profileSchema),
     defaultValues: {
       firstName: pastPlayer.firstName,
@@ -64,10 +61,12 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
       phone: pastPlayer.phone,
       address: pastPlayer.address,
       city: pastPlayer.city,
-      state: pastPlayer.state,
+      state: 'CA',
       zip: pastPlayer.zip,
     },
   });
+
+  const errors = methods.formState.errors;
 
   // handlers
   const onSubmit = async (data: FormValues) => {
@@ -121,44 +120,59 @@ export const PastDataEdit = ({ pastPlayer }: PastDataEditProps) => {
     <div className="confirm-container">
       <div className="confirm-title">Review Past Data</div>
       <div className="confirm-body">
-        <form className="confirm-body-title" onSubmit={handleSubmit(onSubmit)}>
-          Please update any old or incorrect information
-          <div className="confirm-inputs-wrapper">
-            {formFieldNames.map(({ name, label }) => (
-              <React.Fragment key={name}>
-                <div className="edit-input-container">
-                  <div className="input-label">
-                    {label}:
-                    {name === 'nickname' && (
-                      <InfoButton infoBlurbKey="nickname" />
-                    )}
-                  </div>
-                  <input
-                    id={name}
-                    {...register(name as keyof FormValues)}
-                    type="text"
-                    className={
-                      errors[name as keyof FormValues]
-                        ? 'input-error'
-                        : 'edit-input'
-                    }
-                  />
-                </div>
-                {errors[name as keyof FormValues] && (
-                  <div className="error-message">
-                    {errors[name as keyof FormValues]?.message}
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-          <div className="confirm-button-wrapper">
-            <button type="submit" disabled={isCreatingPlayer || isAddingGames}>
-              Submit
-            </button>
-            <LogoutButton disabled={isCreatingPlayer || isAddingGames} />
-          </div>
-        </form>
+        <FormProvider {...methods}>
+          <form
+            className="confirm-body-title"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            Please update any old or incorrect information
+            <div className="confirm-inputs-wrapper">
+              {formFieldNames.map(({ name, label }) => (
+                <React.Fragment key={name}>
+                  {name === 'state' ? (
+                    <StateSelect
+                      register={methods.register}
+                      error={errors.state?.message}
+                    />
+                  ) : (
+                    <div className="edit-input-container">
+                      <div className="input-label">
+                        {label}:
+                        {name === 'nickname' && (
+                          <InfoButton infoBlurbKey="nickname" />
+                        )}
+                      </div>
+                      <input
+                        id={name}
+                        {...methods.register(name as keyof FormValues)}
+                        type="text"
+                        className={
+                          errors[name as keyof FormValues]
+                            ? 'input-error'
+                            : 'edit-input'
+                        }
+                      />
+                      {errors[name as keyof FormValues] && (
+                        <div className="error-message">
+                          {errors[name as keyof FormValues]?.message}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+            <div className="confirm-button-wrapper">
+              <button
+                type="submit"
+                disabled={isCreatingPlayer || isAddingGames}
+              >
+                Submit
+              </button>
+              <LogoutButton disabled={isCreatingPlayer || isAddingGames} />
+            </div>
+          </form>
+        </FormProvider>
       </div>
     </div>
   );
