@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/useAuthContext';
 
 import './newPlayers.css';
-
+// added comment to redeploy
 export const WelcomePage = () => {
   const googleFormURL = 'https://forms.gle/Tn8xjYhpWRwdHLxp7';
   const { player } = useAuthContext();
