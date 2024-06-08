@@ -1,5 +1,5 @@
 import { UseFormRegister, Path } from 'react-hook-form';
-import { usStates } from '../assets/usStatesArray';
+import { usStates } from 'bca-firebase-queries';
 
 type StateSelectProps<T extends Record<string, unknown>> = {
   register: UseFormRegister<T>;
