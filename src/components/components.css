@@ -76,3 +76,23 @@
   display: flex;
   justify-content: space-around;
 }
+.view-edit-group {
+  display: contents;
+  align-items: center;
+  font-size: 3vh;
+}
+.view-edit-label {
+  grid-column: 1;
+  justify-self: end;
+  width: 100%;
+}
+.view-edit-icon {
+  grid-column: 2;
+  justify-self: end;
+  align-items: end;
+}
+.view-edit-value {
+  grid-column: 3;
+  justify-self: start;
+  margin: 0 2vh;
+}

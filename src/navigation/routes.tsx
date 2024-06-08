@@ -5,6 +5,7 @@ import { Login } from '../login/Login';
 // private routes
 import { SignUp } from '../newPlayers/SignUp';
 import { WelcomePage } from '../newPlayers/WelcomePage';
+import { Profile } from '../profile/Profile';
 
 // admin routes
 import { Seasons } from '../seasons/Seasons';
@@ -51,6 +52,13 @@ export const privateRoutes: Route[] = [
     name: 'Welcome',
     path: '/welcome',
     Component: WelcomePage,
+    link: true,
+    ...protect,
+  },
+  {
+    name: 'Profile',
+    path: '/profile',
+    Component: Profile,
     link: true,
     ...protect,
   },
